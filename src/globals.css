@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 220 20% 8%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 220 15% 15%;
     
     /* Brightened Color System - Blue, Purple, Orange, Baby Blue, Light Green */
     --primary-gradient-start: 270 80% 65%; /* Bright Purple */
@@ -17,30 +17,30 @@
     --accent-baby-blue: 200 90% 70%; /* Baby Blue */
     --accent-light-green: 140 65% 65%; /* Light Green */
     
-    /* Card & UI - Lighter backgrounds */
-    --card: 220 18% 12%;
-    --card-foreground: 0 0% 100%;
+    /* Card & UI - Light backgrounds */
+    --card: 0 0% 98%;
+    --card-foreground: 220 15% 15%;
     
-    --popover: 220 18% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 220 15% 15%;
     
     --primary: 270 80% 65%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 15% 95%;
+    --secondary-foreground: 220 15% 15%;
     
-    --muted: 220 15% 22%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 40%;
     
-    --accent: 220 15% 22%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 15% 96%;
+    --accent-foreground: 220 15% 15%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 15% 25%;
-    --input: 220 15% 20%;
+    --border: 220 15% 88%;
+    --input: 220 15% 95%;
     --ring: 270 80% 65%;
     
     --radius: 0.75rem;
@@ -91,7 +91,7 @@
   }
   
   .glass-effect {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
@@ -114,15 +114,15 @@
   
   /* Card Depth System */
   .card-depth-1 {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(167, 139, 250, 0.15);
   }
   
   .card-depth-2 {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(167, 139, 250, 0.2);
+    box-shadow: 0 8px 30px rgba(167, 139, 250, 0.2), 0 2px 10px rgba(96, 165, 250, 0.15);
   }
   
   .card-depth-3 {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 4px 15px rgba(96, 165, 250, 0.25);
+    box-shadow: 0 12px 40px rgba(167, 139, 250, 0.25), 0 4px 15px rgba(96, 165, 250, 0.2);
   }
   
   /* Animations */
@@ -193,7 +193,7 @@
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(167, 139, 250, 0.1);
     border-radius: 10px;
   }
   
@@ -218,9 +218,9 @@
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 75%
+    rgba(167, 139, 250, 0.1) 25%,
+    rgba(167, 139, 250, 0.2) 50%,
+    rgba(167, 139, 250, 0.1) 75%
   );
   background-size: 200% 100%;
   animation: loading 1.5s ease-in-out infinite;
