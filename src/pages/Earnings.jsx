@@ -16,6 +16,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import ReferralCard from '../components/monetization/ReferralCard';
+import TierBadge from '../components/monetization/TierBadge';
 
 export default function Earnings() {
   const [user, setUser] = useState(null);
@@ -37,15 +39,45 @@ export default function Earnings() {
     initialData: []
   });
 
+  const { data: allRevenue } = useQuery({
+    queryKey: ['my-revenue', user?.email],
+    queryFn: () => base44.entities.Revenue.filter({ user_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const { data: referrals } = useQuery({
+    queryKey: ['my-referrals', user?.email],
+    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const { data: subscription } = useQuery({
+    queryKey: ['my-sub-earnings', user?.email],
+    queryFn: async () => {
+      const subs = await base44.entities.Subscription.filter({ 
+        user_email: user?.email,
+        status: 'active'
+      });
+      return subs[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const adRevenue = allRevenue.filter(r => r.source === 'ads').reduce((sum, r) => sum + r.amount, 0);
+  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + r.amount, 0);
+
   const totalEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
   const tipsCount = transactions.filter(t => t.type === 'tip').length;
   const boostsCount = transactions.filter(t => t.type === 'boost').length;
 
   const stats = [
-    { label: 'Total Earned', value: `$${totalEarnings.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
-    { label: 'Tips Received', value: tipsCount, icon: Gift, color: 'from-pink-500 to-rose-500' },
-    { label: 'Value Boosts', value: boostsCount, icon: Zap, color: 'from-yellow-500 to-orange-500' },
-    { label: 'This Month', value: `$${(totalEarnings * 0.3).toFixed(2)}`, icon: TrendingUp, color: 'from-purple-500 to-indigo-500' },
+    { label: 'Total Earned', value: `$${(totalEarnings + referralEarnings + adRevenue + affiliateRevenue).toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
+    { label: 'Tips & Boosts', value: `$${totalEarnings.toFixed(2)}`, icon: Gift, color: 'from-pink-500 to-rose-500' },
+    { label: 'Referrals', value: `$${referralEarnings.toFixed(2)}`, icon: Users, color: 'from-purple-500 to-indigo-500' },
+    { label: 'Ads & Affiliate', value: `$${(adRevenue + affiliateRevenue).toFixed(2)}`, icon: TrendingUp, color: 'from-yellow-500 to-orange-500' },
   ];
 
   return (
@@ -81,26 +113,43 @@ export default function Earnings() {
         ))}
       </div>
 
-      {/* Boost Value CTA */}
+      {/* Tier Upgrade CTA */}
       <Card className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500/30 mb-8">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold mb-2">Boost Your Value</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-xl font-bold">Maximize Your Earnings</h3>
+                <TierBadge tier={subscription?.tier || 'free'} />
+              </div>
               <p className="text-zinc-300 text-sm">
-                Create engaging content to earn more tips and recognition from your community.
+                {subscription?.tier === 'elite' 
+                  ? 'You\'re earning at maximum capacity with Elite tier benefits!'
+                  : `Upgrade to ${subscription?.tier === 'pro' ? 'Elite' : 'Pro'} for ${subscription?.tier === 'pro' ? '5x' : '2x'} referral bonuses and more revenue streams.`
+                }
               </p>
             </div>
-            <Button className="bg-white text-purple-900 hover:bg-zinc-100">
-              <Zap className="w-4 h-4 mr-2" />
-              Create Content
-            </Button>
+            {subscription?.tier !== 'elite' && (
+              <Button 
+                onClick={() => window.location.href = '/subscription'}
+                className="bg-white text-purple-900 hover:bg-zinc-100"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Upgrade Now
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
 
+      {/* Referral Program */}
+      <ReferralCard 
+        user={user} 
+        referralStats={{ count: referrals.length, earnings: referralEarnings }}
+      />
+
       {/* Recent Transactions */}
-      <Card className="bg-zinc-900 border-zinc-800">
+      <Card className="bg-zinc-900 border-zinc-800 mt-6">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Recent Transactions</span>

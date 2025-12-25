@@ -38,6 +38,10 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Profile', icon: User, page: 'Profile' },
   ];
 
+  const adminItems = user?.role === 'admin' ? [
+    { name: 'Admin', icon: DollarSign, page: 'Admin' }
+  ] : [];
+
   return (
     <div className="min-h-screen bg-black text-white">
       <style>{`
@@ -68,7 +72,7 @@ export default function Layout({ children, currentPageName }) {
         </Link>
 
         <div className="flex-1 space-y-2">
-          {navItems.map((item) => (
+          {[...navItems, ...adminItems].map((item) => (
             <Link
               key={item.name}
               to={createPageUrl(item.page)}

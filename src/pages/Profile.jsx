@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
+import TierBadge from '../components/monetization/TierBadge';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -59,6 +60,18 @@ export default function Profile() {
   });
 
   const totalEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+
+  const { data: subscription } = useQuery({
+    queryKey: ['profile-subscription', user?.email],
+    queryFn: async () => {
+      const subs = await base44.entities.Subscription.filter({ 
+        user_email: user?.email,
+        status: 'active'
+      });
+      return subs[0];
+    },
+    enabled: !!user?.email
+  });
 
   const handleLogout = () => {
     base44.auth.logout();
@@ -111,8 +124,9 @@ export default function Profile() {
           </Avatar>
 
           <div className="flex-1">
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-4 flex-wrap">
               <h2 className="text-xl font-bold">{user.full_name || 'User'}</h2>
+              <TierBadge tier={subscription?.tier || 'free'} size="md" />
               <Button variant="outline" size="sm" className="border-zinc-700">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
@@ -148,11 +162,21 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Join Circle CTA */}
-        <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-500 mb-6">
-          <Users className="w-4 h-4 mr-2" />
-          Join My Circle
-        </Button>
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Button 
+            onClick={() => window.location.href = '/subscription'}
+            variant="outline"
+            className="border-purple-500/50"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            Upgrade Tier
+          </Button>
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-500">
+            <Users className="w-4 h-4 mr-2" />
+            My Circle
+          </Button>
+        </div>
       </div>
 
       {/* Tabs */}

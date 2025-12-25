@@ -4,6 +4,8 @@ import Create from './pages/Create';
 import Messages from './pages/Messages';
 import Earnings from './pages/Earnings';
 import Profile from './pages/Profile';
+import Subscription from './pages/Subscription';
+import Admin from './pages/Admin';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +16,8 @@ export const PAGES = {
     "Messages": Messages,
     "Earnings": Earnings,
     "Profile": Profile,
+    "Subscription": Subscription,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {
