@@ -6,9 +6,9 @@ import Explore from './pages/Explore';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Messages from './pages/Messages';
+import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Subscription from './pages/Subscription';
-import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -21,9 +21,9 @@ export const PAGES = {
     "Gamification": Gamification,
     "Home": Home,
     "Messages": Messages,
+    "Onboarding": Onboarding,
     "Profile": Profile,
     "Subscription": Subscription,
-    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {

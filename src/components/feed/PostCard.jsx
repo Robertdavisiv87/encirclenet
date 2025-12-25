@@ -75,21 +75,23 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   };
 
   return (
-    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden mb-4">
+    <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden mb-4 card-depth-2 hover-lift">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
-          <Avatar className="w-10 h-10 ring-2 ring-purple-500/50">
+          <Avatar className="w-10 h-10 ring-2 ring-purple-500/50 shadow-glow">
             <AvatarImage src={post.author_avatar} />
-            <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-500">
+            <AvatarFallback className="gradient-bg-primary">
               {post.author_name?.[0] || 'U'}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold text-sm">{post.author_name}</p>
-            {post.is_raw_mode && (
-              <span className="text-xs text-purple-400">🔥 Raw Mode</span>
-            )}
+            <div>
+              <p className="font-semibold text-sm">{post.author_name}</p>
+              {post.is_raw_mode && (
+                <span className="text-xs text-purple-400 animate-pulse-glow">🔥 Raw Mode</span>
+              )}
+            </div>
           </div>
         </div>
         <Button variant="ghost" size="icon" className="text-zinc-400">

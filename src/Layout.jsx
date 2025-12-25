@@ -47,32 +47,13 @@ export default function Layout({ children, currentPageName }) {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <style>{`
-        :root {
-          --gradient-start: #7C3AED;
-          --gradient-mid: #EC4899;
-          --gradient-end: #F59E0B;
-        }
-        .gradient-text {
-          background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .gradient-bg {
-          background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
-        }
-        .gradient-border {
-          border-image: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid)) 1;
-        }
-      `}</style>
+    <div className="min-h-screen bg-black text-white"
 
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-black border-r border-zinc-800 flex-col p-6 z-50">
-        <Link to={createPageUrl('Home')} className="mb-10">
-          <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
-          <p className="text-xs text-zinc-500 mt-1">Your World. Your Voice.</p>
+        <Link to={createPageUrl('Home')} className="mb-10 group">
+          <h1 className="text-2xl font-bold gradient-text hover-scale">EncircleNet</h1>
+          <p className="text-xs text-zinc-400 mt-1">Your World • Your Voice • Your Value</p>
         </Link>
 
         <div className="flex-1 space-y-2">
@@ -81,15 +62,15 @@ export default function Layout({ children, currentPageName }) {
               key={item.name}
               to={createPageUrl(item.page)}
               className={cn(
-                "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200",
+                "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 hover-lift",
                 currentPageName === item.page 
-                  ? "bg-zinc-900 text-white" 
+                  ? "gradient-bg-card text-white border border-purple-500/30 shadow-glow" 
                   : "text-zinc-400 hover:bg-zinc-900/50 hover:text-white"
               )}
             >
               <item.icon className={cn(
-                "w-6 h-6",
-                currentPageName === item.page && "text-purple-500"
+                "w-6 h-6 transition-transform",
+                currentPageName === item.page && "text-purple-400 scale-110"
               )} />
               <span className="font-medium">{item.name}</span>
             </Link>
@@ -98,15 +79,15 @@ export default function Layout({ children, currentPageName }) {
 
         {user && (
           <div className="border-t border-zinc-800 pt-4 mt-4">
-            <div className="flex items-center gap-3 px-4">
-              <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+            <div className="flex items-center gap-3 px-4 hover-lift cursor-pointer rounded-xl p-2">
+              <div className="w-10 h-10 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
                 <span className="text-white font-bold">
                   {user.full_name?.[0] || user.email?.[0] || 'U'}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{user.full_name || 'User'}</p>
-                <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+                <p className="font-semibold truncate">{user.full_name || 'User'}</p>
+                <p className="text-xs text-zinc-400 truncate">{user.email}</p>
               </div>
             </div>
           </div>

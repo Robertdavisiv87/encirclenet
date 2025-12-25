@@ -29,13 +29,17 @@ export default function TierBadge({ tier = 'free', size = 'sm' }) {
   
   return (
     <div className={cn(
-      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold",
+      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold shadow-lg hover-scale cursor-pointer",
       config.bg,
       config.color,
       size === 'sm' && "text-xs",
-      size === 'md' && "text-sm px-3 py-1"
+      size === 'md' && "text-sm px-3 py-1",
+      tier === 'elite' && "shadow-glow-gold animate-pulse-glow"
     )}>
-      <Icon className={cn(size === 'sm' ? "w-3 h-3" : "w-4 h-4")} />
+      <Icon className={cn(
+        size === 'sm' ? "w-3 h-3" : "w-4 h-4",
+        tier === 'elite' && "animate-float"
+      )} />
       {config.label}
     </div>
   );
