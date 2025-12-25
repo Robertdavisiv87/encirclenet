@@ -9,7 +9,11 @@ import {
   ArrowUpRight,
   Gift,
   Star,
-  Clock
+  Clock,
+  Heart,
+  MousePointerClick,
+  Crown,
+  Link
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,10 +73,15 @@ export default function Earnings() {
   const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
   const adRevenue = allRevenue.filter(r => r.source === 'ads').reduce((sum, r) => sum + r.amount, 0);
   const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + r.amount, 0);
+  const tipsEarnings = transactions.filter(t => t.type === 'tip').reduce((sum, t) => sum + t.amount, 0);
+  const subscriptionRevenue = allRevenue.filter(r => r.source === 'subscriptions').reduce((sum, r) => sum + r.amount, 0);
 
   const totalEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
   const tipsCount = transactions.filter(t => t.type === 'tip').length;
   const boostsCount = transactions.filter(t => t.type === 'boost').length;
+
+  // Calculate trend (mock data - in real app, compare with previous period)
+  const earningsTrend = 12.5;
 
   const stats = [
     { label: 'Total Earned', value: `$${(totalEarnings + referralEarnings + adRevenue + affiliateRevenue).toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
@@ -81,129 +90,158 @@ export default function Earnings() {
     { label: 'Ads & Affiliate', value: `$${(adRevenue + affiliateRevenue).toFixed(2)}`, icon: TrendingUp, color: 'from-yellow-500 to-orange-500' },
   ];
 
+  const userTier = subscription?.tier || 'free';
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">CircleValue</h1>
-        <p className="text-zinc-500">Your earnings from authentic connections</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-2 gradient-text">Earnings Dashboard</h1>
+          <p className="text-zinc-500">Track your revenue streams and maximize your earnings</p>
+        </div>
+        <TierBadge tier={userTier} size="md" />
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card className="bg-zinc-900 border-zinc-800 overflow-hidden">
-              <CardContent className="p-4">
-                <div className={cn(
-                  "w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center mb-3",
-                  stat.color
-                )}>
-                  <stat.icon className="w-5 h-5 text-white" />
-                </div>
-                <p className="text-2xl font-bold">{stat.value}</p>
-                <p className="text-sm text-zinc-500">{stat.label}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Tier Upgrade CTA */}
-      <Card className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500/30 mb-8">
+      {/* Top Section - Total Earnings with Trend */}
+      <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/30 mb-6">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between mb-4">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-xl font-bold">Maximize Your Earnings</h3>
-                <TierBadge tier={subscription?.tier || 'free'} />
+              <p className="text-sm text-zinc-400 mb-1">Total Earnings</p>
+              <div className="flex items-baseline gap-3">
+                <h2 className="text-5xl font-bold text-green-400">
+                  ${(totalEarnings + referralEarnings + adRevenue + affiliateRevenue).toFixed(2)}
+                </h2>
+                <div className="flex items-center gap-1 text-green-400 text-sm">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>+{earningsTrend}%</span>
+                </div>
               </div>
-              <p className="text-zinc-300 text-sm">
-                {subscription?.tier === 'elite' 
-                  ? 'You\'re earning at maximum capacity with Elite tier benefits!'
-                  : `Upgrade to ${subscription?.tier === 'pro' ? 'Elite' : 'Pro'} for ${subscription?.tier === 'pro' ? '5x' : '2x'} referral bonuses and more revenue streams.`
-                }
-              </p>
             </div>
-            {subscription?.tier !== 'elite' && (
-              <Button 
-                onClick={() => window.location.href = '/subscription'}
-                className="bg-white text-purple-900 hover:bg-zinc-100"
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                Upgrade Now
-              </Button>
-            )}
+            <Button 
+              onClick={() => window.location.href = '/subscription'}
+              className="bg-gradient-to-r from-purple-600 to-pink-500"
+            >
+              Upgrade Tier
+            </Button>
+          </div>
+          
+          {/* Mini Chart Preview */}
+          <div className="flex items-end gap-1 h-16">
+            {[40, 55, 45, 70, 60, 85, 75, 90, 80, 95, 85, 100].map((height, i) => (
+              <div
+                key={i}
+                className="flex-1 bg-gradient-to-t from-purple-600 to-pink-500 rounded-t"
+                style={{ height: `${height}%` }}
+              />
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Referral Program */}
-      <ReferralCard 
-        user={user} 
-        referralStats={{ count: referrals.length, earnings: referralEarnings }}
-      />
+      {/* Monetization Streams Overview */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <DollarSign className="w-5 h-5 text-green-400" />
+          Monetization Streams
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Card className="bg-zinc-900 border-zinc-800 cursor-pointer hover:border-pink-500/50 transition-colors">
+              <CardContent className="p-4 text-center">
+                <Heart className="w-8 h-8 mx-auto mb-2 text-pink-400" />
+                <p className="text-2xl font-bold">${tipsEarnings.toFixed(2)}</p>
+                <p className="text-xs text-zinc-500">Tips & Boosts</p>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-      {/* Recent Transactions */}
-      <Card className="bg-zinc-900 border-zinc-800 mt-6">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Recent Transactions</span>
-            <Button variant="ghost" size="sm" className="text-purple-400">
-              View All <ArrowUpRight className="w-4 h-4 ml-1" />
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {transactions.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500">
-              <Gift className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No transactions yet</p>
-              <p className="text-sm">Start creating content to receive tips!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {transactions.slice(0, 10).map((transaction) => (
-                <motion.div
-                  key={transaction.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-xl"
-                >
-                  <div className="flex items-center gap-4">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Card className="bg-zinc-900 border-zinc-800 cursor-pointer hover:border-purple-500/50 transition-colors">
+              <CardContent className="p-4 text-center">
+                <Users className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                <p className="text-2xl font-bold">${referralEarnings.toFixed(2)}</p>
+                <p className="text-xs text-zinc-500">Referrals</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Card className="bg-zinc-900 border-zinc-800 cursor-pointer hover:border-blue-500/50 transition-colors">
+              <CardContent className="p-4 text-center">
+                <MousePointerClick className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                <p className="text-2xl font-bold">${adRevenue.toFixed(2)}</p>
+                <p className="text-xs text-zinc-500">Ad Revenue</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Card className="bg-zinc-900 border-zinc-800 cursor-pointer hover:border-green-500/50 transition-colors">
+              <CardContent className="p-4 text-center">
+                <Link className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                <p className="text-2xl font-bold">${affiliateRevenue.toFixed(2)}</p>
+                <p className="text-xs text-zinc-500">Affiliate</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Card className="bg-zinc-900 border-zinc-800 cursor-pointer hover:border-yellow-500/50 transition-colors">
+              <CardContent className="p-4 text-center">
+                <Crown className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                <p className="text-2xl font-bold">${subscriptionRevenue.toFixed(2)}</p>
+                <p className="text-xs text-zinc-500">Subscriptions</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Activity Feed & Referral */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Activity Feed */}
+        <Card className="bg-zinc-900 border-zinc-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              Recent Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {transactions.slice(0, 8).map((transaction) => (
+                <div key={transaction.id} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                  <div className="flex items-center gap-3">
                     <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center",
-                      transaction.type === 'tip' 
-                        ? "bg-pink-500/20 text-pink-500"
-                        : "bg-yellow-500/20 text-yellow-500"
+                      "w-8 h-8 rounded-full flex items-center justify-center",
+                      transaction.type === 'tip' ? "bg-pink-500/20" : "bg-purple-500/20"
                     )}>
-                      {transaction.type === 'tip' ? <Gift className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                      {transaction.type === 'tip' ? '💝' : '⭐'}
                     </div>
                     <div>
-                      <p className="font-medium">{transaction.from_name || 'Anonymous'}</p>
-                      <p className="text-sm text-zinc-500">
-                        {transaction.type === 'tip' ? 'Sent you a tip' : 'Boosted your value'}
+                      <p className="text-sm font-medium">{transaction.from_name || 'Anonymous'}</p>
+                      <p className="text-xs text-zinc-500">
+                        {transaction.type} • {new Date(transaction.created_date).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold text-green-400">+${transaction.amount}</p>
-                    <p className="text-xs text-zinc-500">
-                      <Clock className="w-3 h-3 inline mr-1" />
-                      {new Date(transaction.created_date).toLocaleDateString()}
-                    </p>
-                  </div>
-                </motion.div>
+                  <p className="font-bold text-green-400">+${transaction.amount}</p>
+                </div>
               ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Referral Card */}
+        <ReferralCard 
+          referralCount={referrals.length}
+          totalEarnings={referralEarnings}
+        />
+      </div>
+
+
 
       {/* Payout Info */}
       <Card className="bg-zinc-900 border-zinc-800 mt-6">
