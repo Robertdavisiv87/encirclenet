@@ -20,6 +20,7 @@ const tiers = [
       'Limited posting (5/day)',
       'Basic analytics',
       'Ads displayed',
+      '1x participation earnings',
       'Referral tracking'
     ]
   },
@@ -33,11 +34,11 @@ const tiers = [
     features: [
       'Ad-light experience',
       'Unlimited posting',
-      'Advanced analytics',
-      'Profile customization',
-      'Monetization tools',
+      '3x participation earnings',
+      'Passive income from engagement',
+      'Content royalties',
       '2x referral bonuses',
-      'Video priority'
+      'Monetization dashboard'
     ]
   },
   {
@@ -48,13 +49,13 @@ const tiers = [
     color: 'from-yellow-500 to-orange-500',
     features: [
       'Zero ads',
-      'Priority algorithm',
-      'Paid subscriptions',
-      'AI engagement insights',
-      'Early features',
+      '10x participation earnings',
+      'Maximum passive income',
+      'Lifetime referral network',
+      'Automated revenue streams',
       'Elite badge',
-      '5x referral bonuses',
-      'Revenue share program'
+      '10% platform profit share',
+      'Priority payouts'
     ]
   }
 ];
@@ -107,9 +108,12 @@ export default function Subscription() {
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4 gradient-text">Choose Your Power Level</h1>
-        <p className="text-zinc-400 text-lg">
-          Unlock features, maximize earnings, dominate your niche
+        <h1 className="text-4xl font-bold mb-4 gradient-text">Build Your Passive Income</h1>
+        <p className="text-zinc-300 text-lg mb-2">
+          Get paid automatically for your participation & engagement
+        </p>
+        <p className="text-zinc-400">
+          Higher tiers = Higher % from every like, comment, share & post you make
         </p>
       </div>
 
@@ -210,35 +214,60 @@ export default function Subscription() {
         })}
       </div>
 
-      {/* Revenue Potential */}
-      <Card className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-green-500/30 mt-12">
+      {/* Passive Income Explainer */}
+      <Card className="bg-gradient-to-br from-green-500/20 via-blue-500/20 to-purple-500/20 border-green-400/40 mt-12 shadow-glow-green">
         <CardContent className="p-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-400" />
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center shadow-glow-green">
+              <DollarSign className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold">Revenue Multipliers</h3>
-              <p className="text-sm text-zinc-400">Higher tiers = higher earning potential</p>
+              <h3 className="text-2xl font-bold gradient-text">Automatic Passive Income</h3>
+              <p className="text-sm text-zinc-300">Earn money while you sleep from your participation</p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-black/30 rounded-lg p-4">
-              <p className="text-xs text-zinc-500 mb-2">Free Tier</p>
-              <p className="text-2xl font-bold">1x</p>
-              <p className="text-xs text-zinc-400 mt-1">Standard earnings</p>
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-black/40 rounded-xl p-5 border border-zinc-700">
+              <p className="text-xs text-zinc-400 mb-2">Free Tier</p>
+              <p className="text-3xl font-bold mb-1">1x</p>
+              <p className="text-xs text-zinc-400">$0.01 per engagement</p>
             </div>
-            <div className="bg-black/30 rounded-lg p-4 ring-2 ring-purple-500/30">
-              <p className="text-xs text-zinc-500 mb-2">Pro Tier</p>
-              <p className="text-2xl font-bold text-purple-400">2x</p>
-              <p className="text-xs text-zinc-400 mt-1">Double referral bonuses</p>
+            <div className="bg-black/40 rounded-xl p-5 border-2 border-purple-500/50 shadow-glow-blue">
+              <p className="text-xs text-purple-300 mb-2">Pro Tier</p>
+              <p className="text-3xl font-bold text-purple-400 mb-1">3x</p>
+              <p className="text-xs text-zinc-300">$0.05 per engagement + royalties</p>
             </div>
-            <div className="bg-black/30 rounded-lg p-4 ring-2 ring-yellow-500/30">
-              <p className="text-xs text-zinc-500 mb-2">Elite Tier</p>
-              <p className="text-2xl font-bold text-yellow-400">5x</p>
-              <p className="text-xs text-zinc-400 mt-1">Maximum earning power</p>
+            <div className="bg-black/40 rounded-xl p-5 border-2 border-orange-500/50 shadow-glow-orange">
+              <p className="text-xs text-orange-300 mb-2">Elite Tier</p>
+              <p className="text-3xl font-bold text-orange-400 mb-1">10x</p>
+              <p className="text-xs text-zinc-300">$0.10 per engagement + full passive income</p>
             </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-purple-500/10 to-orange-500/10 rounded-xl p-6 border border-purple-400/30">
+            <h4 className="font-bold mb-3 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-yellow-400" />
+              How It Works
+            </h4>
+            <ul className="space-y-2 text-sm text-zinc-300">
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <span>Every like, comment, share, and post you make earns you money</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <span>Your content continues earning views & engagement while you sleep</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <span>Referrals earn you 10% of their earnings, forever</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <span>Elite members get 10% profit share from entire platform revenue</span>
+              </li>
+            </ul>
           </div>
         </CardContent>
       </Card>
