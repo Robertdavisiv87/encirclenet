@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DollarSign, TrendingUp, Users, Download, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
+import AdminProtection from '../components/auth/AdminProtection';
 
 export default function AdminRevenue() {
   const [user, setUser] = useState(null);
@@ -21,21 +22,6 @@ export default function AdminRevenue() {
     };
     loadUser();
   }, []);
-
-  // Only allow admin access
-  if (user && user.role !== 'admin') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card className="max-w-md">
-          <CardContent className="p-8 text-center">
-            <Lock className="w-16 h-16 mx-auto mb-4 text-red-500" />
-            <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
-            <p className="text-zinc-400">Only administrators can access this page.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   const { data: allRevenue } = useQuery({
     queryKey: ['admin-revenue'],
@@ -96,6 +82,7 @@ export default function AdminRevenue() {
   };
 
   return (
+    <AdminProtection>
     <div className="max-w-6xl mx-auto p-6">
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -185,5 +172,6 @@ export default function AdminRevenue() {
         </CardContent>
       </Card>
     </div>
+    </AdminProtection>
   );
 }

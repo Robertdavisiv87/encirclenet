@@ -12,9 +12,12 @@ import {
   Compass,
   DollarSign,
   TrendingUp,
-  Trophy
+  Trophy,
+  Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const ADMIN_EMAIL = 'robertdavisiv87@gmail.com';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -42,8 +45,9 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Profile', icon: User, page: 'Profile' },
   ];
 
-  const adminItems = user?.role === 'admin' ? [
-    { name: 'Admin', icon: DollarSign, page: 'Admin' },
+  // Only show admin items to robertdavisiv87@gmail.com
+  const adminItems = user?.email === ADMIN_EMAIL ? [
+    { name: 'Admin', icon: Shield, page: 'Admin' },
     { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' }
   ] : [];
 

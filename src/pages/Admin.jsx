@@ -196,5 +196,6 @@ export default function Admin() {
         </Card>
       </div>
     </div>
+    </AdminProtection>
   );
 }
