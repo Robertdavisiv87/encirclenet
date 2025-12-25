@@ -10,7 +10,8 @@ import {
   Edit,
   Link as LinkIcon,
   DollarSign,
-  LogOut
+  LogOut,
+  Crown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
