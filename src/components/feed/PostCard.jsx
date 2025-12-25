@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import ViralIndicator from '../discovery/ViralIndicator';
 
 export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -59,6 +60,11 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     setTimeout(() => setShowHeart(false), 1000);
   };
 
+  // Determine if post is viral
+  const isViral = likesCount > 100;
+  const isTrending = likesCount > 50 && likesCount <= 100;
+  const isHot = likesCount > 20 && likesCount <= 50;
+
   const handleTip = async () => {
     if (!currentUser) return;
     await base44.entities.Transaction.create({
@@ -104,6 +110,15 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         className="relative"
         onDoubleClick={handleDoubleClick}
       >
+        {/* Viral Indicator */}
+        {(isViral || isTrending || isHot) && (
+          <div className="absolute top-3 left-3 z-10">
+            <ViralIndicator 
+              type={isViral ? 'viral' : isTrending ? 'trending' : 'hot'}
+              count={likesCount}
+            />
+          </div>
+        )}
         {post.content_type === 'photo' && post.media_url && (
           <img 
             src={post.media_url} 

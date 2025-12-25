@@ -5,9 +5,9 @@ import PostCard from '../components/feed/PostCard';
 import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
+import TrendingRibbon from '../components/feed/TrendingRibbon';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const mockAds = [
   { id: 'ad1', type: 'ppc', title: 'Premium Fitness App', description: 'Get fit in 30 days. Join 1M+ users today!', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop', url: 'https://example.com', cta: 'Start Free Trial', value: 0.5 },
@@ -136,6 +136,9 @@ export default function Home() {
       <div className="border-b border-zinc-800">
         <StoryBar currentUser={user} />
       </div>
+
+      {/* Trending Ribbon */}
+      <TrendingRibbon onSelectTrend={(trend) => console.log('Selected:', trend)} />
 
       {/* Feed */}
       <div className="p-4">
