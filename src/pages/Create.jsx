@@ -1,0 +1,254 @@
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { 
+  Image, 
+  Video, 
+  Mic, 
+  Type, 
+  X, 
+  Upload, 
+  Sparkles,
+  Hash,
+  Zap
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+
+const contentTypes = [
+  { id: 'photo', icon: Image, label: 'Photo', color: 'from-pink-500 to-rose-500' },
+  { id: 'video', icon: Video, label: 'Video', color: 'from-purple-500 to-indigo-500' },
+  { id: 'voice', icon: Mic, label: 'Voice', color: 'from-blue-500 to-cyan-500' },
+  { id: 'text', icon: Type, label: 'Text', color: 'from-orange-500 to-yellow-500' },
+];
+
+export default function Create() {
+  const [user, setUser] = useState(null);
+  const [contentType, setContentType] = useState('photo');
+  const [caption, setCaption] = useState('');
+  const [tags, setTags] = useState('');
+  const [isRawMode, setIsRawMode] = useState(false);
+  const [mediaFile, setMediaFile] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        // Redirect to login if not authenticated
+      }
+    };
+    loadUser();
+  }, []);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setMediaFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMediaPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!user) return;
+    setIsLoading(true);
+
+    try {
+      let mediaUrl = null;
+      
+      if (mediaFile) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file: mediaFile });
+        mediaUrl = file_url;
+      }
+
+      const tagArray = tags
+        .split(',')
+        .map(t => t.trim().replace('#', ''))
+        .filter(t => t.length > 0);
+
+      await base44.entities.Post.create({
+        content_type: contentType,
+        media_url: mediaUrl,
+        caption: caption,
+        author_name: user.full_name || 'Anonymous',
+        author_avatar: user.avatar,
+        tags: tagArray,
+        is_raw_mode: isRawMode,
+        likes_count: 0,
+        comments_count: 0,
+        tips_received: 0
+      });
+
+      // Navigate to home
+      window.location.href = createPageUrl('Home');
+    } catch (error) {
+      console.error('Error creating post:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-lg mx-auto p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold">Create VibePosts</h1>
+        <Button
+          onClick={handleSubmit}
+          disabled={isLoading || (!caption && !mediaFile)}
+          className="bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90"
+        >
+          {isLoading ? (
+            <span className="animate-pulse">Posting...</span>
+          ) : (
+            <>
+              <Zap className="w-4 h-4 mr-2" />
+              Share
+            </>
+          )}
+        </Button>
+      </div>
+
+      {/* Content Type Selector */}
+      <div className="grid grid-cols-4 gap-3 mb-8">
+        {contentTypes.map(type => (
+          <motion.button
+            key={type.id}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setContentType(type.id);
+              setMediaFile(null);
+              setMediaPreview(null);
+            }}
+            className={cn(
+              "flex flex-col items-center gap-2 p-4 rounded-xl transition-all",
+              contentType === type.id
+                ? `bg-gradient-to-br ${type.color} text-white`
+                : "bg-zinc-900 text-zinc-400 hover:text-white"
+            )}
+          >
+            <type.icon className="w-6 h-6" />
+            <span className="text-xs font-medium">{type.label}</span>
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Media Upload */}
+      {contentType !== 'text' && (
+        <div className="mb-6">
+          {mediaPreview ? (
+            <div className="relative rounded-xl overflow-hidden">
+              {contentType === 'photo' && (
+                <img src={mediaPreview} alt="Preview" className="w-full aspect-square object-cover" />
+              )}
+              {contentType === 'video' && (
+                <video src={mediaPreview} className="w-full aspect-square object-cover" controls />
+              )}
+              {contentType === 'voice' && (
+                <div className="w-full aspect-video bg-zinc-900 flex items-center justify-center">
+                  <audio src={mediaPreview} controls />
+                </div>
+              )}
+              <button
+                onClick={() => {
+                  setMediaFile(null);
+                  setMediaPreview(null);
+                }}
+                className="absolute top-4 right-4 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <label className="block">
+              <div className="border-2 border-dashed border-zinc-700 rounded-xl p-12 text-center cursor-pointer hover:border-purple-500 transition-colors">
+                <Upload className="w-12 h-12 mx-auto mb-4 text-zinc-500" />
+                <p className="text-zinc-400 mb-2">
+                  Click to upload {contentType}
+                </p>
+                <p className="text-xs text-zinc-600">
+                  {contentType === 'photo' && 'JPG, PNG, GIF up to 10MB'}
+                  {contentType === 'video' && 'MP4, MOV up to 100MB'}
+                  {contentType === 'voice' && 'MP3, WAV up to 10MB'}
+                </p>
+              </div>
+              <input
+                type="file"
+                className="hidden"
+                accept={
+                  contentType === 'photo' ? 'image/*' :
+                  contentType === 'video' ? 'video/*' :
+                  'audio/*'
+                }
+                onChange={handleFileChange}
+              />
+            </label>
+          )}
+        </div>
+      )}
+
+      {/* Caption */}
+      <div className="mb-6">
+        <Label className="text-zinc-400 mb-2 block">
+          {contentType === 'text' ? 'Your Thoughts' : 'Caption'}
+        </Label>
+        <Textarea
+          placeholder={contentType === 'text' 
+            ? "Express yourself freely..." 
+            : "Add a caption..."
+          }
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+          className={cn(
+            "bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 resize-none",
+            contentType === 'text' ? "min-h-[200px]" : "min-h-[100px]"
+          )}
+        />
+      </div>
+
+      {/* Tags */}
+      <div className="mb-6">
+        <Label className="text-zinc-400 mb-2 block">
+          <Hash className="w-4 h-4 inline mr-1" />
+          Tags
+        </Label>
+        <Input
+          placeholder="lifestyle, thoughts, creative (comma separated)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600"
+        />
+      </div>
+
+      {/* Raw Mode Toggle */}
+      <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <p className="font-medium">Raw Mode</p>
+            <p className="text-xs text-zinc-500">No filters, no pretending. Just real.</p>
+          </div>
+        </div>
+        <Switch
+          checked={isRawMode}
+          onCheckedChange={setIsRawMode}
+        />
+      </div>
+    </div>
+  );
+}
