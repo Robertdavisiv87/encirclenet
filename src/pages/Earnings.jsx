@@ -22,6 +22,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import ReferralCard from '../components/monetization/ReferralCard';
 import TierBadge from '../components/monetization/TierBadge';
+import PassiveIncomeCard from '../components/monetization/PassiveIncomeCard';
 
 export default function Earnings() {
   const [user, setUser] = useState(null);
@@ -97,14 +98,19 @@ export default function Earnings() {
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2 gradient-text">Earnings Dashboard</h1>
-          <p className="text-zinc-500">Track your revenue streams and maximize your earnings</p>
+          <h1 className="text-3xl font-bold mb-2 gradient-text">Passive Income Dashboard</h1>
+          <p className="text-zinc-300">Earn automatically from your participation & engagement</p>
         </div>
         <TierBadge tier={userTier} size="md" />
       </div>
 
+      {/* Passive Income Explainer */}
+      <div className="mb-6">
+        <PassiveIncomeCard userTier={userTier} />
+      </div>
+
       {/* Top Section - Total Earnings with Trend */}
-      <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/30 mb-6">
+      <Card className="bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-green-500/20 border-purple-400/40 mb-6 shadow-glow">
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
