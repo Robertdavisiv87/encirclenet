@@ -12,6 +12,8 @@ import TrendingSection from '../components/explore/TrendingSection';
 import TrendingRibbon from '../components/feed/TrendingRibbon';
 import NicheCard from '../components/explore/NicheCard';
 import CreatorLeaderboard from '../components/leaderboard/CreatorLeaderboard';
+import TrendingTabs from '../components/explore/TrendingTabs';
+import InteractivePost from '../components/explore/InteractivePost';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
 
@@ -20,6 +22,8 @@ export default function Explore() {
   const [user, setUser] = useState(null);
   const [selectedTrend, setSelectedTrend] = useState(null);
   const [selectedNiche, setSelectedNiche] = useState(null);
+  const [activeTab, setActiveTab] = useState('fitness');
+  const [userSubscription, setUserSubscription] = useState(null);
 
   const niches = [
     { id: 'fitness', name: 'Fitness & Health', description: 'Workouts, training tips, and fitness journeys', postCount: 2456 },
@@ -34,6 +38,13 @@ export default function Explore() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Load subscription
+        const subs = await base44.entities.Subscription.filter({
+          user_email: currentUser.email,
+          status: 'active'
+        });
+        setUserSubscription(subs[0]);
       } catch (e) {}
     };
     loadUser();
@@ -95,6 +106,22 @@ export default function Explore() {
       .slice(0, 10);
   }, []);
 
+  // Filter posts by active tab theme
+  const tabPosts = useMemo(() => {
+    const themeMap = {
+      fitness: 'workout',
+      nutrition: 'nutrition',
+      professional: 'professional',
+      lifestyle: 'wellness',
+      tech: 'professional',
+      viral: 'workout'
+    };
+    const theme = themeMap[activeTab];
+    return allPosts.filter(p => p.theme === theme).slice(0, 20);
+  }, [allPosts, activeTab]);
+
+  const userTier = userSubscription?.tier || 'free';
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -112,12 +139,17 @@ export default function Explore() {
           </div>
         </div>
         <TrendingRibbon onSelectTrend={setSelectedTrend} />
+        <TrendingTabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab.id)} />
       </div>
 
       <div className="p-4">
 
-      <Tabs defaultValue="niches" className="w-full">
+      <Tabs defaultValue="feed" className="w-full">
         <TabsList className="w-full bg-zinc-900 mb-6 overflow-x-auto">
+          <TabsTrigger value="feed" className="flex-1">
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Feed
+          </TabsTrigger>
           <TabsTrigger value="niches" className="flex-1">
             <Sparkles className="w-4 h-4 mr-2" />
             Niches
@@ -135,6 +167,18 @@ export default function Explore() {
             Circles
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="feed">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tabPosts.map((post) => (
+              <InteractivePost
+                key={post.id}
+                post={post}
+                userTier={userTier}
+              />
+            ))}
+          </div>
+        </TabsContent>
 
         <TabsContent value="niches">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
