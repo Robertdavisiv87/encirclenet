@@ -6,6 +6,8 @@ import Earnings from './pages/Earnings';
 import Profile from './pages/Profile';
 import Subscription from './pages/Subscription';
 import Admin from './pages/Admin';
+import Analytics from './pages/Analytics';
+import Gamification from './pages/Gamification';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +20,8 @@ export const PAGES = {
     "Profile": Profile,
     "Subscription": Subscription,
     "Admin": Admin,
+    "Analytics": Analytics,
+    "Gamification": Gamification,
 }
 
 export const pagesConfig = {

@@ -18,6 +18,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import TierBadge from '../components/monetization/TierBadge';
+import BadgeShowcase from '../components/gamification/BadgeShowcase';
+import StreakDisplay from '../components/gamification/StreakDisplay';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -70,6 +72,22 @@ export default function Profile() {
         status: 'active'
       });
       return subs[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: badges } = useQuery({
+    queryKey: ['profile-badges', user?.email],
+    queryFn: () => base44.entities.Badge.filter({ user_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const { data: userStats } = useQuery({
+    queryKey: ['profile-stats', user?.email],
+    queryFn: async () => {
+      const stats = await base44.entities.UserStats.filter({ user_email: user?.email });
+      return stats[0] || null;
     },
     enabled: !!user?.email
   });
@@ -160,8 +178,25 @@ export default function Profile() {
                 {user.website}
               </a>
             )}
-          </div>
-        </div>
+
+            {/* Gamification Stats */}
+            {userStats && (
+              <div className="mt-4 space-y-3">
+                <StreakDisplay 
+                  currentStreak={userStats.current_streak || 0}
+                  longestStreak={userStats.longest_streak || 0}
+                  size="sm"
+                />
+                {badges.length > 0 && (
+                  <div>
+                    <p className="text-xs text-zinc-500 mb-2">Badges Earned</p>
+                    <BadgeShowcase badges={badges} maxDisplay={5} />
+                  </div>
+                )}
+              </div>
+            )}
+            </div>
+            </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-6">

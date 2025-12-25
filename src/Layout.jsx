@@ -10,7 +10,9 @@ import {
   User, 
   MessageCircle,
   Compass,
-  DollarSign
+  DollarSign,
+  TrendingUp,
+  Trophy
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -35,6 +37,8 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'Messages', icon: MessageCircle, page: 'Messages' },
     { name: 'Earnings', icon: DollarSign, page: 'Earnings' },
+    { name: 'Rewards', icon: Trophy, page: 'Gamification' },
+    { name: 'Analytics', icon: TrendingUp, page: 'Analytics' },
     { name: 'Profile', icon: User, page: 'Profile' },
   ];
 
@@ -117,7 +121,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-zinc-800 z-50">
         <div className="flex justify-around items-center h-16">
-          {navItems.slice(0, 5).map((item) => (
+          {[navItems[0], navItems[1], navItems[2], navItems[5], navItems[7]].map((item) => (
             <Link
               key={item.name}
               to={createPageUrl(item.page)}
