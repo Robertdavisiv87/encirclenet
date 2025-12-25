@@ -208,17 +208,21 @@ export default function Onboarding() {
 
             {step === 3 && (
               <div className="grid gap-4 max-w-md mx-auto mb-8">
-                <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-xl p-4 border border-purple-500/30">
-                  <p className="font-semibold mb-1">Referral Program</p>
-                  <p className="text-sm text-zinc-400">Earn $5 per friend who signs up</p>
+                <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-4 border border-purple-400/40">
+                  <p className="font-semibold mb-1">💸 Engagement Revenue</p>
+                  <p className="text-sm text-zinc-300">Earn automatically from likes, comments & shares</p>
                 </div>
-                <div className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-xl p-4 border border-blue-500/30">
-                  <p className="font-semibold mb-1">Affiliate Links</p>
-                  <p className="text-sm text-zinc-400">Share products and earn commissions</p>
+                <div className="bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-xl p-4 border border-blue-400/40">
+                  <p className="font-semibold mb-1">🎯 Referral Income</p>
+                  <p className="text-sm text-zinc-300">$5 per signup + 10% of their earnings forever</p>
                 </div>
-                <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl p-4 border border-green-500/30">
-                  <p className="font-semibold mb-1">Sponsored Posts</p>
-                  <p className="text-sm text-zinc-400">Partner with brands (Pro/Elite)</p>
+                <div className="bg-gradient-to-r from-green-500/20 to-orange-500/20 rounded-xl p-4 border border-green-400/40">
+                  <p className="font-semibold mb-1">🚀 Passive Growth</p>
+                  <p className="text-sm text-zinc-300">Your content earns while you sleep (Pro/Elite)</p>
+                </div>
+                <div className="bg-gradient-to-r from-orange-500/20 to-purple-500/20 rounded-xl p-4 border border-orange-400/40">
+                  <p className="font-semibold mb-1">💎 Tiered Bonuses</p>
+                  <p className="text-sm text-zinc-300">Higher tiers = higher % from participation</p>
                 </div>
               </div>
             )}
