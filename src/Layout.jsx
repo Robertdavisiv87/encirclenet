@@ -47,8 +47,7 @@ export default function Layout({ children, currentPageName }) {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-black text-white"
-
+    <div className="min-h-screen bg-black text-white">
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-black border-r border-zinc-800 flex-col p-6 z-50">
         <Link to={createPageUrl('Home')} className="mb-10 group">
