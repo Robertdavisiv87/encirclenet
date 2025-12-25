@@ -63,7 +63,7 @@ export default function Home() {
       {/* Header */}
       <div className="sticky top-0 bg-black/90 backdrop-blur-lg z-40 border-b border-zinc-800">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-2xl font-bold gradient-text">CircleNet</h1>
+          <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -87,7 +87,7 @@ export default function Home() {
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
               <span className="text-4xl">🌟</span>
             </div>
-            <h3 className="text-xl font-bold mb-2">Welcome to CircleNet!</h3>
+            <h3 className="text-xl font-bold mb-2">Welcome to EncircleNet!</h3>
             <p className="text-zinc-500 mb-6">
               Your feed is empty. Start creating content or follow others to see posts.
             </p>
