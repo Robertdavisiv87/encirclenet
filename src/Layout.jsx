@@ -43,7 +43,8 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const adminItems = user?.role === 'admin' ? [
-    { name: 'Admin', icon: DollarSign, page: 'Admin' }
+    { name: 'Admin', icon: DollarSign, page: 'Admin' },
+    { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' }
   ] : [];
 
   return (

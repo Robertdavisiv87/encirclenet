@@ -9,6 +9,7 @@ import Messages from './pages/Messages';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Subscription from './pages/Subscription';
+import AdminRevenue from './pages/AdminRevenue';
 import __Layout from './Layout.jsx';
 
 
@@ -24,6 +25,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Subscription": Subscription,
+    "AdminRevenue": AdminRevenue,
 }
 
 export const pagesConfig = {

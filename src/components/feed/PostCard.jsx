@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic, Lock } from 'lucide-react';
+import MonetizationEligibility from '../monetization/MonetizationEligibility';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -13,6 +14,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [showTipModal, setShowTipModal] = useState(false);
   const [tipAmount, setTipAmount] = useState(5);
   const [showHeart, setShowHeart] = useState(false);
+  const [userSubscription, setUserSubscription] = useState(null);
 
   useEffect(() => {
     const checkLike = async () => {
@@ -23,6 +25,13 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           user_email: currentUser.email
         });
         setIsLiked(likes.length > 0);
+
+        // Check user subscription tier
+        const subs = await base44.entities.Subscription.filter({
+          user_email: currentUser.email,
+          status: 'active'
+        });
+        setUserSubscription(subs[0]);
       } catch (e) {}
     };
     checkLike();
@@ -67,6 +76,12 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
 
   const handleTip = async () => {
     if (!currentUser) return;
+
+    const userTier = userSubscription?.tier || 'free';
+    if (userTier === 'free') {
+      return; // Blocked by MonetizationEligibility component
+    }
+
     await base44.entities.Transaction.create({
       from_email: currentUser.email,
       from_name: currentUser.full_name,
@@ -79,6 +94,9 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     setShowTipModal(false);
     onTip && onTip(post.id, tipAmount);
   };
+
+  const userTier = userSubscription?.tier || 'free';
+  const canMonetize = userTier === 'pro' || userTier === 'elite';
 
   return (
     <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden mb-4 card-depth-2 hover-lift">
@@ -180,12 +198,18 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             <button className="hover:opacity-70 transition-opacity">
               <Send className="w-7 h-7" />
             </button>
-            <button 
-              onClick={() => setShowTipModal(true)}
-              className="hover:opacity-70 transition-opacity ml-2"
-            >
-              <DollarSign className="w-7 h-7 text-yellow-500" />
-            </button>
+            {canMonetize ? (
+              <button 
+                onClick={() => setShowTipModal(true)}
+                className="hover:opacity-70 transition-opacity ml-2"
+              >
+                <DollarSign className="w-7 h-7 text-yellow-500" />
+              </button>
+            ) : (
+              <button className="hover:opacity-70 transition-opacity ml-2 opacity-50">
+                <Lock className="w-6 h-6 text-zinc-500" />
+              </button>
+            )}
           </div>
           <button className="hover:opacity-70 transition-opacity">
             <Bookmark className="w-7 h-7" />
@@ -214,9 +238,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             💰 ${post.tips_received} earned from this post
           </p>
         )}
-      </div>
+        </div>
 
-      {/* Tip Modal */}
+        {/* Monetization Eligibility Notice */}
+        {!canMonetize && (
+        <MonetizationEligibility userTier={userTier} feature="tips" />
+        )}
+
+        {/* Tip Modal */}
       <AnimatePresence>
         {showTipModal && (
           <motion.div

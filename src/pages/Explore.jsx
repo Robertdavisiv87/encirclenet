@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Grid3X3, Users, Flame, TrendingUp, Crown } from 'lucide-react';
+import { Search, Grid3X3, Users, Flame, TrendingUp, Crown, Dumbbell, Utensils, Briefcase, Home as HomeIcon, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
@@ -10,12 +10,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import TrendingSection from '../components/explore/TrendingSection';
 import TrendingRibbon from '../components/feed/TrendingRibbon';
+import NicheCard from '../components/explore/NicheCard';
+import CreatorLeaderboard from '../components/leaderboard/CreatorLeaderboard';
 import { mockPosts } from '../components/data/mockPosts';
+import { mockUsers } from '../components/data/mockUsers';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
   const [selectedTrend, setSelectedTrend] = useState(null);
+  const [selectedNiche, setSelectedNiche] = useState(null);
+
+  const niches = [
+    { id: 'fitness', name: 'Fitness & Health', description: 'Workouts, training tips, and fitness journeys', postCount: 2456 },
+    { id: 'nutrition', name: 'Nutrition & Cooking', description: 'Healthy recipes, meal prep, and nutrition guides', postCount: 1832 },
+    { id: 'professional', name: 'Professional Growth', description: 'Career tips, entrepreneurship, and business insights', postCount: 1623 },
+    { id: 'remote', name: 'Remote Work', description: 'Work-from-home tips, productivity, and digital nomad life', postCount: 1245 },
+    { id: 'lifestyle', name: 'Lifestyle & Hobbies', description: 'Creative pursuits, self-care, and personal development', postCount: 2178 },
+  ];
 
   useEffect(() => {
     const loadUser = async () => {
@@ -69,6 +81,20 @@ export default function Explore() {
     post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  // Top creators for leaderboard
+  const topCreatorsByEngagement = useMemo(() => {
+    return mockUsers
+      .sort((a, b) => (b.followers || 0) - (a.followers || 0))
+      .slice(0, 10);
+  }, []);
+
+  const topCreatorsByEarnings = useMemo(() => {
+    return mockUsers
+      .filter(u => u.tier === 'pro' || u.tier === 'elite')
+      .sort((a, b) => (b.total_earned || 0) - (a.total_earned || 0))
+      .slice(0, 10);
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -90,17 +116,39 @@ export default function Explore() {
 
       <div className="p-4">
 
-      <Tabs defaultValue="posts" className="w-full">
-        <TabsList className="w-full bg-zinc-900 mb-6">
+      <Tabs defaultValue="niches" className="w-full">
+        <TabsList className="w-full bg-zinc-900 mb-6 overflow-x-auto">
+          <TabsTrigger value="niches" className="flex-1">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Niches
+          </TabsTrigger>
           <TabsTrigger value="posts" className="flex-1">
             <Grid3X3 className="w-4 h-4 mr-2" />
             Posts
+          </TabsTrigger>
+          <TabsTrigger value="leaderboard" className="flex-1">
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Leaderboard
           </TabsTrigger>
           <TabsTrigger value="circles" className="flex-1">
             <Users className="w-4 h-4 mr-2" />
             Circles
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="niches">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {niches.map((niche) => (
+              <NicheCard
+                key={niche.id}
+                niche={niche}
+                trending={niche.postCount > 2000}
+                activeUsers={Math.floor(niche.postCount * 0.3)}
+                onClick={() => setSelectedNiche(niche)}
+              />
+            ))}
+          </div>
+        </TabsContent>
 
         <TabsContent value="posts">
           {searchQuery ? (
@@ -164,6 +212,19 @@ export default function Explore() {
               />
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="leaderboard">
+          <div className="space-y-6">
+            <CreatorLeaderboard 
+              creators={topCreatorsByEngagement}
+              type="engagement"
+            />
+            <CreatorLeaderboard 
+              creators={topCreatorsByEarnings}
+              type="earnings"
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="circles">
