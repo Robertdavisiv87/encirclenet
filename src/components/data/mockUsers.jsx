@@ -19,6 +19,14 @@ const bios = [
 export function generateMockUsers(count = 1000) {
   const users = [];
   
+  // Real profile photo IDs from Unsplash (diverse, professional headshots)
+  const profilePhotoIds = [
+    'rDEOVtE7vOs', 'ILip77SbmOE', '6anudmpILw4', 'sibVwORYqs0', 'mEZ3PoFGs_k',
+    'WNoLnJo7tS8', 'd2MSDujJl2g', 'pAtA8xe_iVM', '7YVZYZeITc8', 'ZHvM3XIOHoE',
+    'jmURdhtm7Ng', 'qCrocisvGwc', 'L1ZhjK-R6p4', 'jztjlOyKBOY', 'N390KQdCGWY',
+    'vpOeXr5wmR4', '2_3c4dIFYFU', 'mTkXSSScrzw', 'w2DsS-ZAP4U', 'c_GmwfHBDzk'
+  ];
+  
   for (let i = 0; i < count; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
@@ -26,11 +34,15 @@ export function generateMockUsers(count = 1000) {
     const tierWeights = { free: 0.6, pro: 0.3, elite: 0.1 };
     const actualTier = Math.random() < tierWeights.free ? 'free' : Math.random() < 0.75 ? 'pro' : 'elite';
     
+    // Cycle through real profile photos
+    const photoId = profilePhotoIds[i % profilePhotoIds.length];
+    const avatarUrl = `https://images.unsplash.com/photo-${photoId}?w=200&h=200&fit=crop&crop=faces`;
+    
     users.push({
       id: `user_${i + 1}`,
       full_name: `${firstName} ${lastName}`,
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@encirclenet.com`,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName}${lastName}${i}`,
+      avatar: avatarUrl,
       bio: bios[Math.floor(Math.random() * bios.length)],
       tier: actualTier,
       followers: Math.floor(Math.random() * 10000) + 100,
