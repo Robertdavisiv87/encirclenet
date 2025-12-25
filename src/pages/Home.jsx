@@ -4,8 +4,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PostCard from '../components/feed/PostCard';
 import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
-import { Loader2, RefreshCw } from 'lucide-react';
+import TikTokFeed from '../components/feed/TikTokFeed';
+import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const mockAds = [
   { id: 'ad1', type: 'ppc', title: 'Premium Fitness App', description: 'Get fit in 30 days. Join 1M+ users today!', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop', url: 'https://example.com', cta: 'Start Free Trial', value: 0.5 },
@@ -14,6 +16,7 @@ const mockAds = [
 
 export default function Home() {
   const [user, setUser] = useState(null);
+  const [feedMode, setFeedMode] = useState('classic'); // classic or tiktok
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -21,6 +24,11 @@ export default function Home() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check if onboarding is complete
+        if (!currentUser.onboarding_completed && currentUser.email) {
+          window.location.href = '/onboarding';
+        }
       } catch (e) {}
     };
     loadUser();
@@ -58,20 +66,69 @@ export default function Home() {
     );
   }
 
+  if (feedMode === 'tiktok') {
+    return (
+      <div className="relative">
+        {/* Floating Header */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
+          <div className="flex items-center justify-between max-w-lg mx-auto">
+            <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
+            <div className="flex gap-2">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setFeedMode('classic')}
+                className="text-zinc-400 hover:text-white"
+              >
+                <Grid3X3 className="w-5 h-5" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleRefresh}
+                className="text-zinc-400 hover:text-white"
+              >
+                <RefreshCw className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <TikTokFeed 
+          posts={posts}
+          currentUser={user}
+          onLike={() => queryClient.invalidateQueries(['posts'])}
+          onTip={() => queryClient.invalidateQueries(['posts'])}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-lg mx-auto">
       {/* Header */}
       <div className="sticky top-0 bg-black/90 backdrop-blur-lg z-40 border-b border-zinc-800">
         <div className="flex items-center justify-between p-4">
           <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handleRefresh}
-            className="text-zinc-400 hover:text-white"
-          >
-            <RefreshCw className="w-5 h-5" />
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setFeedMode('tiktok')}
+              className="text-zinc-400 hover:text-white"
+              title="TikTok Mode"
+            >
+              <LayoutGrid className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleRefresh}
+              className="text-zinc-400 hover:text-white"
+            >
+              <RefreshCw className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </div>
 

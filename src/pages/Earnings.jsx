@@ -21,6 +21,7 @@ import TierBadge from '../components/monetization/TierBadge';
 
 export default function Earnings() {
   const [user, setUser] = useState(null);
+  const [timeframe, setTimeframe] = useState('all'); // all, month, week
 
   useEffect(() => {
     const loadUser = async () => {
