@@ -62,6 +62,43 @@ export default function CreatorEconomy() {
     enabled: !!user?.email
   });
 
+  // Fetch circles
+  const { data: circles = [] } = useQuery({
+    queryKey: ['user-circles', user?.email],
+    queryFn: () => base44.entities.Circle.filter({ owner_email: user?.email }),
+    enabled: !!user?.email
+  });
+
+  // Fetch brand campaigns
+  const { data: brandAccount } = useQuery({
+    queryKey: ['brand-account', user?.email],
+    queryFn: async () => {
+      const accounts = await base44.entities.BrandAccount.filter({ owner_email: user?.email });
+      return accounts[0];
+    },
+    enabled: !!user?.email
+  });
+
+  // Fetch transactions for tips
+  const { data: tipTransactions = [] } = useQuery({
+    queryKey: ['tip-transactions', user?.email],
+    queryFn: () => base44.entities.Transaction.filter({ 
+      receiver_email: user?.email,
+      transaction_type: 'tip'
+    }),
+    enabled: !!user?.email
+  });
+
+  // Fetch subscriptions
+  const { data: subscriptions = [] } = useQuery({
+    queryKey: ['user-subscriptions', user?.email],
+    queryFn: () => base44.entities.Subscription.filter({ 
+      creator_email: user?.email,
+      status: 'active'
+    }),
+    enabled: !!user?.email
+  });
+
   const handleCopyReferralLink = () => {
     const referralCode = `CREATOR${user?.email?.slice(0, 4).toUpperCase()}`;
     const referralLink = `${window.location.origin}?ref=${referralCode}`;
@@ -192,20 +229,34 @@ export default function CreatorEconomy() {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid grid-cols-4 w-full max-w-2xl bg-white border-2 border-gray-200 p-1 rounded-xl shadow-md">
-          <TabsTrigger value="overview" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="affiliate" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
-            Affiliates
-          </TabsTrigger>
-          <TabsTrigger value="referrals" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
-            Referrals
-          </TabsTrigger>
-          <TabsTrigger value="shop" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
-            Shop
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="inline-flex w-full min-w-max bg-white border-2 border-gray-200 p-1 rounded-xl shadow-md">
+            <TabsTrigger value="overview" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="tips" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Tips
+            </TabsTrigger>
+            <TabsTrigger value="subscriptions" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Subscriptions
+            </TabsTrigger>
+            <TabsTrigger value="affiliate" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Affiliates
+            </TabsTrigger>
+            <TabsTrigger value="referrals" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Referrals
+            </TabsTrigger>
+            <TabsTrigger value="shop" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Shop
+            </TabsTrigger>
+            <TabsTrigger value="brands" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Brands
+            </TabsTrigger>
+            <TabsTrigger value="circles" className="data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+              Circles
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview">
           <MultiStreamDashboard earnings={earnings} />
@@ -409,6 +460,320 @@ export default function CreatorEconomy() {
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Setup Your Shop
+                  </Button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="tips">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Tips & Donations</h3>
+                  <p className="text-gray-600">Receive direct support from your fans</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-glow">
+                  <DollarSign className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                  <p className="text-sm text-gray-600 mb-1">Total Tips</p>
+                  <p className="text-3xl font-bold text-green-900">
+                    ${tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0).toFixed(2)}
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                  <p className="text-sm text-gray-600 mb-1">Tips Received</p>
+                  <p className="text-3xl font-bold text-blue-900">{tipTransactions.length}</p>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                  <p className="text-sm text-gray-600 mb-1">Avg Tip</p>
+                  <p className="text-3xl font-bold text-purple-900">
+                    ${tipTransactions.length > 0 
+                      ? (tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0) / tipTransactions.length).toFixed(2)
+                      : '0.00'
+                    }
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6">
+                <h4 className="font-bold text-blue-900 mb-3">How to Maximize Tips</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Create valuable, engaging content consistently
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Respond to comments and build community
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Share exclusive behind-the-scenes content
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Mention tip options in your posts
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="subscriptions">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Subscriptions</h3>
+                  <p className="text-gray-600">Recurring revenue from loyal fans</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-glow">
+                  <Crown className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                  <p className="text-sm text-gray-600 mb-1">Active Subscribers</p>
+                  <p className="text-3xl font-bold text-purple-900">{subscriptions.length}</p>
+                </div>
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                  <p className="text-sm text-gray-600 mb-1">Monthly Revenue</p>
+                  <p className="text-3xl font-bold text-blue-900">
+                    ${subscriptions.reduce((sum, s) => sum + (s.price || 0), 0).toFixed(2)}
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                  <p className="text-sm text-gray-600 mb-1">Annual Projection</p>
+                  <p className="text-3xl font-bold text-green-900">
+                    ${(subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 12).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6">
+                <h4 className="font-bold text-blue-900 mb-3">Grow Your Subscriber Base</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    Offer exclusive content to subscribers only
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    Create tiered subscription levels
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    Host subscriber-only live sessions
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                    Provide early access to new content
+                  </li>
+                </ul>
+              </div>
+
+              <Button 
+                onClick={() => navigate(createPageUrl('Profile'))}
+                className="w-full mt-4 gradient-bg-primary text-white shadow-glow"
+              >
+                Manage Subscription Settings
+              </Button>
+            </div>
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="brands">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Brand Partnerships</h3>
+                  <p className="text-gray-600">Monetize with PPC campaigns</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-glow">
+                  <Zap className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              {brandAccount ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                      <p className="text-sm text-gray-600 mb-1">Active Campaigns</p>
+                      <p className="text-3xl font-bold text-blue-900">{brandAccount.active_campaigns || 0}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                      <p className="text-sm text-gray-600 mb-1">Total Earned</p>
+                      <p className="text-3xl font-bold text-green-900">${(brandAccount.total_spent || 0).toFixed(2)}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-4 border-2 border-orange-200">
+                      <p className="text-sm text-gray-600 mb-1">Budget</p>
+                      <p className="text-3xl font-bold text-orange-900">${(brandAccount.campaign_budget || 0).toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  <Button className="w-full gradient-bg-primary text-white shadow-glow">
+                    View Active Campaigns
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-6">
+                    Join brand campaigns to earn money through clicks, leads, and sales
+                  </p>
+                  <div className="bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
+                    <h4 className="font-bold text-blue-900 mb-3">Campaign Types</h4>
+                    <ul className="space-y-2 text-sm text-gray-700 text-left max-w-md mx-auto">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                        CPC (Cost Per Click) - Earn per click
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                        CPA (Cost Per Action) - Earn per lead/signup
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                        CPS (Cost Per Sale) - Earn commission on sales
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                        CPM (Cost Per Mille) - Earn per 1000 views
+                      </li>
+                    </ul>
+                  </div>
+                  <Button 
+                    onClick={() => toast({
+                      title: "Coming Soon",
+                      description: "Brand partnership program launching soon!"
+                    })}
+                    className="gradient-bg-primary text-white shadow-glow"
+                  >
+                    Join Brand Program
+                  </Button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </TabsContent>
+
+        <TabsContent value="circles">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Premium Circles</h3>
+                  <p className="text-gray-600">Monetize exclusive communities</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-glow">
+                  <Users className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              {circles.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-200">
+                      <p className="text-sm text-gray-600 mb-1">Your Circles</p>
+                      <p className="text-3xl font-bold text-indigo-900">{circles.length}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                      <p className="text-sm text-gray-600 mb-1">Total Members</p>
+                      <p className="text-3xl font-bold text-blue-900">
+                        {circles.reduce((sum, c) => sum + (c.members_count || 0), 0)}
+                      </p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                      <p className="text-sm text-gray-600 mb-1">Monthly Revenue</p>
+                      <p className="text-3xl font-bold text-green-900">
+                        ${circles.reduce((sum, c) => sum + ((c.subscription_price || 0) * (c.members_count || 0)), 0).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Circle List */}
+                  <div className="space-y-3">
+                    {circles.map((circle) => (
+                      <div key={circle.id} className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300 rounded-xl p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-bold text-blue-900">{circle.name}</h4>
+                            <p className="text-sm text-gray-600">{circle.members_count || 0} members</p>
+                          </div>
+                          <div className="text-right">
+                            {circle.is_premium && (
+                              <p className="font-bold text-green-900">${circle.subscription_price}/mo</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Button 
+                    onClick={() => navigate(createPageUrl('MyCircle'))}
+                    className="w-full gradient-bg-primary text-white shadow-glow"
+                  >
+                    Manage Circles
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-6">
+                    Create premium circles and earn recurring revenue from your community
+                  </p>
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-300 rounded-xl p-6 mb-6">
+                    <h4 className="font-bold text-blue-900 mb-3">Circle Benefits</h4>
+                    <ul className="space-y-2 text-sm text-gray-700 text-left max-w-md mx-auto">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Charge monthly subscription fees
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Build exclusive communities
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Share premium content with members
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Keep 90% of subscription revenue
+                      </li>
+                    </ul>
+                  </div>
+                  <Button 
+                    onClick={() => navigate(createPageUrl('MyCircle'))}
+                    className="gradient-bg-primary text-white shadow-glow"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Your First Circle
                   </Button>
                 </div>
               )}
