@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { X, Upload, Image as ImageIcon, Video } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, Video, Camera, StopCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
@@ -9,6 +9,12 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [contentType, setContentType] = useState('photo');
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedChunks, setRecordedChunks] = useState([]);
+  
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const streamRef = useRef(null);
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -22,6 +28,59 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
       setPreview(reader.result);
     };
     reader.readAsDataURL(file);
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: true, 
+        audio: true 
+      });
+      
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp8,opus'
+      });
+      
+      mediaRecorderRef.current = mediaRecorder;
+      const chunks = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const file = new File([blob], 'recorded-video.webm', { type: 'video/webm' });
+        setSelectedFile(file);
+        setContentType('video');
+        setPreview(URL.createObjectURL(blob));
+        setIsRecording(false);
+        
+        // Stop all tracks
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+        }
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      alert('Camera access denied or not available');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+    }
   };
 
   const handlePost = async () => {
@@ -73,8 +132,30 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
             </div>
 
             <div className="p-6">
-              {!preview ? (
+              {isRecording ? (
                 <div>
+                  <div className="relative rounded-xl overflow-hidden mb-4 bg-black">
+                    <video 
+                      ref={videoRef}
+                      className="w-full max-h-96 object-contain"
+                      autoPlay
+                      muted
+                    />
+                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 animate-pulse">
+                      <span className="w-2 h-2 bg-white rounded-full"></span>
+                      REC
+                    </div>
+                  </div>
+                  <Button
+                    onClick={stopRecording}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    <StopCircle className="w-5 h-5 mr-2" />
+                    Stop Recording
+                  </Button>
+                </div>
+              ) : !preview ? (
+                <div className="space-y-4">
                   <input
                     type="file"
                     accept="image/*,video/*"
@@ -90,6 +171,20 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
                     <p className="text-sm font-medium text-gray-700 mb-2">Upload Photo or Video</p>
                     <p className="text-xs text-gray-500">Click to select a file</p>
                   </label>
+
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-px bg-gray-300"></div>
+                    <span className="text-xs text-gray-500">OR</span>
+                    <div className="flex-1 h-px bg-gray-300"></div>
+                  </div>
+
+                  <Button
+                    onClick={startRecording}
+                    className="w-full gradient-bg-primary text-white shadow-glow"
+                  >
+                    <Camera className="w-5 h-5 mr-2" />
+                    Record Live Video
+                  </Button>
                 </div>
               ) : (
                 <div>

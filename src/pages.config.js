@@ -8,11 +8,11 @@ import Explore from './pages/Explore';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Messages from './pages/Messages';
+import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import Subscription from './pages/Subscription';
-import MyCircle from './pages/MyCircle';
 import ViewProfile from './pages/ViewProfile';
 import __Layout from './Layout.jsx';
 
@@ -28,11 +28,11 @@ export const PAGES = {
     "Gamification": Gamification,
     "Home": Home,
     "Messages": Messages,
+    "MyCircle": MyCircle,
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Referrals": Referrals,
     "Subscription": Subscription,
-    "MyCircle": MyCircle,
     "ViewProfile": ViewProfile,
 }
 
