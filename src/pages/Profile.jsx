@@ -356,9 +356,8 @@ export default function Profile() {
                     <video 
                       src={post.media_url} 
                       className="w-full h-full object-cover"
-                      muted
+                      controls
                       playsInline
-                      preload="metadata"
                     />
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
