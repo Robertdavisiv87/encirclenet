@@ -188,7 +188,7 @@ export default function Explore() {
               placeholder="Search posts, people, tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 bg-white border-gray-300 h-12 rounded-xl text-gray-900 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-all"
+              className="pl-12 bg-white border-2 border-gray-300 h-12 rounded-xl text-blue-900 placeholder:text-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-300 transition-all realistic-shadow"
             />
           </div>
         </div>
@@ -261,28 +261,28 @@ export default function Explore() {
       )}
 
       <Tabs defaultValue="feed" className="w-full">
-        <TabsList className="w-full bg-gradient-to-r from-purple-50 to-blue-50 mb-6 overflow-x-auto shadow-md">
-          <TabsTrigger value="feed" className="flex-1">
+        <TabsList className="w-full bg-white border-2 border-gray-200 mb-6 overflow-x-auto realistic-shadow">
+          <TabsTrigger value="feed" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <TrendingUp className="w-4 h-4 mr-2" />
             Feed
           </TabsTrigger>
-          <TabsTrigger value="niches" className="flex-1">
+          <TabsTrigger value="niches" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <Sparkles className="w-4 h-4 mr-2" />
             Niches
           </TabsTrigger>
-          <TabsTrigger value="posts" className="flex-1">
+          <TabsTrigger value="posts" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <Grid3X3 className="w-4 h-4 mr-2" />
             Posts
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="flex-1">
+          <TabsTrigger value="leaderboard" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <Crown className="w-4 h-4 mr-2" />
             Leaderboard
           </TabsTrigger>
-          <TabsTrigger value="circles" className="flex-1">
+          <TabsTrigger value="circles" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <Users className="w-4 h-4 mr-2" />
             Circles
           </TabsTrigger>
-          <TabsTrigger value="creators" className="flex-1">
+          <TabsTrigger value="creators" className="flex-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white">
             <Briefcase className="w-4 h-4 mr-2" />
             Creators
           </TabsTrigger>
