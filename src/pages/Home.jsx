@@ -5,7 +5,6 @@ import PostCard from '../components/feed/PostCard';
 import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
-import TrendingRibbon from '../components/feed/TrendingRibbon';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
@@ -28,11 +27,11 @@ export default function Home() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
-        // Check if onboarding is complete
-        if (!currentUser.onboarding_completed && currentUser.email) {
-          window.location.href = '/onboarding';
-          return;
-        }
+        // Check if onboarding is complete - skip this check for now
+        // if (!currentUser.onboarding_completed && currentUser.email) {
+        //   window.location.href = '/onboarding';
+        //   return;
+        // }
 
         // Show grow prompt on first login or every 3 days
         const lastPromptDate = localStorage.getItem('lastGrowPromptDate');
@@ -165,9 +164,6 @@ export default function Home() {
       <div className="border-b border-gray-200 bg-white">
         <StoryBar currentUser={user} />
       </div>
-
-      {/* Trending Ribbon - Commented out for now */}
-      {/* <TrendingRibbon onSelectTrend={(trend) => console.log('Selected:', trend)} /> */}
 
       {/* Feed */}
       <div className="p-4">
