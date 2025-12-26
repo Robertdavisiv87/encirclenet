@@ -35,17 +35,21 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
   }, [src]);
 
   const handleClick = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     const video = videoRef.current;
     if (!video || hasError) return;
 
     if (video.paused) {
-      video.play().catch(err => {
+      video.play().then(() => {
+        setIsPlaying(true);
+      }).catch(err => {
         console.error('Play error:', err);
         setHasError(true);
       });
     } else {
       video.pause();
+      setIsPlaying(false);
     }
   };
 
@@ -69,7 +73,8 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         src={src}
         className="w-full h-full object-contain"
         playsInline
-        preload="metadata"
+        preload="auto"
+        poster={src ? src.replace(/\.(mp4|mov|webm)$/, '-thumbnail.jpg') : ''}
       />
       
       {!isPlaying && (
