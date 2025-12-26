@@ -101,7 +101,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const canMonetize = userTier === 'pro' || userTier === 'elite';
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-4 realistic-shadow realistic-shadow-hover tap-feedback">
+    <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl overflow-hidden mb-4 realistic-shadow realistic-shadow-hover tap-feedback">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div 
