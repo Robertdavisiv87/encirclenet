@@ -40,7 +40,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Explore', icon: Compass, page: 'Explore' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'Messages', icon: MessageCircle, page: 'Messages' },
-    { name: 'Earnings', icon: DollarSign, page: 'Earnings' },
+    { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
     { name: 'Rewards', icon: Trophy, page: 'Gamification' },
     { name: 'Analytics', icon: TrendingUp, page: 'Analytics' },
     { name: 'Profile', icon: User, page: 'Profile' },
