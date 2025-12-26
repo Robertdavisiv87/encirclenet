@@ -9,13 +9,15 @@ import { motion } from 'framer-motion';
 export default function RemoteJobsSection() {
   const [category, setCategory] = useState('all');
 
-  const { data: jobsData, isLoading, refetch } = useQuery({
+  const { data: jobsData, isLoading, refetch, error } = useQuery({
     queryKey: ['remote-jobs', category],
     queryFn: async () => {
       const response = await base44.functions.invoke('fetchRemoteJobs', { category });
       return response.data;
     },
     staleTime: 1000 * 60 * 15, // 15 minutes
+    retry: 2,
+    retryDelay: 1000
   });
 
   const jobs = jobsData?.jobs || [];
@@ -73,7 +75,25 @@ export default function RemoteJobsSection() {
       {/* Loading State */}
       {isLoading && (
         <div className="flex justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+          <div className="text-center">
+            <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-3" />
+            <p className="text-blue-900 font-medium">Finding remote jobs...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && !isLoading && (
+        <div className="text-center py-20">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h3 className="text-xl font-bold mb-2 text-blue-900">Error Loading Jobs</h3>
+          <p className="text-gray-600 mb-4">We couldn't load job listings right now.</p>
+          <Button onClick={() => refetch()} className="gradient-bg-primary text-white shadow-glow">
+            <Loader2 className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
         </div>
       )}
 
