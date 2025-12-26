@@ -154,18 +154,30 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <div className="relative w-full aspect-square bg-black">
+          <div className="relative w-full aspect-square bg-black" onClick={(e) => e.stopPropagation()}>
             <video 
+              key={post.media_url}
               src={post.media_url} 
               className="w-full h-full object-contain"
               controls
+              controlsList="nodownload"
               playsInline
-              preload="metadata"
+              preload="auto"
+              onLoadedMetadata={(e) => {
+                console.log('Video loaded:', post.media_url, 'Duration:', e.target.duration);
+              }}
               onError={(e) => {
-                console.error('Video load error:', e);
-                console.error('Video URL:', post.media_url);
+                console.error('Video error:', {
+                  error: e.target.error,
+                  url: post.media_url,
+                  networkState: e.target.networkState,
+                  readyState: e.target.readyState
+                });
               }}
             >
+              <source src={post.media_url} type="video/mp4" />
+              <source src={post.media_url} type="video/quicktime" />
+              <source src={post.media_url} type="video/webm" />
               Your browser does not support video playback.
             </video>
           </div>
