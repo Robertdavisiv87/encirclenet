@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import CreateStoryModal from '../story/CreateStoryModal';
 
 const mockStories = [
   { id: 1, name: 'Your Story', avatar: null, isOwn: true },
@@ -13,10 +14,17 @@ const mockStories = [
 ];
 
 export default function StoryBar({ currentUser }) {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
   return (
-    <div className="flex gap-4 overflow-x-auto py-4 px-2 scrollbar-hide">
-      {mockStories.map((story, index) => (
-        <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
+    <>
+      <div className="flex gap-4 overflow-x-auto py-4 px-2 scrollbar-hide">
+        {mockStories.map((story, index) => (
+          <div 
+            key={story.id} 
+            className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer"
+            onClick={() => story.isOwn && setShowCreateModal(true)}
+          >
           <div className={cn(
             "relative p-[2px] rounded-full",
             story.hasNew && !story.isOwn && "bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400"
@@ -39,8 +47,15 @@ export default function StoryBar({ currentUser }) {
           <span className="text-xs text-zinc-400 truncate w-16 text-center">
             {story.isOwn ? 'Your Story' : story.name}
           </span>
-        </div>
-      ))}
-    </div>
+          </div>
+        ))}
+      </div>
+
+      <CreateStoryModal 
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        currentUser={currentUser}
+      />
+    </>
   );
 }
