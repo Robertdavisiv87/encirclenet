@@ -83,13 +83,12 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
 
   return (
     <div 
-      className={`${className} ${aspectClasses[aspectRatio]} relative bg-black cursor-pointer group overflow-hidden`}
-      onClick={togglePlayPause}
+      className={`${className} ${aspectClasses[aspectRatio]} relative bg-black group overflow-hidden`}
     >
       <video
         ref={videoRef}
         src={src}
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain cursor-pointer"
         playsInline
         preload="metadata"
         webkit-playsinline="true"
@@ -107,12 +106,12 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
-          className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all"
+          className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all pointer-events-none"
         >
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className="w-20 h-20 rounded-full bg-white/95 flex items-center justify-center shadow-2xl"
+            className="w-20 h-20 rounded-full bg-white/95 flex items-center justify-center shadow-2xl pointer-events-none"
           >
             <Play className="w-10 h-10 text-purple-600 ml-1" fill="currentColor" />
           </motion.div>

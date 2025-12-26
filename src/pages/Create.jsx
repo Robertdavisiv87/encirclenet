@@ -268,6 +268,7 @@ export default function Create() {
         title="Create & Share Content - EncircleNet | Monetize Your Posts"
         description="Create and share photos, videos, voice notes, and text posts on EncircleNet. Start earning from your content with tips, boosts, and subscriptions."
         keywords="create content, share posts, monetize content, creator tools, post content, earn from posts, social media creator"
+        url="https://encirclenet.net/create"
       />
       {/* Header */}
       <div className="flex items-center justify-between mb-8">

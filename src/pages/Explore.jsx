@@ -178,6 +178,7 @@ export default function Explore() {
         title="Explore Trending Content - EncircleNet | Discover Viral Posts & Top Creators"
         description="Explore trending niches, viral posts, and top creators on EncircleNet. Discover fitness, lifestyle, business content and more on the most engaging social platform."
         keywords="explore social media, trending content, viral posts, top creators, social media discovery, trending niches, influencer content, engaging posts"
+        url="https://encirclenet.net/explore"
       />
       {/* Header */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-lg">
