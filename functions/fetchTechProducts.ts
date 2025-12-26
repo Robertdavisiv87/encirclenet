@@ -28,20 +28,22 @@ Deno.serve(async (req) => {
 
     const prompt = `Find the latest ${searchQuery} currently available on major platforms like Amazon, Best Buy, Newegg, B&H Photo, and other major tech retailers.
 
+CRITICAL: For product images, use ONLY real product-specific images that EXACTLY match the product name. Search for actual product images.
+
 For each product, provide:
-- product_name: Full product name
-- description: Brief 2-3 sentence description highlighting key features
-- price: Current price in USD (number only)
-- original_price: Original price before discount if on sale
-- image_url: Use a realistic product image URL from unsplash or similar (actual tech product images)
+- product_name: EXACT full product name with brand and model (e.g., "iPhone 15 Pro Max 256GB", "Sony WH-1000XM5 Headphones")
+- description: Accurate 2-3 sentence description with real specifications
+- price: Real current price in USD (number only)
+- original_price: Real original price before discount if on sale
+- image_url: MUST be a REAL product image URL that EXACTLY matches the product name. Use actual product images from the web, NOT generic tech images. The image MUST show the exact product mentioned.
 - category: One of: smartphones, laptops, tablets, smartwatches, headphones, cameras, gaming, accessories
-- platform: Retailer name (Amazon, Best Buy, etc)
-- product_url: Direct product purchase URL
-- rating: Product rating out of 5
-- reviews_count: Number of reviews
+- platform: Real retailer name (Amazon, Best Buy, etc)
+- product_url: Real direct product purchase URL
+- rating: Real product rating out of 5
+- reviews_count: Real number of reviews
 - is_trending: true if it's a hot/trending item
 
-Return 20 diverse, real tech products that are currently in high demand and trending.`;
+Return 20 diverse REAL tech products with ACCURATE MATCHING product images that are currently in high demand and trending.`;
 
     const products = await base44.integrations.Core.InvokeLLM({
       prompt: prompt,

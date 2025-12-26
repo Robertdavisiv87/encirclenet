@@ -26,19 +26,21 @@ Deno.serve(async (req) => {
 
     const prompt = `Find the latest ${searchQuery} currently posted on job platforms like LinkedIn Jobs, Indeed, ZipRecruiter, FlexJobs, We Work Remotely, Remote.co, Upwork, and other major job boards.
 
+CRITICAL: For each job, provide REAL, WORKING application URLs that directly link to the actual job posting on the platform.
+
 For each job, provide:
-- job_title: The position title
-- company: Company name
-- location: Remote location info
+- job_title: The exact position title as listed on the platform
+- company: Real company name currently hiring
+- location: Remote location info (e.g., "Remote - US", "Remote - Worldwide")
 - job_type: Full-time, Part-time, Contract, or Freelance
-- salary_range: Salary range if available, otherwise "Not disclosed"
-- description: Brief 2-3 sentence job description
-- requirements: Key requirements (2-3 main ones)
-- apply_url: Direct application URL (use the most likely job board URL)
-- posted_date: When posted (e.g., "2 days ago", "1 week ago")
+- salary_range: Real salary range if available, otherwise "Not disclosed"
+- description: Accurate 2-3 sentence job description with real requirements
+- requirements: Real key requirements (2-3 specific ones from the actual job posting)
+- apply_url: REAL, WORKING direct application URL to the actual job posting (must be a valid URL like https://linkedin.com/jobs/view/12345 or https://indeed.com/viewjob?jk=abc123)
+- posted_date: Accurate posting date (e.g., "2 days ago", "1 week ago")
 - category: One of: customer_service, healthcare, it_helpdesk, cloud_infrastructure, admin, freelance, general
 
-Return 20 diverse, real job listings that are actively hiring right now.`;
+Return 20 diverse REAL job listings with VALID application URLs that are actively hiring right now.`;
 
     const jobs = await base44.integrations.Core.InvokeLLM({
       prompt: prompt,
