@@ -74,19 +74,27 @@ export default function InteractivePost({ post, userTier, onLike, onTip }) {
               />
             )}
             {post.media_url && post.content_type === 'video' && (
-              <video
-                src={post.media_url}
-                className="w-full aspect-square object-cover"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                onError={(e) => {
-                  console.error('Video error:', e);
+              <div 
+                className="w-full aspect-square relative cursor-pointer"
+                onClick={(e) => {
+                  const video = e.currentTarget.querySelector('video');
+                  if (video) {
+                    if (video.paused) {
+                      video.play().catch(err => console.error('Play error:', err));
+                    } else {
+                      video.pause();
+                    }
+                  }
                 }}
               >
-                Your browser does not support video playback.
-              </video>
+                <video
+                  className="w-full h-full object-cover"
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src={post.media_url} type="video/mp4" />
+                </video>
+              </div>
             )}
             {!post.media_url && post.content_type === 'text' && (
               <div className="w-full aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-6">
