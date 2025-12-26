@@ -30,6 +30,7 @@ export default function Explore() {
   const [selectedNiche, setSelectedNiche] = useState(null);
   const [activeTab, setActiveTab] = useState('fitness');
   const [userSubscription, setUserSubscription] = useState(null);
+  const [trendFilter, setTrendFilter] = useState('hot');
 
   const niches = [
     { id: 'fitness', name: 'Fitness & Health', description: 'Workouts, training tips, and fitness journeys', postCount: 2456 },
@@ -123,8 +124,50 @@ export default function Explore() {
       viral: 'workout'
     };
     const theme = themeMap[activeTab];
-    return allPosts.filter(p => p.theme === theme).slice(0, 20);
-  }, [allPosts, activeTab]);
+    let filtered = allPosts.filter(p => p.theme === theme);
+
+    // Apply trend filter
+    switch (trendFilter) {
+      case 'hot':
+        // Hot this hour - highest engagement in last hour (simulated by recent + high likes)
+        filtered = filtered
+          .filter(p => p.likes_count > 1500)
+          .sort((a, b) => b.likes_count - a.likes_count);
+        break;
+      case 'trending':
+        // Trending - growing engagement
+        filtered = filtered
+          .filter(p => p.likes_count > 1000 && p.likes_count <= 3000)
+          .sort((a, b) => b.likes_count - a.likes_count);
+        break;
+      case 'value':
+        // Top Value - high comments relative to likes (engagement quality)
+        filtered = filtered
+          .filter(p => p.comments_count > 50)
+          .sort((a, b) => {
+            const valueA = (a.comments_count + a.tips_received) / (a.likes_count || 1);
+            const valueB = (b.comments_count + b.tips_received) / (b.likes_count || 1);
+            return valueB - valueA;
+          });
+        break;
+      case 'rising':
+        // Rising Stars - new creators with good engagement
+        filtered = filtered
+          .filter(p => p.likes_count > 500 && p.likes_count < 1500)
+          .sort((a, b) => b.likes_count - a.likes_count);
+        break;
+      case 'elite':
+        // Elite Content - from elite tier users only
+        filtered = filtered
+          .filter(p => p.user_tier === 'elite')
+          .sort((a, b) => b.likes_count - a.likes_count);
+        break;
+      default:
+        break;
+    }
+
+    return filtered.slice(0, 20);
+  }, [allPosts, activeTab, trendFilter]);
 
   const userTier = userSubscription?.tier || 'free';
 
@@ -149,7 +192,18 @@ export default function Explore() {
             />
           </div>
         </div>
-        <TrendingRibbon onSelectTrend={setSelectedTrend} />
+        <TrendingRibbon onSelectTrend={(topic) => {
+          setSelectedTrend(topic);
+          // Map trend labels to filter keys
+          const filterMap = {
+            'Hot this hour': 'hot',
+            'Trending': 'trending',
+            'Top Value': 'value',
+            'Rising Stars': 'rising',
+            'Elite Content': 'elite'
+          };
+          setTrendFilter(filterMap[topic.label] || 'hot');
+        }} />
         <TrendingTabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab.id)} />
       </div>
 
