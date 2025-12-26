@@ -194,7 +194,6 @@ export default function Explore() {
         </div>
         <TrendingRibbon onSelectTrend={(topic) => {
           setSelectedTrend(topic);
-          // Map trend labels to filter keys
           const filterMap = {
             'Hot this hour': 'hot',
             'Trending': 'trending',
@@ -202,12 +201,64 @@ export default function Explore() {
             'Rising Stars': 'rising',
             'Elite Content': 'elite'
           };
-          setTrendFilter(filterMap[topic.label] || 'hot');
+          const newFilter = filterMap[topic.label] || 'hot';
+          setTrendFilter(newFilter);
+          console.log('Trend selected:', topic.label, 'Filter:', newFilter);
         }} />
         <TrendingTabs activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab.id)} />
       </div>
 
       <div className="p-4">
+
+      {/* Trending Filter Active Indicator */}
+      {selectedTrend && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-glow">
+                {selectedTrend.icon && <selectedTrend.icon className="w-5 h-5 text-white" />}
+              </div>
+              <div>
+                <h3 className="font-bold text-blue-900">
+                  Showing: {selectedTrend.label}
+                </h3>
+                <p className="text-xs text-gray-600">{selectedTrend.tag}</p>
+              </div>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => {
+                setSelectedTrend(null);
+                setTrendFilter('hot');
+              }}
+            >
+              Clear Filter
+            </Button>
+          </div>
+          
+          {/* Filtered Posts Display */}
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tabPosts.length > 0 ? (
+              tabPosts.slice(0, 9).map((post) => (
+                <InteractivePost
+                  key={post.id}
+                  post={post}
+                  userTier={userTier}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8 text-gray-600">
+                <p>No posts match this filter</p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
 
       <Tabs defaultValue="feed" className="w-full">
         <TabsList className="w-full bg-gradient-to-r from-purple-50 to-blue-50 mb-6 overflow-x-auto shadow-md">
