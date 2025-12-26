@@ -210,6 +210,12 @@ export default function Create() {
       const newPost = await base44.entities.Post.create(postData);
       console.log('✅ Post created successfully with ID:', newPost.id, 'Media URL:', newPost.media_url);
 
+      // Invalidate all feed queries to ensure post appears everywhere
+      await Promise.all([
+        base44.entities.Post.list('-created_date', 50), // Refresh home feed
+        base44.entities.Post.list('-likes_count', 50)    // Refresh explore feed
+      ]);
+
       // Update user stats and streak
       const stats = await base44.entities.UserStats.filter({ user_email: user.email });
       const today = new Date().toDateString();

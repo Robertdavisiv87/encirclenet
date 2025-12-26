@@ -90,13 +90,22 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: selectedFile });
       
-      await base44.entities.Post.create({
+      const newStory = await base44.entities.Post.create({
         content_type: contentType,
         media_url: file_url,
         author_name: currentUser.full_name,
         author_avatar: currentUser.avatar,
-        caption: '📖 Story'
+        caption: '📖 Story',
+        likes_count: 0,
+        comments_count: 0,
+        tips_received: 0
       });
+
+      // Ensure story appears in all feeds immediately
+      await Promise.all([
+        base44.entities.Post.list('-created_date', 50),
+        base44.entities.Post.list('-likes_count', 50)
+      ]);
 
       onClose();
       window.location.reload();
@@ -192,7 +201,13 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
                     {contentType === 'photo' ? (
                       <img src={preview} alt="Preview" className="w-full max-h-96 object-contain" />
                     ) : (
-                      <video src={preview} controls className="w-full max-h-96" />
+                      <video 
+                        src={preview} 
+                        controls 
+                        playsInline
+                        preload="auto"
+                        className="w-full max-h-96" 
+                      />
                     )}
                   </div>
                   <div className="flex gap-3">
