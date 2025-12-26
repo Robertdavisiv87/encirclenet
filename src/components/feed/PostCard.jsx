@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic, Lock } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic, Lock, Trash2, Link2, Flag, EyeOff, Share2 } from 'lucide-react';
 import MonetizationEligibility from '../monetization/MonetizationEligibility';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ViralIndicator from '../discovery/ViralIndicator';
@@ -18,6 +25,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [showHeart, setShowHeart] = useState(false);
   const [userSubscription, setUserSubscription] = useState(null);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const checkLike = async () => {
@@ -100,6 +108,45 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
 
   const userTier = userSubscription?.tier || 'free';
   const canMonetize = userTier === 'pro' || userTier === 'elite';
+  const isOwnPost = currentUser && post.created_by === currentUser.email;
+
+  const handleDeletePost = async () => {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return;
+    }
+    
+    setIsDeleting(true);
+    try {
+      await base44.entities.Post.delete(post.id);
+      window.location.reload(); // Refresh to show updated feed
+    } catch (error) {
+      alert('Failed to delete post. Please try again.');
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    const postUrl = `${window.location.origin}?post=${post.id}`;
+    navigator.clipboard.writeText(postUrl);
+    alert('Link copied to clipboard!');
+  };
+
+  const handleShare = async () => {
+    const postUrl = `${window.location.origin}?post=${post.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Check out this post by ${post.author_name}`,
+          text: post.caption || 'Amazing content on Encircle Net!',
+          url: postUrl
+        });
+      } catch (err) {
+        handleCopyLink(); // Fallback to copy
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
 
   return (
     <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl overflow-hidden mb-4 realistic-shadow realistic-shadow-hover tap-feedback">
