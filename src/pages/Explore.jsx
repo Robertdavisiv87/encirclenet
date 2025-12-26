@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Search, Grid3X3, Users, Flame, TrendingUp, Crown, Dumbbell, Utensils, Briefcase, Home as HomeIcon, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -16,8 +16,10 @@ import TrendingTabs from '../components/explore/TrendingTabs';
 import InteractivePost from '../components/explore/InteractivePost';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
+import { motion } from 'framer-motion';
 
 export default function Explore() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
   const [selectedTrend, setSelectedTrend] = useState(null);
@@ -146,7 +148,7 @@ export default function Explore() {
 
       <Tabs defaultValue="feed" className="w-full">
         <TabsList className="w-full bg-gradient-to-r from-purple-50 to-blue-50 mb-6 overflow-x-auto shadow-md">
-          <TabsTrigger value="feed" className="flex-1">
+          <TabsTrigger value="feed" className="flex-1" onClick={() => navigate(createPageUrl('Home'))}>
             <TrendingUp className="w-4 h-4 mr-2" />
             Feed
           </TabsTrigger>
@@ -158,7 +160,7 @@ export default function Explore() {
             <Grid3X3 className="w-4 h-4 mr-2" />
             Posts
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="flex-1">
+          <TabsTrigger value="leaderboard" className="flex-1" onClick={() => navigate(createPageUrl('Gamification'))}>
             <TrendingUp className="w-4 h-4 mr-2" />
             Leaderboard
           </TabsTrigger>
@@ -221,12 +223,21 @@ export default function Explore() {
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
                         <p className="text-sm text-center line-clamp-3 text-blue-900">{post.caption}</p>
                       </div>
+                    ) : post.content_type === 'video' && post.media_url ? (
+                     <video 
+                       src={post.media_url} 
+                       className="w-full h-full object-cover"
+                       autoPlay
+                       muted
+                       loop
+                       playsInline
+                     />
                     ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <span className="text-2xl">
-                          {post.content_type === 'video' ? '🎬' : '🎤'}
-                        </span>
-                      </div>
+                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                       <span className="text-2xl">
+                         {post.content_type === 'video' ? '🎬' : '🎤'}
+                       </span>
+                     </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
                       <span className="text-white font-bold text-lg drop-shadow-lg animate-bounce-in">❤️ {post.likes_count || 0}</span>

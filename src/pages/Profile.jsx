@@ -135,12 +135,34 @@ export default function Profile() {
       {/* Profile Info */}
       <div className="p-6">
         <div className="flex items-start gap-8 mb-6">
-          <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-purple-500/30">
-            <AvatarImage src={user.avatar} />
-            <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-500 text-3xl">
-              {user.full_name?.[0] || user.email?.[0] || 'U'}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="w-24 h-24 md:w-32 md:h-32 ring-4 ring-purple-500/30">
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-500 text-3xl">
+                {user.full_name?.[0] || user.email?.[0] || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <label className="absolute bottom-0 right-0 w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 shadow-lg">
+              <Edit className="w-5 h-5 text-white" />
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    try {
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      await base44.auth.updateMe({ avatar: file_url });
+                      setUser({ ...user, avatar: file_url });
+                    } catch (error) {
+                      console.error('Upload failed:', error);
+                    }
+                  }
+                }}
+              />
+            </label>
+          </div>
 
           <div className="flex-1">
             <div className="flex items-center gap-4 mb-4 flex-wrap">

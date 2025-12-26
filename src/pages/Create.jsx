@@ -64,6 +64,23 @@ export default function Create() {
 
   const handleSubmit = async () => {
     if (!user) return;
+    
+    // Content validation rules
+    const forbiddenWords = ['hate', 'violence', 'spam', 'illegal'];
+    const containsForbidden = forbiddenWords.some(word => 
+      caption.toLowerCase().includes(word)
+    );
+    
+    if (containsForbidden) {
+      alert('Your post contains inappropriate content. Please review our community guidelines.');
+      return;
+    }
+    
+    if (caption.length > 2200) {
+      alert('Caption is too long. Maximum 2200 characters.');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
@@ -96,6 +113,7 @@ export default function Create() {
       window.location.href = createPageUrl('Home');
     } catch (error) {
       console.error('Error creating post:', error);
+      alert('Failed to create post. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -254,6 +272,21 @@ export default function Create() {
           checked={isRawMode}
           onCheckedChange={setIsRawMode}
         />
+      </div>
+
+      {/* Content Guidelines */}
+      <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+        <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-purple-600" />
+          Community Guidelines
+        </h3>
+        <ul className="text-xs text-gray-700 space-y-1">
+          <li>• Be respectful and authentic</li>
+          <li>• No hate speech, harassment, or illegal content</li>
+          <li>• Maximum caption length: 2200 characters</li>
+          <li>• All media uploads are moderated</li>
+          <li>• Protect privacy - yours and others</li>
+        </ul>
       </div>
     </div>
   );

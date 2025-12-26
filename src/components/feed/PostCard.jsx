@@ -149,6 +149,10 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             src={post.media_url} 
             className="w-full aspect-square object-cover"
             controls
+            autoPlay
+            muted
+            loop
+            playsInline
           />
         )}
         {post.content_type === 'voice' && (
