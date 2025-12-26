@@ -51,15 +51,87 @@ export default function Create() {
     loadUser();
   }, []);
 
-  const handleFileChange = (e) => {
+  const validateContent = async (file, type) => {
+    // File size limits
+    const maxSizes = {
+      photo: 10 * 1024 * 1024, // 10MB
+      video: 100 * 1024 * 1024, // 100MB
+      voice: 10 * 1024 * 1024 // 10MB
+    };
+
+    if (file.size > maxSizes[type]) {
+      const sizeMB = (maxSizes[type] / (1024 * 1024)).toFixed(0);
+      throw new Error(`File too large. Maximum ${sizeMB}MB for ${type}.`);
+    }
+
+    // Format validation
+    const validFormats = {
+      photo: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
+      video: ['video/mp4', 'video/quicktime', 'video/webm'],
+      voice: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg']
+    };
+
+    if (!validFormats[type].includes(file.type)) {
+      throw new Error(`Invalid format. Please upload a valid ${type} file.`);
+    }
+
+    // Video duration check
+    if (type === 'video') {
+      return new Promise((resolve, reject) => {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+        video.onloadedmetadata = () => {
+          window.URL.revokeObjectURL(video.src);
+          if (video.duration > 180) { // 3 minutes max
+            reject(new Error('Video too long. Maximum 3 minutes allowed.'));
+          } else if (video.duration < 1) {
+            reject(new Error('Video too short or corrupted. Please try again.'));
+          } else {
+            resolve();
+          }
+        };
+        video.onerror = () => reject(new Error('Unable to load video. File may be corrupted.'));
+        video.src = URL.createObjectURL(file);
+      });
+    }
+
+    // Image validation
+    if (type === 'photo') {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width < 100 || img.height < 100) {
+            reject(new Error('Image too small. Minimum 100x100 pixels required.'));
+          } else {
+            resolve();
+          }
+        };
+        img.onerror = () => reject(new Error('Unable to load image. File may be corrupted.'));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    return Promise.resolve();
+  };
+
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    try {
+      // Validate content
+      await validateContent(file, contentType);
+      
+      // If valid, set file and preview
       setMediaFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setMediaPreview(reader.result);
       };
       reader.readAsDataURL(file);
+    } catch (error) {
+      alert(error.message);
+      e.target.value = ''; // Clear input
     }
   };
 
