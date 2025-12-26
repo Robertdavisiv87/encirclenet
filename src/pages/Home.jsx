@@ -114,6 +114,7 @@ export default function Home() {
         <SEO 
           title="Encircle Net Feed - Viral Content & High Engagement Social Media"
           description="Discover trending posts, viral content, and connect with top creators on Encircle Net. The most engaging social media platform with real-time interactions."
+          url="https://encirclenet.net"
         />
         <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
         {/* Floating Header */}
@@ -164,6 +165,7 @@ export default function Home() {
         title="Encircle Net - #1 High Engagement Social Media Platform | Earn While You Share"
         description="Join 1M+ creators on Encircle Net, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
         keywords="high engagement social media, best social media platform 2025, earn money online, content creator platform, social media with highest engagement, monetize content, influencer platform, creator economy"
+        url="https://encirclenet.net"
       />
       <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
       {/* Header */}
