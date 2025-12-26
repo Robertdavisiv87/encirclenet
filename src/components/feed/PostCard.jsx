@@ -160,7 +160,13 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               className="w-full h-full object-contain"
               controls
               playsInline
-              preload="metadata"
+              preload="auto"
+              controlsList="nodownload"
+              onError={(e) => {
+                console.error('Video load error:', e);
+                console.error('Video URL:', post.media_url);
+              }}
+              onLoadedData={() => console.log('Video loaded successfully')}
             />
           </div>
         )}

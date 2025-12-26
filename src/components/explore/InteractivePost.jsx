@@ -79,7 +79,9 @@ export default function InteractivePost({ post, userTier, onLike, onTip }) {
                 className="w-full aspect-square object-cover"
                 controls
                 playsInline
-                preload="metadata"
+                preload="auto"
+                controlsList="nodownload"
+                onError={(e) => console.error('Video error:', post.media_url, e)}
               />
             )}
             {!post.media_url && post.content_type === 'text' && (

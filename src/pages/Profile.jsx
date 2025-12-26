@@ -358,8 +358,10 @@ export default function Profile() {
                       className="w-full h-full object-cover"
                       controls
                       playsInline
-                      preload="metadata"
+                      preload="auto"
+                      controlsList="nodownload"
                       onClick={(e) => e.stopPropagation()}
+                      onError={(e) => console.error('Video error:', e)}
                     />
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
