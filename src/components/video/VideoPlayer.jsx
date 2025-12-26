@@ -47,18 +47,21 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     };
   }, [src]);
 
-  const togglePlayPause = (e) => {
-    e.stopPropagation();
+  const togglePlayPause = async (e) => {
+    e?.stopPropagation();
+    e?.preventDefault();
     const video = videoRef.current;
     if (!video) return;
 
-    if (video.paused) {
-      video.play().catch(err => {
-        console.error('Failed to play video:', err);
-        setHasError(true);
-      });
-    } else {
-      video.pause();
+    try {
+      if (video.paused) {
+        await video.play();
+      } else {
+        video.pause();
+      }
+    } catch (err) {
+      console.error('Failed to toggle playback:', err);
+      setHasError(true);
     }
   };
 
@@ -88,8 +91,9 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         src={src}
         className="w-full h-full object-contain"
         playsInline
-        preload="auto"
+        preload="metadata"
         webkit-playsinline="true"
+        onClick={togglePlayPause}
       />
       
       {isLoading && (
