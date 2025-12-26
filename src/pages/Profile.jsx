@@ -13,6 +13,7 @@ import {
   LogOut,
   Crown
 } from 'lucide-react';
+import moment from 'moment';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -366,11 +367,44 @@ export default function Profile() {
         </TabsContent>
 
         <TabsContent value="voice" className="mt-0">
-          <div className="text-center py-20 text-zinc-500">
-            <Mic className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="font-medium mb-2">Voice Notes</p>
-            <p className="text-sm">Your voice posts will appear here</p>
-          </div>
+          {myPosts.filter(p => p.content_type === 'voice').length === 0 ? (
+            <div className="text-center py-20 text-zinc-500">
+              <Mic className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p className="font-medium mb-2">Voice Notes</p>
+              <p className="text-sm">Your voice posts will appear here</p>
+            </div>
+          ) : (
+            <div className="space-y-4 p-4">
+              {myPosts.filter(p => p.content_type === 'voice').map(post => (
+                <div 
+                  key={post.id}
+                  className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                      <Mic className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-blue-900">{post.caption || 'Voice Note'}</p>
+                      <p className="text-xs text-gray-500">{moment(post.created_date).fromNow()}</p>
+                    </div>
+                  </div>
+                  {post.media_url && (
+                    <audio controls className="w-full" src={post.media_url}>
+                      Your browser does not support audio.
+                    </audio>
+                  )}
+                  <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
+                    <span>❤️ {post.likes_count || 0}</span>
+                    <span>💬 {post.comments_count || 0}</span>
+                    {post.tips_received > 0 && (
+                      <span className="text-green-600">💰 ${post.tips_received}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="saved" className="mt-0">
@@ -378,6 +412,12 @@ export default function Profile() {
             <Bookmark className="w-16 h-16 mx-auto mb-4 opacity-50" />
             <p className="font-medium mb-2">Saved Posts</p>
             <p className="text-sm">Save posts to view them later</p>
+            <Button 
+              className="mt-4 gradient-bg-primary text-white shadow-glow"
+              onClick={() => window.location.href = createPageUrl('Explore')}
+            >
+              Explore Posts
+            </Button>
           </div>
         </TabsContent>
       </Tabs>

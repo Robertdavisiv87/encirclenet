@@ -9,7 +9,7 @@ import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell } from 'lucide-react';
-import NotificationBell from '../components/notifications/NotificationBell';
+import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 
 const mockAds = [
