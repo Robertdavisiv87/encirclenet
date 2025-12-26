@@ -195,25 +195,16 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          posts.map((post, index) => (
-            <React.Fragment key={post.id}>
-              <PostCard 
-                post={post} 
-                currentUser={user}
-                onLike={() => queryClient.invalidateQueries(['posts'])}
-                onTip={() => queryClient.invalidateQueries(['posts'])}
-              />
-              {/* Show ad every 6 posts for pro users only */}
-              {userTier === 'pro' && (index + 1) % 6 === 0 && 
-                mockAds[Math.floor(Math.random() * mockAds.length)] && (
-                <AdCard 
-                  ad={mockAds[Math.floor(Math.random() * mockAds.length)]}
-                  userTier={userTier}
-                />
-              )}
-            </React.Fragment>
+          posts.map((post) => (
+            <PostCard 
+              key={post.id}
+              post={post} 
+              currentUser={user}
+              onLike={() => queryClient.invalidateQueries(['posts'])}
+              onTip={() => queryClient.invalidateQueries(['posts'])}
+            />
           ))
-        )}
+          )}
       </div>
     </div>
   );

@@ -102,22 +102,25 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-4 realistic-shadow realistic-shadow-hover tap-feedback">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="w-10 h-10 ring-2 ring-purple-500/50 shadow-glow">
-            <AvatarImage src={post.author_avatar} />
-            <AvatarFallback className="gradient-bg-primary">
-              {post.author_name?.[0] || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          <div>
+        <div 
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => window.location.href = `/viewprofile?email=${post.created_by}`}
+          >
+            <Avatar className="w-10 h-10 ring-2 ring-purple-500/50 shadow-glow">
+              <AvatarImage src={post.author_avatar} />
+              <AvatarFallback className="gradient-bg-primary">
+                {post.author_name?.[0] || 'U'}
+              </AvatarFallback>
+            </Avatar>
             <div>
-              <p className="font-semibold text-sm text-blue-900">{post.author_name}</p>
-              {post.is_raw_mode && (
-                <span className="text-xs text-purple-600 animate-pulse-glow">🔥 Raw Mode</span>
-              )}
+              <div>
+                <p className="font-semibold text-sm text-blue-900">{post.author_name}</p>
+                {post.is_raw_mode && (
+                  <span className="text-xs text-purple-600 animate-pulse-glow">🔥 Raw Mode</span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
         <Button variant="ghost" size="icon" className="text-gray-600">
           <MoreHorizontal className="w-5 h-5" />
         </Button>

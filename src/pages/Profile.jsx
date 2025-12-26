@@ -23,6 +23,7 @@ import StreakDisplay from '../components/gamification/StreakDisplay';
 import SEO from '../components/SEO';
 import EditProfileModal from '../components/profile/EditProfileModal';
 import { createPageUrl } from '../utils';
+import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -233,6 +234,21 @@ export default function Profile() {
             )}
             </div>
             </div>
+
+        {/* Privacy Toggle */}
+        <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4 flex items-center justify-between">
+          <div>
+            <p className="font-semibold text-blue-900 text-sm">Private Account</p>
+            <p className="text-xs text-gray-600">Only followers can see your posts</p>
+          </div>
+          <Switch
+            checked={user?.is_private || false}
+            onCheckedChange={async (checked) => {
+              await base44.auth.updateMe({ is_private: checked });
+              setUser({ ...user, is_private: checked });
+            }}
+          />
+        </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-6">
