@@ -110,6 +110,48 @@ export default function Create() {
         tips_received: 0
       });
 
+      // Update user stats and streak
+      const stats = await base44.entities.UserStats.filter({ user_email: user.email });
+      const today = new Date().toDateString();
+      
+      if (stats.length > 0) {
+        const userStat = stats[0];
+        const lastActivity = userStat.last_activity_date ? new Date(userStat.last_activity_date).toDateString() : null;
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+        
+        let newStreak = userStat.current_streak || 0;
+        
+        // Check if posted today already
+        if (lastActivity !== today) {
+          // Increment streak if posted yesterday, reset if gap
+          if (lastActivity === yesterday) {
+            newStreak += 1;
+          } else if (!lastActivity) {
+            newStreak = 1;
+          } else {
+            newStreak = 1; // Reset streak if gap
+          }
+        }
+        
+        await base44.entities.UserStats.update(userStat.id, {
+          posts_count: (userStat.posts_count || 0) + 1,
+          current_streak: newStreak,
+          longest_streak: Math.max(userStat.longest_streak || 0, newStreak),
+          last_activity_date: today
+        });
+      } else {
+        // Create new stats
+        await base44.entities.UserStats.create({
+          user_email: user.email,
+          posts_count: 1,
+          current_streak: 1,
+          longest_streak: 1,
+          last_activity_date: today,
+          points: 0,
+          level: 1
+        });
+      }
+
       // Navigate to home
       window.location.href = createPageUrl('Home');
     } catch (error) {

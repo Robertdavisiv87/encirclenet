@@ -34,7 +34,7 @@ export default function StreakDisplay({ currentStreak, longestStreak, size = 'md
             "text-zinc-500",
             size === 'sm' ? "text-xs" : "text-sm"
           )}>
-            Current Streak
+            Active Posting
           </p>
         </div>
       </motion.div>
