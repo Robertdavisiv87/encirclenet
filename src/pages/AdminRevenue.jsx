@@ -87,7 +87,6 @@ export default function AdminRevenue() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold gradient-text mb-2">💰 Your Earnings, Your Growth!</h1>
         <p className="text-blue-900 font-medium">Track your total revenue across multiple streams in real-time. Share, post, and engage to boost your earnings automatically!</p>
-        <p className="text-gray-600 text-sm mt-2">Admin: {user?.full_name || 'Robert Davis'}</p>
       </div>
 
       <div className="flex justify-end mb-6">
