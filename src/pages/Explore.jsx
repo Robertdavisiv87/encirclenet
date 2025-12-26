@@ -125,16 +125,16 @@ export default function Explore() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="sticky top-0 bg-black/90 backdrop-blur-lg z-40 border-b border-zinc-800">
+      <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-lg">
         <div className="p-4">
-          <h1 className="text-2xl font-bold gradient-text mb-4">Explore</h1>
+          <h1 className="text-2xl font-bold gradient-text mb-4 animate-shimmer">Explore</h1>
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
             <Input
               placeholder="Search posts, people, tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 bg-zinc-900 border-zinc-800 h-12 rounded-xl text-white placeholder:text-zinc-500"
+              className="pl-12 bg-white border-gray-300 h-12 rounded-xl text-gray-900 placeholder:text-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-all"
             />
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function Explore() {
       <div className="p-4">
 
       <Tabs defaultValue="feed" className="w-full">
-        <TabsList className="w-full bg-zinc-900 mb-6 overflow-x-auto">
+        <TabsList className="w-full bg-gradient-to-r from-purple-50 to-blue-50 mb-6 overflow-x-auto shadow-md">
           <TabsTrigger value="feed" className="flex-1">
             <TrendingUp className="w-4 h-4 mr-2" />
             Feed
@@ -205,9 +205,11 @@ export default function Explore() {
             ) : (
               <div className="grid grid-cols-3 gap-1">
                 {filteredPosts.map(post => (
-                  <div 
+                  <motion.div 
                     key={post.id}
-                    className="aspect-square relative group cursor-pointer overflow-hidden rounded-lg hover-lift"
+                    whileHover={{ scale: 1.05, rotate: 1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl realistic-shadow realistic-shadow-hover"
                   >
                     {post.content_type === 'photo' && post.media_url ? (
                       <img 
@@ -226,10 +228,10 @@ export default function Explore() {
                         </span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                      <span className="text-white font-semibold">❤️ {post.likes_count || 0}</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
+                      <span className="text-white font-bold text-lg drop-shadow-lg animate-bounce-in">❤️ {post.likes_count || 0}</span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )

@@ -99,7 +99,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const canMonetize = userTier === 'pro' || userTier === 'elite';
 
   return (
-    <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden mb-4 card-depth-2 hover-lift">
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-4 realistic-shadow realistic-shadow-hover tap-feedback">
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
@@ -171,12 +171,30 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         <AnimatePresence>
           {showHeart && (
             <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center"
+              initial={{ scale: 0, opacity: 0, rotate: -45 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              exit={{ scale: 0, opacity: 0, rotate: 45 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
             >
-              <Heart className="w-24 h-24 text-red-500 fill-red-500" />
+              <Heart className="w-32 h-32 text-red-500 fill-red-500 drop-shadow-2xl animate-pulse-glow" />
+              {/* Sparkle effects */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1, 0], rotate: 360 }}
+                transition={{ duration: 1 }}
+                className="absolute top-10 left-10 w-6 h-6 text-yellow-400"
+              >
+                ✨
+              </motion.div>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: [0, 1, 0], rotate: -360 }}
+                transition={{ duration: 1, delay: 0.1 }}
+                className="absolute bottom-10 right-10 w-6 h-6 text-yellow-400"
+              >
+                ✨
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -186,10 +204,10 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-4">
-            <button onClick={handleLike} className="hover:opacity-70 transition-opacity">
+            <button onClick={handleLike} className="hover:opacity-70 transition-all hover-scale tap-feedback">
               <Heart className={cn(
-                "w-7 h-7 transition-colors",
-                isLiked ? "text-red-500 fill-red-500" : "text-white"
+                "w-7 h-7 transition-all animate-grow",
+                isLiked ? "text-red-500 fill-red-500 animate-bounce-in" : "text-gray-700"
               )} />
             </button>
             <button className="hover:opacity-70 transition-opacity">
@@ -201,9 +219,10 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             {canMonetize ? (
               <button 
                 onClick={() => setShowTipModal(true)}
-                className="hover:opacity-70 transition-opacity ml-2"
+                className="hover:opacity-70 transition-all ml-2 hover-scale tap-feedback relative"
               >
-                <DollarSign className="w-7 h-7 text-yellow-500" />
+                <DollarSign className="w-7 h-7 text-yellow-500 animate-coin-flip" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
               </button>
             ) : (
               <button className="hover:opacity-70 transition-opacity ml-2 opacity-50">

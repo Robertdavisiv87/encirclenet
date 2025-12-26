@@ -105,21 +105,23 @@ export default function Create() {
     <div className="max-w-lg mx-auto p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Create VibePosts</h1>
-        <Button
-          onClick={handleSubmit}
-          disabled={isLoading || (!caption && !mediaFile)}
-          className="bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90"
-        >
-          {isLoading ? (
-            <span className="animate-pulse">Posting...</span>
-          ) : (
-            <>
-              <Zap className="w-4 h-4 mr-2" />
-              Share
-            </>
-          )}
-        </Button>
+        <h1 className="text-2xl font-bold gradient-text animate-shimmer">Create VibePosts</h1>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button
+            onClick={handleSubmit}
+            disabled={isLoading || (!caption && !mediaFile)}
+            className="bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 shadow-glow hover-glow"
+          >
+            {isLoading ? (
+              <span className="animate-pulse">Posting...</span>
+            ) : (
+              <>
+                <Zap className="w-4 h-4 mr-2 animate-sparkle" />
+                Share
+              </>
+            )}
+          </Button>
+        </motion.div>
       </div>
 
       {/* Content Type Selector */}
@@ -127,6 +129,7 @@ export default function Create() {
         {contentTypes.map(type => (
           <motion.button
             key={type.id}
+            whileHover={{ scale: 1.05, y: -4 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
               setContentType(type.id);
@@ -134,10 +137,10 @@ export default function Create() {
               setMediaPreview(null);
             }}
             className={cn(
-              "flex flex-col items-center gap-2 p-4 rounded-xl transition-all",
+              "flex flex-col items-center gap-2 p-4 rounded-xl transition-all realistic-shadow",
               contentType === type.id
-                ? `bg-gradient-to-br ${type.color} text-white`
-                : "bg-zinc-900 text-zinc-400 hover:text-white"
+                ? `bg-gradient-to-br ${type.color} text-white shadow-glow`
+                : "bg-white text-gray-600 hover:text-gray-900 border border-gray-200"
             )}
           >
             <type.icon className="w-6 h-6" />
@@ -174,17 +177,20 @@ export default function Create() {
             </div>
           ) : (
             <label className="block">
-              <div className="border-2 border-dashed border-zinc-700 rounded-xl p-12 text-center cursor-pointer hover:border-purple-500 transition-colors">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-zinc-500" />
-                <p className="text-zinc-400 mb-2">
+              <motion.div 
+                whileHover={{ scale: 1.02, borderColor: "rgb(168, 85, 247)" }}
+                className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-purple-500 transition-all bg-gradient-to-br from-purple-50 to-blue-50"
+              >
+                <Upload className="w-12 h-12 mx-auto mb-4 text-purple-400 animate-float" />
+                <p className="text-gray-700 mb-2">
                   Click to upload {contentType}
                 </p>
-                <p className="text-xs text-zinc-600">
+                <p className="text-xs text-gray-500">
                   {contentType === 'photo' && 'JPG, PNG, GIF up to 10MB'}
                   {contentType === 'video' && 'MP4, MOV up to 100MB'}
                   {contentType === 'voice' && 'MP3, WAV up to 10MB'}
                 </p>
-              </div>
+              </motion.div>
               <input
                 type="file"
                 className="hidden"
