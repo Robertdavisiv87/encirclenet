@@ -526,6 +526,312 @@ export default function SystemStatus() {
           </ul>
         </CardContent>
       </Card>
+
+      {/* ELITE SYSTEM CHECKLIST */}
+      <div className="mt-8 space-y-6">
+        <h2 className="text-3xl font-bold gradient-text">ELITE SYSTEM CHECKLIST</h2>
+        <p className="text-gray-700 font-semibold">
+          Communication • Streamlining • Integrations • Zero-Error Standard
+        </p>
+
+        {/* What to Say */}
+        <Card className="bg-white border-2 border-blue-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🗣️ WHAT TO SAY (User-Facing Communication Rules)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">Current Beta Messaging</h4>
+              <div className="bg-green-50 border border-green-300 rounded-lg p-4 mb-3">
+                <p className="font-semibold text-green-900 mb-2">State Clearly:</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li>• Earnings are tracked and accruing during beta</li>
+                  <li>• Cash payouts activate once monetization streams go live</li>
+                </ul>
+              </div>
+              <div className="bg-red-50 border border-red-300 rounded-lg p-4 mb-3">
+                <p className="font-semibold text-red-900 mb-2">Avoid:</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li>• Promising instant payouts</li>
+                  <li>• Implying guaranteed income</li>
+                </ul>
+              </div>
+              <div className="bg-purple-50 border border-purple-300 rounded-lg p-4 mb-3">
+                <p className="font-semibold text-purple-900 mb-2">Reinforce:</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li>• Early access = higher future earning potential</li>
+                  <li>• Actions today compound earnings later</li>
+                </ul>
+              </div>
+              <div className="bg-blue-50 border border-blue-300 rounded-lg p-4">
+                <p className="font-semibold text-blue-900 mb-2">Approved Language Example:</p>
+                <p className="text-sm text-gray-700 italic">
+                  "During beta, earnings are tracked and accrued as monetization streams activate. Cash payouts unlock once revenue sources are live."
+                </p>
+                <p className="text-xs text-green-600 mt-2 font-semibold">✅ Honesty builds long-term trust.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* System Streamlining */}
+        <Card className="bg-white border-2 border-purple-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🧭 SYSTEM STREAMLINING (How Everything Should Flow)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">Correct End-to-End Revenue Flow</h4>
+              <ol className="space-y-2 text-sm text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">1.</span>
+                  <span>User action (post, share, invite, subscribe)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">2.</span>
+                  <span>Action is tracked instantly</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">3.</span>
+                  <span>Revenue stream attribution assigned</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">4.</span>
+                  <span>Platform share calculated</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">5.</span>
+                  <span>Creator earnings updated</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">6.</span>
+                  <span>Earnings stored in creator wallet</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="font-bold text-purple-600">7.</span>
+                  <span>Cash Out enabled only when funds exist</span>
+                </li>
+              </ol>
+              <p className="text-xs text-green-600 mt-3 font-semibold">✅ No skipped steps. No invisible jumps.</p>
+            </div>
+
+            <div className="mt-4">
+              <h4 className="font-bold text-blue-900 mb-2">Earnings Display Logic</h4>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>• Total Platform Revenue = sum of all streams</li>
+                <li>• Each stream must show: Gross amount, Platform share %, Net creator earnings</li>
+                <li>• Timestamp shown: "Last updated"</li>
+                <li>• Pending vs Available earnings clearly labeled</li>
+              </ul>
+              <p className="text-xs text-green-600 mt-3 font-semibold">✅ If numbers don't match, the system halts scaling.</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Stream Verification */}
+        <Card className="bg-white border-2 border-green-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🔁 STREAM-BY-STREAM VERIFICATION</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              {
+                name: 'Tips & Boosts',
+                trigger: 'User interaction',
+                track: 'Amount + source',
+                status: 'Instant → Wallet'
+              },
+              {
+                name: 'Affiliate',
+                trigger: 'Click → Conversion',
+                track: 'Clicks even before conversion',
+                status: 'External dashboard → App'
+              },
+              {
+                name: 'Sponsored Posts',
+                trigger: 'Impression / engagement',
+                track: 'Views, clicks, payout terms',
+                status: 'Pending until sponsor funds received'
+              },
+              {
+                name: 'Subscriptions',
+                trigger: 'User payment',
+                track: 'Recurring billing accuracy',
+                status: 'Active / Cancelled / Expired'
+              },
+              {
+                name: 'Referrals',
+                trigger: 'New user activation',
+                track: 'Referrer + lifecycle',
+                status: 'Lock earnings until verification'
+              }
+            ].map((stream, i) => (
+              <div key={i} className="bg-gradient-to-r from-gray-50 to-white border border-gray-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">{stream.name}</h5>
+                <div className="text-xs space-y-1 text-gray-700">
+                  <p><strong>Trigger:</strong> {stream.trigger}</p>
+                  <p><strong>Track:</strong> {stream.track}</p>
+                  <p><strong>Status:</strong> {stream.status}</p>
+                </div>
+              </div>
+            ))}
+            <p className="text-xs text-green-600 mt-3 font-semibold">✅ Each stream must operate independently AND roll up cleanly.</p>
+          </CardContent>
+        </Card>
+
+        {/* UX & Error-Proofing */}
+        <Card className="bg-white border-2 border-yellow-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🎨 UX & ERROR-PROOFING CHECKLIST</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">Visual & Interaction Standards</h4>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li>• One primary CTA per screen</li>
+                <li>• Earnings numbers visually dominant</li>
+                <li>• No grey-on-bright text</li>
+                <li>• Disabled states explained (not silent)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">Empty States (Mandatory)</h4>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li>• "No earnings yet — take action to activate"</li>
+                <li>• "This stream unlocks after posting"</li>
+                <li>• "You're early — growth compounds"</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">Error Handling</h4>
+              <p className="text-sm text-gray-700 mb-2">Errors explain:</p>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li>• What happened</li>
+                <li>• What to do next</li>
+                <li>• No generic "Something went wrong"</li>
+              </ul>
+            </div>
+            <p className="text-xs text-green-600 mt-3 font-semibold">✅ Users should never feel lost.</p>
+          </CardContent>
+        </Card>
+
+        {/* Integrations */}
+        <Card className="bg-white border-2 border-indigo-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🔗 REQUIRED INTEGRATED RESOURCES (Elite Stack)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">Payments & Payouts</h5>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Stripe or PayPal</li>
+                  <li>• Platform balance vs creator wallet</li>
+                  <li>• Payout status tracking</li>
+                </ul>
+              </div>
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">Analytics & Tracking</h5>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• User actions tracking</li>
+                  <li>• Revenue attribution per stream</li>
+                  <li>• Drop-off tracking</li>
+                </ul>
+              </div>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">Security & Trust</h5>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Secure payout indicators</li>
+                  <li>• Data encryption for earnings</li>
+                  <li>• Platform share disclosures</li>
+                </ul>
+              </div>
+              <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">Notifications</h5>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Earnings update alerts</li>
+                  <li>• Cash Out eligibility alerts</li>
+                  <li>• Referral success alerts</li>
+                </ul>
+              </div>
+              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-300 rounded-lg p-4">
+                <h5 className="font-bold text-blue-900 mb-2">Admin Controls</h5>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Manual override (beta safety)</li>
+                  <li>• Stream enable/disable toggles</li>
+                  <li>• Earnings adjustment logs</li>
+                </ul>
+              </div>
+            </div>
+            <p className="text-xs text-green-600 mt-3 font-semibold">✅ If a resource is missing, scale pauses.</p>
+          </CardContent>
+        </Card>
+
+        {/* Beta Testing Validation */}
+        <Card className="bg-white border-2 border-red-300 realistic-shadow">
+          <CardHeader>
+            <CardTitle className="text-blue-900">🧪 BETA TESTING VALIDATION CHECKLIST</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-700 mb-3 font-semibold">Before onboarding more users, confirm:</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                'No earnings miscalculations',
+                'No broken links or dead CTAs',
+                'No confusing payout language',
+                'No silent failures',
+                'All streams report correctly'
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-300 rounded-lg">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <span className="text-sm text-gray-700">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-green-600 mt-4 font-semibold">✅ Beta success = system stability, not hype.</p>
+          </CardContent>
+        </Card>
+
+        {/* Final Elite Standard */}
+        <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 realistic-shadow">
+          <CardContent className="p-8">
+            <h3 className="text-2xl font-bold gradient-text mb-4">✅ FINAL ELITE STANDARD CONFIRMATION</h3>
+            <p className="text-gray-700 mb-4 font-semibold">The platform is considered elite-ready when:</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              {[
+                'Performance feels instant',
+                'Money logic is flawless',
+                'Communication is transparent',
+                'Integrations are synced',
+                'Errors are instructional',
+                'Growth loops are obvious',
+                'Trust is reinforced everywhere'
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 p-3 bg-white/80 backdrop-blur rounded-lg border border-purple-300">
+                  <CheckCircle2 className="w-5 h-5 text-purple-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-blue-900">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-red-700 font-bold bg-red-50 border-2 border-red-300 rounded-lg p-4">
+              If any item fails, resolve before growth.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* System Principle Footer */}
+        <Card className="bg-gradient-to-r from-gray-900 to-blue-900 text-white border-2 border-gray-700 realistic-shadow">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-xl font-bold mb-3">🧠 SYSTEM PRINCIPLE</h3>
+            <p className="text-lg mb-2">
+              This platform prioritizes precision, transparency, and compounding value.
+            </p>
+            <p className="text-sm opacity-90">
+              Every connection must be intentional.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
