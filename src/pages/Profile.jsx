@@ -22,12 +22,14 @@ import BadgeShowcase from '../components/gamification/BadgeShowcase';
 import StreakDisplay from '../components/gamification/StreakDisplay';
 import SEO from '../components/SEO';
 import EditProfileModal from '../components/profile/EditProfileModal';
+import StreakModal from '../components/gamification/StreakModal';
 import { createPageUrl } from '../utils';
 import { Switch } from '@/components/ui/switch';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showStreakModal, setShowStreakModal] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -230,11 +232,16 @@ export default function Profile() {
             {/* Gamification Stats */}
             {userStats && (
               <div className="mt-4 space-y-3">
-                <StreakDisplay 
-                  currentStreak={userStats.current_streak || 0}
-                  longestStreak={userStats.longest_streak || 0}
-                  size="sm"
-                />
+                <div 
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setShowStreakModal(true)}
+                >
+                  <StreakDisplay 
+                    currentStreak={userStats.current_streak || 0}
+                    longestStreak={userStats.longest_streak || 0}
+                    size="sm"
+                  />
+                </div>
                 {badges.length > 0 && (
                   <div>
                     <p className="text-xs text-zinc-500 mb-2">Badges Earned</p>
@@ -376,6 +383,14 @@ export default function Profile() {
           };
           loadUser();
         }}
+      />
+
+      {/* Streak Modal */}
+      <StreakModal 
+        isOpen={showStreakModal}
+        onClose={() => setShowStreakModal(false)}
+        userStats={userStats}
+        posts={myPosts}
       />
     </div>
   );
