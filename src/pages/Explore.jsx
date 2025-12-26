@@ -14,6 +14,7 @@ import NicheCard from '../components/explore/NicheCard';
 import CreatorLeaderboard from '../components/leaderboard/CreatorLeaderboard';
 import TrendingTabs from '../components/explore/TrendingTabs';
 import InteractivePost from '../components/explore/InteractivePost';
+import RemoteJobsSection from '../components/jobs/RemoteJobsSection';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
 import { motion } from 'framer-motion';
@@ -32,7 +33,7 @@ export default function Explore() {
     { id: 'fitness', name: 'Fitness & Health', description: 'Workouts, training tips, and fitness journeys', postCount: 2456 },
     { id: 'nutrition', name: 'Nutrition & Cooking', description: 'Healthy recipes, meal prep, and nutrition guides', postCount: 1832 },
     { id: 'professional', name: 'Professional Growth', description: 'Career tips, entrepreneurship, and business insights', postCount: 1623 },
-    { id: 'remote', name: 'Remote Work', description: 'Work-from-home tips, productivity, and digital nomad life', postCount: 1245 },
+    { id: 'remote', name: 'Work From Home Jobs', description: 'Live remote job listings from 20+ platforms', postCount: 1245, isJobs: true },
     { id: 'lifestyle', name: 'Lifestyle & Hobbies', description: 'Creative pursuits, self-care, and personal development', postCount: 2178 },
   ];
 
@@ -200,6 +201,13 @@ export default function Explore() {
               />
             ))}
           </div>
+
+          {/* Show Jobs Section when Work From Home niche is selected */}
+          {selectedNiche?.isJobs && (
+            <div className="mt-8">
+              <RemoteJobsSection />
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="posts">
