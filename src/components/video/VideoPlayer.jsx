@@ -40,11 +40,16 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     const video = videoRef.current;
     if (!video || hasError) return;
 
+    console.log('Video clicked! Current state:', video.paused ? 'paused' : 'playing');
+
     try {
       if (video.paused) {
+        console.log('Attempting to play video...');
         await video.play();
+        console.log('Video playing!');
         setIsPlaying(true);
       } else {
+        console.log('Pausing video...');
         video.pause();
         setIsPlaying(false);
       }
@@ -88,21 +93,21 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         playsInline
         preload="auto"
         poster={src ? src.replace(/\.(mp4|mov|webm)$/, '-thumbnail.jpg') : ''}
+        onClick={handleClick}
       />
       
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-2xl animate-pulse">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        {!isPlaying && (
+          <div className="w-20 h-20 rounded-full bg-white/95 flex items-center justify-center shadow-2xl animate-pulse">
             <Play className="w-10 h-10 text-purple-600 ml-1" fill="currentColor" />
           </div>
-        </div>
-      )}
-
-      {isPlaying && (
-        <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-          <Pause className="w-5 h-5 text-white" />
-        </div>
-      )}
+        )}
+        {isPlaying && (
+          <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 flex items-center justify-center">
+            <Pause className="w-5 h-5 text-white" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
