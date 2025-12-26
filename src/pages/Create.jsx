@@ -136,7 +136,16 @@ export default function Create() {
   };
 
   const handleSubmit = async () => {
-    if (!user) return;
+    if (!user) {
+      alert('Please sign in to create posts');
+      return;
+    }
+    
+    // Validate that there's content to post
+    if (!caption && !mediaFile) {
+      alert('Please add content or media to your post');
+      return;
+    }
     
     // Content validation rules
     const forbiddenWords = ['hate', 'violence', 'spam', 'illegal'];
@@ -159,9 +168,18 @@ export default function Create() {
     try {
       let mediaUrl = null;
       
+      // Upload media file if present
       if (mediaFile) {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file: mediaFile });
-        mediaUrl = file_url;
+        try {
+          const { file_url } = await base44.integrations.Core.UploadFile({ file: mediaFile });
+          mediaUrl = file_url;
+          console.log('Media uploaded:', file_url);
+        } catch (uploadError) {
+          console.error('Upload error:', uploadError);
+          alert('Failed to upload media. Please try a smaller file or different format.');
+          setIsLoading(false);
+          return;
+        }
       }
 
       const tagArray = tags
@@ -169,18 +187,22 @@ export default function Create() {
         .map(t => t.trim().replace('#', ''))
         .filter(t => t.length > 0);
 
-      await base44.entities.Post.create({
+      const postData = {
         content_type: contentType,
         media_url: mediaUrl,
-        caption: caption,
+        caption: caption || '',
         author_name: user.full_name || 'Anonymous',
-        author_avatar: user.avatar,
+        author_avatar: user.avatar || '',
         tags: tagArray,
         is_raw_mode: isRawMode,
         likes_count: 0,
         comments_count: 0,
         tips_received: 0
-      });
+      };
+
+      console.log('Creating post with data:', postData);
+      const newPost = await base44.entities.Post.create(postData);
+      console.log('Post created successfully:', newPost);
 
       // Update user stats and streak
       const stats = await base44.entities.UserStats.filter({ user_email: user.email });
