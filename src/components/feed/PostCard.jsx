@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ViralIndicator from '../discovery/ViralIndicator';
 import ImageLightbox from '../ui/ImageLightbox';
+import VideoPlayer from '../video/VideoPlayer';
 
 export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [isLiked, setIsLiked] = useState(false);

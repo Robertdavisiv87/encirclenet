@@ -28,6 +28,7 @@ import FollowersModal from '../components/profile/FollowersModal';
 import { createPageUrl } from '../utils';
 import { Switch } from '@/components/ui/switch';
 import ImageLightbox from '../components/ui/ImageLightbox';
+import VideoPlayer from '../components/video/VideoPlayer';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
