@@ -246,7 +246,7 @@ export default function Profile() {
           </Button>
           <Button 
             className="bg-gradient-to-r from-purple-600 to-pink-500"
-            onClick={() => window.location.href = createPageUrl('Explore')}
+            onClick={() => window.location.href = createPageUrl('MyCircle')}
           >
             <Users className="w-4 h-4 mr-2" />
             My Circle

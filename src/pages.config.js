@@ -12,6 +12,7 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import Subscription from './pages/Subscription';
+import MyCircle from './pages/MyCircle';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "Profile": Profile,
     "Referrals": Referrals,
     "Subscription": Subscription,
+    "MyCircle": MyCircle,
 }
 
 export const pagesConfig = {
