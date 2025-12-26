@@ -121,7 +121,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">
         <div className="flex justify-around items-center h-16">
-          {[navItems[0], navItems[1], navItems[2], navItems[5], navItems[7]].map((item) => (
+          {[navItems[0], navItems[1], navItems[3], navItems[6], navItems[8]].map((item) => (
             <Link
               key={item.name}
               to={createPageUrl(item.page)}
