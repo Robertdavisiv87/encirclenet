@@ -34,22 +34,31 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     };
   }, [src]);
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const video = videoRef.current;
     if (!video || hasError) return;
 
-    if (video.paused) {
-      video.play().then(() => {
+    try {
+      if (video.paused) {
+        await video.play();
         setIsPlaying(true);
-      }).catch(err => {
-        console.error('Play error:', err);
+      } else {
+        video.pause();
+        setIsPlaying(false);
+      }
+    } catch (err) {
+      console.error('Video playback error:', err);
+      // Retry once
+      try {
+        video.load();
+        await video.play();
+        setIsPlaying(true);
+      } catch (retryErr) {
+        console.error('Video retry failed:', retryErr);
         setHasError(true);
-      });
-    } else {
-      video.pause();
-      setIsPlaying(false);
+      }
     }
   };
 

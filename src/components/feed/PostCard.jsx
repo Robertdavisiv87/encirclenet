@@ -132,7 +132,11 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
       {/* Content */}
       <div 
         className="relative"
-        onDoubleClick={handleDoubleClick}
+        onDoubleClick={(e) => {
+          if (post.content_type !== 'video') {
+            handleDoubleClick();
+          }
+        }}
       >
         {/* Viral Indicator */}
         {(isViral || isTrending || isHot) && (
@@ -155,7 +159,9 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <VideoPlayer src={post.media_url} className="w-full" aspectRatio="square" />
+          <div onClick={(e) => e.stopPropagation()}>
+            <VideoPlayer src={post.media_url} className="w-full" aspectRatio="square" />
+          </div>
         )}
         {post.content_type === 'voice' && (
           <div className="w-full aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
