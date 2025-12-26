@@ -154,35 +154,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <div className="relative w-full aspect-square bg-black group cursor-pointer"
-               onClick={(e) => {
-                 const video = e.currentTarget.querySelector('video');
-                 if (video) {
-                   if (video.paused) {
-                     video.play().catch(err => {
-                       console.error('Play failed:', err);
-                       alert('Video playback failed. Please try again.');
-                     });
-                   } else {
-                     video.pause();
-                   }
-                 }
-               }}>
-            <video 
-              src={post.media_url}
-              className="w-full h-full object-contain"
-              playsInline
-              preload="auto"
-              onError={(e) => console.error('Video error:', post.media_url)}
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all">
-              <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
-                <svg className="w-10 h-10 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
+          <VideoPlayer src={post.media_url} className="w-full" aspectRatio="square" />
         )}
         {post.content_type === 'voice' && (
           <div className="w-full aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
