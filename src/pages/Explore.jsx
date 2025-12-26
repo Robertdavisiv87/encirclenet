@@ -415,9 +415,19 @@ export default function Explore() {
                     ) : post.content_type === 'video' && post.media_url ? (
                       <video 
                         src={post.media_url} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover cursor-pointer"
                         controls
                         playsInline
+                        preload="metadata"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const video = e.target;
+                          if (video.paused) {
+                            video.play();
+                          } else {
+                            video.pause();
+                          }
+                        }}
                       />
                     ) : post.content_type === 'text' ? (
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">

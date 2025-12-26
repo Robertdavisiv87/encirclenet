@@ -195,7 +195,7 @@ export default function Create() {
 
       const postData = {
         content_type: contentType,
-        media_url: mediaUrl,
+        media_url: mediaUrl || '',
         caption: caption || '',
         author_name: user.full_name || 'Anonymous',
         author_avatar: user.avatar || '',
@@ -206,9 +206,9 @@ export default function Create() {
         tips_received: 0
       };
 
-      console.log('Creating post with data:', postData);
+      console.log('✅ Creating post with data:', postData);
       const newPost = await base44.entities.Post.create(postData);
-      console.log('Post created successfully:', newPost);
+      console.log('✅ Post created successfully with ID:', newPost.id, 'Media URL:', newPost.media_url);
 
       // Update user stats and streak
       const stats = await base44.entities.UserStats.filter({ user_email: user.email });

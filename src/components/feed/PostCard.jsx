@@ -157,12 +157,17 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           <div className="relative w-full aspect-square bg-black">
             <video 
               src={post.media_url} 
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain cursor-pointer"
               controls
               playsInline
-              webkit-playsinline="true"
-              onError={(e) => {
-                console.error('Video playback error for:', post.media_url);
+              preload="metadata"
+              onClick={(e) => {
+                const video = e.target;
+                if (video.paused) {
+                  video.play();
+                } else {
+                  video.pause();
+                }
               }}
             />
           </div>
