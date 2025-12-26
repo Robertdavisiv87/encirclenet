@@ -205,8 +205,10 @@ export default function CreateStoryModal({ isOpen, onClose, currentUser }) {
                         src={preview} 
                         controls 
                         playsInline
-                        preload="auto"
-                        className="w-full max-h-96" 
+                        preload="metadata"
+                        muted
+                        className="w-full max-h-96"
+                        style={{ pointerEvents: 'auto' }}
                       />
                     )}
                   </div>
