@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import TierBadge from '../components/monetization/TierBadge';
 import BadgeShowcase from '../components/gamification/BadgeShowcase';
 import StreakDisplay from '../components/gamification/StreakDisplay';
+import SEO from '../components/SEO';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -114,6 +115,11 @@ export default function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <SEO 
+        title={`${user.full_name || 'User'} Profile - EncircleNet`}
+        description={`View ${user.full_name || 'User'}'s profile, posts, and earnings on EncircleNet. Connect with creators and build your circle.`}
+        keywords="creator profile, social media profile, influencer profile, earnings dashboard, content creator"
+      />
       {/* Header */}
       <div className="p-4 flex items-center justify-between border-b border-zinc-800">
         <h1 className="text-xl font-bold">{user.full_name || 'User'}</h1>

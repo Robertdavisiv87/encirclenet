@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -52,7 +53,8 @@ export default function Layout({ children, currentPageName }) {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-white text-blue-900">
+    <HelmetProvider>
+      <div className="min-h-screen bg-white text-blue-900">
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex-col p-6 z-50 shadow-lg">
         <Link to={createPageUrl('Home')} className="mb-10 group">
@@ -123,6 +125,7 @@ export default function Layout({ children, currentPageName }) {
           ))}
         </div>
       </nav>
-    </div>
+      </div>
+    </HelmetProvider>
   );
 }

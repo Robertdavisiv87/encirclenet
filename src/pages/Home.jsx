@@ -6,6 +6,7 @@ import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
 import TrendingRibbon from '../components/feed/TrendingRibbon';
+import SEO from '../components/SEO';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -69,6 +70,10 @@ export default function Home() {
   if (feedMode === 'tiktok') {
     return (
       <div className="relative">
+        <SEO 
+          title="EncircleNet Feed - Viral Content & High Engagement Social Media"
+          description="Discover trending posts, viral content, and connect with top creators on EncircleNet. The most engaging social media platform with real-time interactions."
+        />
         {/* Floating Header */}
         <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
           <div className="flex items-center justify-between max-w-lg mx-auto">
@@ -106,6 +111,11 @@ export default function Home() {
 
   return (
     <div className="max-w-lg mx-auto bg-gradient-to-b from-purple-50 via-white to-pink-50 min-h-screen">
+      <SEO 
+        title="EncircleNet - #1 High Engagement Social Media Platform | Earn While You Share"
+        description="Join 1M+ creators on EncircleNet, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
+        keywords="high engagement social media, best social media platform 2025, earn money online, content creator platform, social media with highest engagement, monetize content, influencer platform, creator economy"
+      />
       {/* Header */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">

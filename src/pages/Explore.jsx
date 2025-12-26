@@ -17,6 +17,7 @@ import InteractivePost from '../components/explore/InteractivePost';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 export default function Explore() {
   const navigate = useNavigate();
@@ -126,6 +127,11 @@ export default function Explore() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <SEO 
+        title="Explore Trending Content - EncircleNet | Discover Viral Posts & Top Creators"
+        description="Explore trending niches, viral posts, and top creators on EncircleNet. Discover fitness, lifestyle, business content and more on the most engaging social platform."
+        keywords="explore social media, trending content, viral posts, top creators, social media discovery, trending niches, influencer content, engaging posts"
+      />
       {/* Header */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-lg">
         <div className="p-4">

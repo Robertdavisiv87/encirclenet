@@ -20,6 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import SEO from '../components/SEO';
 
 const contentTypes = [
   { id: 'photo', icon: Image, label: 'Photo', color: 'from-pink-500 to-rose-500' },
@@ -121,6 +122,11 @@ export default function Create() {
 
   return (
     <div className="max-w-lg mx-auto p-4 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
+      <SEO 
+        title="Create & Share Content - EncircleNet | Monetize Your Posts"
+        description="Create and share photos, videos, voice notes, and text posts on EncircleNet. Start earning from your content with tips, boosts, and subscriptions."
+        keywords="create content, share posts, monetize content, creator tools, post content, earn from posts, social media creator"
+      />
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold gradient-text animate-shimmer">Create VibePosts</h1>
