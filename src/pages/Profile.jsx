@@ -205,7 +205,10 @@ export default function Profile() {
             </div>
 
             <div className="flex gap-8 mb-4">
-              <div className="text-center">
+              <div 
+                className="text-center cursor-pointer hover:opacity-70 transition-opacity"
+                onClick={() => window.location.href = createPageUrl('Create')}
+              >
                 <p className="font-bold">{myPosts.length}</p>
                 <p className="text-sm text-zinc-500">Posts</p>
               </div>
