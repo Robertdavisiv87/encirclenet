@@ -77,11 +77,16 @@ export default function InteractivePost({ post, userTier, onLike, onTip }) {
               <video
                 src={post.media_url}
                 className="w-full aspect-square object-cover"
-                autoPlay
                 muted
                 loop
                 playsInline
-              />
+                preload="metadata"
+                onError={(e) => {
+                  console.error('Video error:', e);
+                }}
+              >
+                Your browser does not support video playback.
+              </video>
             )}
             {!post.media_url && post.content_type === 'text' && (
               <div className="w-full aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-6">

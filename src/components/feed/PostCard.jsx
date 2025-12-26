@@ -154,15 +154,20 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <video 
-            src={post.media_url} 
-            className="w-full aspect-square object-cover"
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+          <div className="relative w-full aspect-square bg-black">
+            <video 
+              src={post.media_url} 
+              className="w-full h-full object-contain"
+              controls
+              playsInline
+              preload="metadata"
+              onError={(e) => {
+                console.error('Video error:', e);
+              }}
+            >
+              Your browser does not support video playback.
+            </video>
+          </div>
         )}
         {post.content_type === 'voice' && (
           <div className="w-full aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
