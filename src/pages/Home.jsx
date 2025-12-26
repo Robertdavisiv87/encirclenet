@@ -164,9 +164,8 @@ export default function Home() {
                 onLike={() => queryClient.invalidateQueries(['posts'])}
                 onTip={() => queryClient.invalidateQueries(['posts'])}
               />
-              {/* Show ad every 3 posts for free users, every 6 for pro */}
-              {((userTier === 'free' && (index + 1) % 3 === 0) || 
-                (userTier === 'pro' && (index + 1) % 6 === 0)) && 
+              {/* Show ad every 6 posts for pro users only */}
+              {userTier === 'pro' && (index + 1) % 6 === 0 && 
                 mockAds[Math.floor(Math.random() * mockAds.length)] && (
                 <AdCard 
                   ad={mockAds[Math.floor(Math.random() * mockAds.length)]}
