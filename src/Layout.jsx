@@ -61,9 +61,11 @@ export default function Layout({ children, currentPageName }) {
         <Link to={createPageUrl('Home')} className="mb-10 group">
           <h1 className="text-2xl font-bold gradient-text hover-scale flex items-center gap-2">
             Encircle 
-            <span className="w-8 h-8 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
-              <span className="text-white text-sm">◉</span>
-            </span>
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
+              alt="Encircle Net" 
+              className="w-8 h-8 rounded-full shadow-glow"
+            />
             Net
           </h1>
           <p className="text-xs text-gray-500 mt-1">Your World • Your Voice • Your Value</p>
