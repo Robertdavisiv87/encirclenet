@@ -102,7 +102,7 @@ export default function Create() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
+    <div className="max-w-lg mx-auto p-4 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold gradient-text animate-shimmer">Create VibePosts</h1>
@@ -208,7 +208,7 @@ export default function Create() {
 
       {/* Caption */}
       <div className="mb-6">
-        <Label className="text-zinc-400 mb-2 block">
+        <Label className="text-gray-700 mb-2 block">
           {contentType === 'text' ? 'Your Thoughts' : 'Caption'}
         </Label>
         <Textarea
@@ -219,7 +219,7 @@ export default function Create() {
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           className={cn(
-            "bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 resize-none",
+            "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 resize-none",
             contentType === 'text' ? "min-h-[200px]" : "min-h-[100px]"
           )}
         />
@@ -227,7 +227,7 @@ export default function Create() {
 
       {/* Tags */}
       <div className="mb-6">
-        <Label className="text-zinc-400 mb-2 block">
+        <Label className="text-gray-700 mb-2 block">
           <Hash className="w-4 h-4 inline mr-1" />
           Tags
         </Label>
@@ -235,19 +235,19 @@ export default function Create() {
           placeholder="lifestyle, thoughts, creative (comma separated)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600"
+          className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
         />
       </div>
 
       {/* Raw Mode Toggle */}
-      <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-xl">
+      <div className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl shadow-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-glow">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="font-medium">Raw Mode</p>
-            <p className="text-xs text-zinc-500">No filters, no pretending. Just real.</p>
+            <p className="font-medium text-gray-900">Raw Mode</p>
+            <p className="text-xs text-gray-600">No filters, no pretending. Just real.</p>
           </div>
         </div>
         <Switch

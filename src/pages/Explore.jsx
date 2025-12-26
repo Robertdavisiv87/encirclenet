@@ -129,7 +129,7 @@ export default function Explore() {
         <div className="p-4">
           <h1 className="text-2xl font-bold gradient-text mb-4 animate-shimmer">Explore</h1>
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
             <Input
               placeholder="Search posts, people, tags..."
               value={searchQuery}
@@ -198,7 +198,7 @@ export default function Explore() {
           {searchQuery ? (
             // Search results
             filteredPosts.length === 0 ? (
-              <div className="text-center py-20 text-zinc-500">
+              <div className="text-center py-20 text-gray-600">
                 <Grid3X3 className="w-16 h-16 mx-auto mb-4 opacity-50" />
                 <p>No posts found</p>
               </div>
@@ -218,17 +218,17 @@ export default function Explore() {
                         className="w-full h-full object-cover"
                       />
                     ) : post.content_type === 'text' ? (
-                      <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
-                        <p className="text-sm text-center line-clamp-3">{post.caption}</p>
+                      <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
+                        <p className="text-sm text-center line-clamp-3 text-gray-900">{post.caption}</p>
                       </div>
                     ) : (
-                      <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                         <span className="text-2xl">
                           {post.content_type === 'video' ? '🎬' : '🎤'}
                         </span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
                       <span className="text-white font-bold text-lg drop-shadow-lg animate-bounce-in">❤️ {post.likes_count || 0}</span>
                     </div>
                   </motion.div>
@@ -275,10 +275,10 @@ export default function Explore() {
 
         <TabsContent value="circles">
           {circles.length === 0 ? (
-            <div className="text-center py-20 text-zinc-500">
+            <div className="text-center py-20 text-gray-600">
               <Users className="w-16 h-16 mx-auto mb-4 opacity-50" />
               <p>No circles yet</p>
-              <Button className="mt-4 bg-gradient-to-r from-purple-600 to-pink-500">
+              <Button className="mt-4 gradient-bg-primary text-white shadow-glow">
                 Create a Circle
               </Button>
             </div>
@@ -287,7 +287,7 @@ export default function Explore() {
               {circles.map(circle => (
                 <div 
                   key={circle.id}
-                  className="bg-zinc-900 rounded-xl p-4 border border-zinc-800 hover:border-purple-500/50 transition-colors"
+                  className="bg-white rounded-xl p-4 border border-gray-200 hover:border-purple-500/50 transition-colors shadow-md"
                 >
                   <div className="flex items-start gap-4">
                     <Avatar className="w-16 h-16">
@@ -298,25 +298,25 @@ export default function Explore() {
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold">{circle.name}</h3>
+                        <h3 className="font-bold text-gray-900">{circle.name}</h3>
                         {circle.is_premium && (
-                          <span className="text-xs bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded-full">
+                          <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">
                             Premium
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-zinc-400 line-clamp-2 mt-1">{circle.description}</p>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-zinc-500">
+                      <p className="text-sm text-gray-600 line-clamp-2 mt-1">{circle.description}</p>
+                      <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
                         <span>{circle.members_count || 0} members</span>
                         {circle.is_premium && (
-                          <span className="text-yellow-500">${circle.subscription_price}/mo</span>
+                          <span className="text-yellow-600">${circle.subscription_price}/mo</span>
                         )}
-                      </div>
-                    </div>
-                  </div>
-                  <Button className="w-full mt-4 bg-zinc-800 hover:bg-zinc-700">
-                    Join Circle
-                  </Button>
+                        </div>
+                        </div>
+                        </div>
+                        <Button className="w-full mt-4 gradient-bg-primary text-white shadow-glow">
+                        Join Circle
+                        </Button>
                 </div>
               ))}
             </div>

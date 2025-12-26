@@ -111,14 +111,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           </Avatar>
           <div>
             <div>
-              <p className="font-semibold text-sm">{post.author_name}</p>
+              <p className="font-semibold text-sm text-gray-900">{post.author_name}</p>
               {post.is_raw_mode && (
-                <span className="text-xs text-purple-400 animate-pulse-glow">🔥 Raw Mode</span>
+                <span className="text-xs text-purple-600 animate-pulse-glow">🔥 Raw Mode</span>
               )}
             </div>
           </div>
         </div>
-        <Button variant="ghost" size="icon" className="text-zinc-400">
+        <Button variant="ghost" size="icon" className="text-gray-600">
           <MoreHorizontal className="w-5 h-5" />
         </Button>
       </div>
@@ -152,10 +152,10 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'voice' && (
-          <div className="w-full aspect-video bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center">
+          <div className="w-full aspect-video bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
             <div className="text-center">
-              <Mic className="w-16 h-16 text-purple-400 mx-auto mb-4" />
-              <p className="text-zinc-300">Voice Note</p>
+              <Mic className="w-16 h-16 text-purple-600 mx-auto mb-4" />
+              <p className="text-gray-900">Voice Note</p>
               {post.media_url && (
                 <audio src={post.media_url} controls className="mt-4" />
               )}
@@ -163,8 +163,8 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           </div>
         )}
         {post.content_type === 'text' && (
-          <div className="w-full min-h-[200px] bg-gradient-to-br from-purple-900/30 to-pink-900/30 p-8 flex items-center justify-center">
-            <p className="text-xl text-center font-medium">{post.caption}</p>
+          <div className="w-full min-h-[200px] bg-gradient-to-br from-purple-100 to-pink-100 p-8 flex items-center justify-center">
+            <p className="text-xl text-center font-medium text-gray-900">{post.caption}</p>
           </div>
         )}
 
@@ -211,10 +211,10 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               )} />
             </button>
             <button className="hover:opacity-70 transition-opacity">
-              <MessageCircle className="w-7 h-7" />
+              <MessageCircle className="w-7 h-7 text-gray-700" />
             </button>
             <button className="hover:opacity-70 transition-opacity">
-              <Send className="w-7 h-7" />
+              <Send className="w-7 h-7 text-gray-700" />
             </button>
             {canMonetize ? (
               <button 
@@ -231,15 +231,15 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             )}
           </div>
           <button className="hover:opacity-70 transition-opacity">
-            <Bookmark className="w-7 h-7" />
+            <Bookmark className="w-7 h-7 text-gray-700" />
           </button>
         </div>
 
-        <p className="font-semibold text-sm mb-2">{likesCount} likes</p>
+        <p className="font-semibold text-sm mb-2 text-gray-900">{likesCount} likes</p>
         
         {post.content_type !== 'text' && post.caption && (
-          <p className="text-sm">
-            <span className="font-semibold mr-2">{post.author_name}</span>
+          <p className="text-sm text-gray-800">
+            <span className="font-semibold mr-2 text-gray-900">{post.author_name}</span>
             {post.caption}
           </p>
         )}
@@ -247,7 +247,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {post.tags.map((tag, i) => (
-              <span key={i} className="text-purple-400 text-sm">#{tag}</span>
+              <span key={i} className="text-purple-600 text-sm font-medium">#{tag}</span>
             ))}
           </div>
         )}
@@ -278,11 +278,11 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-zinc-900 rounded-2xl p-6 w-full max-w-sm border border-zinc-800"
+              className="bg-white rounded-2xl p-6 w-full max-w-sm border border-gray-200 shadow-lg"
               onClick={e => e.stopPropagation()}
             >
-              <h3 className="text-xl font-bold mb-4 text-center">Boost Value</h3>
-              <p className="text-zinc-400 text-sm text-center mb-6">
+              <h3 className="text-xl font-bold mb-4 text-center text-gray-900">Boost Value</h3>
+              <p className="text-gray-600 text-sm text-center mb-6">
                 Send a tip to {post.author_name} for their awesome content!
               </p>
               
@@ -294,8 +294,8 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
                     className={cn(
                       "px-4 py-2 rounded-full font-semibold transition-all",
                       tipAmount === amount 
-                        ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white"
-                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                        ? "gradient-bg-primary text-white shadow-glow"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     )}
                   >
                     ${amount}
@@ -305,7 +305,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
 
               <Button 
                 onClick={handleTip}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90"
+                className="w-full gradient-bg-primary text-white hover:opacity-90 shadow-glow"
               >
                 Send ${tipAmount} Tip
               </Button>
