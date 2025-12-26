@@ -79,7 +79,7 @@ export default function TrendingTabs({ activeTab, onTabChange }) {
               </div>
               <span className={cn(
                 "font-semibold text-sm whitespace-nowrap",
-                isActive ? "text-white" : "text-blue-900"
+                isActive ? "text-orange-500" : "text-blue-900"
               )}>
                 {tab.name}
               </span>
