@@ -74,15 +74,31 @@ export default function InteractivePost({ post, userTier, onLike, onTip }) {
               />
             )}
             {post.media_url && post.content_type === 'video' && (
-              <video
-                src={post.media_url}
-                className="w-full aspect-square object-cover"
-                controls
-                playsInline
-                preload="auto"
-                controlsList="nodownload"
-                onError={(e) => console.error('Video error:', post.media_url, e)}
-              />
+              <div className="w-full aspect-square relative group cursor-pointer"
+                   onClick={(e) => {
+                     const video = e.currentTarget.querySelector('video');
+                     if (video) {
+                       if (video.paused) {
+                         video.play().catch(err => console.error('Play failed:', err));
+                       } else {
+                         video.pause();
+                       }
+                     }
+                   }}>
+                <video
+                  src={post.media_url}
+                  className="w-full h-full object-cover"
+                  playsInline
+                  preload="auto"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20">
+                  <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
             )}
             {!post.media_url && post.content_type === 'text' && (
               <div className="w-full aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-6">

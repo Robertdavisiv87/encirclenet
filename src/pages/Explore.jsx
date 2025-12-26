@@ -413,16 +413,32 @@ export default function Explore() {
                         className="w-full h-full object-cover"
                       />
                     ) : post.content_type === 'video' && post.media_url ? (
-                      <video 
-                        src={post.media_url}
-                        className="w-full h-full object-cover"
-                        controls
-                        playsInline
-                        preload="auto"
-                        controlsList="nodownload"
-                        onClick={(e) => e.stopPropagation()}
-                        onError={(e) => console.error('Video error:', e)}
-                      />
+                      <div className="w-full h-full relative group"
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             const video = e.currentTarget.querySelector('video');
+                             if (video) {
+                               if (video.paused) {
+                                 video.play().catch(err => console.error('Play failed:', err));
+                               } else {
+                                 video.pause();
+                               }
+                             }
+                           }}>
+                        <video 
+                          src={post.media_url}
+                          className="w-full h-full object-cover"
+                          playsInline
+                          preload="auto"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10">
+                          <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                            <svg className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
                     ) : post.content_type === 'text' ? (
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
                         <p className="text-sm text-center line-clamp-3 text-blue-900">{post.caption}</p>
