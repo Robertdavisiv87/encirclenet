@@ -257,9 +257,11 @@ export default function CreatorsMarketplace() {
                     className="gradient-bg-primary text-white"
                     onClick={() => {
                       if (service.external_url) {
-                        window.open(service.external_url, '_blank');
+                        window.open(service.external_url, '_blank', 'noopener,noreferrer');
+                      } else if (service.freelancer_email) {
+                        window.location.href = `mailto:${service.freelancer_email}?subject=Service Inquiry: ${service.service_title}`;
                       } else {
-                        alert('Contact freelancer: ' + service.freelancer_email);
+                        alert('Unable to contact freelancer');
                       }
                     }}
                   >

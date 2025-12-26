@@ -149,6 +149,9 @@ export default function Home() {
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
               alt="Encircle Net" 
               className="w-8 h-8 rounded-full shadow-glow"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
             />
             Encircle Net
           </h1>

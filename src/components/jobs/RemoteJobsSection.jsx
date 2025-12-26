@@ -140,7 +140,13 @@ export default function RemoteJobsSection() {
               {/* Apply Button */}
               <Button
                 className="w-full gradient-bg-primary text-white shadow-glow hover-lift"
-                onClick={() => window.open(job.apply_url, '_blank')}
+                onClick={() => {
+                  if (job.apply_url) {
+                    window.open(job.apply_url, '_blank', 'noopener,noreferrer');
+                  } else {
+                    alert('Application URL not available. Please search for this job on ' + (job.platform || 'job boards'));
+                  }
+                }}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Apply Now

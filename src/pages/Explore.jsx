@@ -178,7 +178,7 @@ export default function Explore() {
             Circles
           </TabsTrigger>
           <TabsTrigger value="creators" className="flex-1">
-            <Briefcase className="w-4 h-4 mr-2" />
+            <BriefcaseIcon className="w-4 h-4 mr-2" />
             Creators
           </TabsTrigger>
         </TabsList>
