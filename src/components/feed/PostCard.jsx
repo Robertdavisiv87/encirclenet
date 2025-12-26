@@ -171,9 +171,44 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               </div>
             </div>
           </div>
-        <Button variant="ghost" size="icon" className="text-gray-600">
-          <MoreHorizontal className="w-5 h-5" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900">
+              <MoreHorizontal className="w-5 h-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            {isOwnPost ? (
+              <>
+                <DropdownMenuItem onClick={handleDeletePost} disabled={isDeleting} className="text-red-600 focus:text-red-600">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {isDeleting ? 'Deleting...' : 'Delete Post'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem>
+                  <Flag className="w-4 h-4 mr-2" />
+                  Report Post
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <EyeOff className="w-4 h-4 mr-2" />
+                  Hide Post
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+            <DropdownMenuItem onClick={handleShare}>
+              <Share2 className="w-4 h-4 mr-2" />
+              Share Post
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCopyLink}>
+              <Link2 className="w-4 h-4 mr-2" />
+              Copy Link
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Content */}
