@@ -147,7 +147,7 @@ export default function Home() {
             <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
               <span className="text-4xl">🌟</span>
             </div>
-            <h3 className="text-xl font-bold mb-2 text-gray-900">Welcome to EncircleNet!</h3>
+            <h3 className="text-xl font-bold mb-2 text-blue-900">Welcome to EncircleNet!</h3>
             <p className="text-gray-600 mb-6">
               Your feed is empty. Start creating content or follow others to see posts.
             </p>

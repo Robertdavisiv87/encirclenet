@@ -52,7 +52,7 @@ export default function Layout({ children, currentPageName }) {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-white text-blue-900">
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex-col p-6 z-50 shadow-lg">
         <Link to={createPageUrl('Home')} className="mb-10 group">
@@ -69,7 +69,7 @@ export default function Layout({ children, currentPageName }) {
                 "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 hover-lift",
                 currentPageName === item.page 
                   ? "gradient-bg-primary text-white shadow-glow" 
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  : "text-blue-700 hover:bg-gray-100 hover:text-blue-900"
               )}
             >
               <item.icon className={cn(
@@ -90,7 +90,7 @@ export default function Layout({ children, currentPageName }) {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold truncate text-gray-900">{user.full_name || 'User'}</p>
+                <p className="font-semibold truncate text-blue-900">{user.full_name || 'User'}</p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function Layout({ children, currentPageName }) {
               to={createPageUrl(item.page)}
               className={cn(
                 "flex flex-col items-center justify-center p-2",
-                currentPageName === item.page ? "text-gray-900" : "text-gray-400"
+                currentPageName === item.page ? "text-blue-900" : "text-gray-400"
               )}
             >
               <item.icon className={cn(

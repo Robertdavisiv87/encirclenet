@@ -219,7 +219,7 @@ export default function Create() {
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
           className={cn(
-            "bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 resize-none",
+            "bg-white border-gray-300 text-blue-900 placeholder:text-gray-400 resize-none",
             contentType === 'text' ? "min-h-[200px]" : "min-h-[100px]"
           )}
         />
@@ -235,7 +235,7 @@ export default function Create() {
           placeholder="lifestyle, thoughts, creative (comma separated)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
-          className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
+          className="bg-white border-gray-300 text-blue-900 placeholder:text-gray-400"
         />
       </div>
 
@@ -246,7 +246,7 @@ export default function Create() {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="font-medium text-gray-900">Raw Mode</p>
+            <p className="font-medium text-blue-900">Raw Mode</p>
             <p className="text-xs text-gray-600">No filters, no pretending. Just real.</p>
           </div>
         </div>

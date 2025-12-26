@@ -219,7 +219,7 @@ export default function Explore() {
                       />
                     ) : post.content_type === 'text' ? (
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
-                        <p className="text-sm text-center line-clamp-3 text-gray-900">{post.caption}</p>
+                        <p className="text-sm text-center line-clamp-3 text-blue-900">{post.caption}</p>
                       </div>
                     ) : (
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -298,7 +298,7 @@ export default function Explore() {
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-gray-900">{circle.name}</h3>
+                        <h3 className="font-bold text-blue-900">{circle.name}</h3>
                         {circle.is_premium && (
                           <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">
                             Premium
