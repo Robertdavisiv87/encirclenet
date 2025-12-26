@@ -325,11 +325,12 @@ export default function Create() {
               )}
               {contentType === 'video' && (
                 <video 
-                  src={mediaPreview} 
                   className="w-full aspect-square object-cover" 
                   controls
                   playsInline
-                />
+                >
+                  <source src={mediaPreview} type="video/mp4" />
+                </video>
               )}
               {contentType === 'voice' && (
                 <div className="w-full aspect-video bg-zinc-900 flex items-center justify-center">

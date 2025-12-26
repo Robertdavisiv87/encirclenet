@@ -354,21 +354,14 @@ export default function Profile() {
                     />
                   ) : post.content_type === 'video' && post.media_url ? (
                     <video 
-                      src={post.media_url} 
-                      className="w-full h-full object-cover cursor-pointer"
+                      className="w-full h-full object-cover"
                       controls
                       playsInline
-                      preload="metadata"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const video = e.target;
-                        if (video.paused) {
-                          video.play();
-                        } else {
-                          video.pause();
-                        }
-                      }}
-                    />
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <source src={post.media_url} type="video/mp4" />
+                      <source src={post.media_url} type="video/webm" />
+                    </video>
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
                       <p className="text-sm text-center line-clamp-3">{post.caption}</p>

@@ -156,20 +156,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         {post.content_type === 'video' && post.media_url && (
           <div className="relative w-full aspect-square bg-black">
             <video 
-              src={post.media_url} 
-              className="w-full h-full object-contain cursor-pointer"
+              className="w-full h-full object-contain"
               controls
               playsInline
-              preload="metadata"
-              onClick={(e) => {
-                const video = e.target;
-                if (video.paused) {
-                  video.play();
-                } else {
-                  video.pause();
-                }
-              }}
-            />
+            >
+              <source src={post.media_url} type="video/mp4" />
+              <source src={post.media_url} type="video/webm" />
+              <source src={post.media_url} type="video/quicktime" />
+            </video>
           </div>
         )}
         {post.content_type === 'voice' && (
