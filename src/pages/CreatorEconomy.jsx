@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -12,16 +13,25 @@ import {
   Crown,
   BarChart3,
   Target,
-  Rocket
+  Rocket,
+  Copy,
+  ExternalLink,
+  Plus
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import MultiStreamDashboard from '../components/monetization/MultiStreamDashboard';
 import AffiliateTracker from '../components/monetization/AffiliateTracker';
+import ReferralCard from '../components/monetization/ReferralCard';
 import SEO from '../components/SEO';
+import { createPageUrl } from '../utils';
 
 export default function CreatorEconomy() {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -34,6 +44,79 @@ export default function CreatorEconomy() {
     };
     loadUser();
   }, []);
+
+  // Fetch referrals
+  const { data: referrals = [] } = useQuery({
+    queryKey: ['referrals', user?.email],
+    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    enabled: !!user?.email
+  });
+
+  // Fetch creator shop
+  const { data: creatorShop } = useQuery({
+    queryKey: ['creator-shop', user?.email],
+    queryFn: async () => {
+      const shops = await base44.entities.CreatorShop.filter({ creator_email: user?.email });
+      return shops[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const handleCopyReferralLink = () => {
+    const referralCode = `CREATOR${user?.email?.slice(0, 4).toUpperCase()}`;
+    const referralLink = `${window.location.origin}?ref=${referralCode}`;
+    navigator.clipboard.writeText(referralLink);
+    toast({
+      title: "Copied!",
+      description: "Referral link copied to clipboard",
+    });
+  };
+
+  const handleShareReferral = () => {
+    const referralCode = `CREATOR${user?.email?.slice(0, 4).toUpperCase()}`;
+    const referralLink = `${window.location.origin}?ref=${referralCode}`;
+    const text = `Join me on Encircle Net! Use my referral code: ${referralCode}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join Encircle Net',
+        text: text,
+        url: referralLink
+      });
+    } else {
+      handleCopyReferralLink();
+    }
+  };
+
+  const handleSetupShop = async () => {
+    if (creatorShop) {
+      // Navigate to shop management (you can create this page later)
+      toast({
+        title: "Shop Active",
+        description: "Your shop is already set up!",
+      });
+    } else {
+      // Create new shop
+      try {
+        await base44.entities.CreatorShop.create({
+          creator_email: user.email,
+          shop_name: `${user.full_name}'s Shop`,
+          shop_url: user.email.split('@')[0],
+          description: "Welcome to my creator shop!"
+        });
+        toast({
+          title: "Shop Created!",
+          description: "Your creator shop is now live",
+        });
+      } catch (e) {
+        toast({
+          title: "Error",
+          description: "Failed to create shop. Please try again.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
 
   // Mock earnings data (replace with real data)
   const earnings = {
@@ -136,20 +219,90 @@ export default function CreatorEconomy() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow text-center"
+            className="space-y-6"
           >
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-glow">
-              <Users className="w-10 h-10 text-white" />
+            {/* Referral Stats Card */}
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Referral Program</h3>
+                  <p className="text-gray-600">Earn $5-$50 per active referral</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-glow">
+                  <Users className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                  <p className="text-sm text-gray-600 mb-1">Total Referrals</p>
+                  <p className="text-3xl font-bold text-blue-900">{referrals.length}</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                  <p className="text-sm text-gray-600 mb-1">Active</p>
+                  <p className="text-3xl font-bold text-green-900">
+                    {referrals.filter(r => r.status === 'active').length}
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                  <p className="text-sm text-gray-600 mb-1">Earnings</p>
+                  <p className="text-3xl font-bold text-purple-900">
+                    ${referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Referral Link */}
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6 mb-4">
+                <p className="text-sm text-gray-700 mb-3 font-semibold">Your Referral Code</p>
+                <div className="flex items-center gap-3 mb-4">
+                  <Input 
+                    value={`CREATOR${user?.email?.slice(0, 4).toUpperCase()}`}
+                    readOnly
+                    className="text-xl font-bold text-center bg-white border-2 border-purple-400"
+                  />
+                  <Button 
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCopyReferralLink}
+                    className="border-2 border-purple-400 hover:bg-purple-100"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-600 text-center">
+                  Share this code or use the link below
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <Button 
+                  onClick={handleShareReferral}
+                  className="flex-1 gradient-bg-primary text-white shadow-glow"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Share Referral Link
+                </Button>
+                <Button 
+                  onClick={() => navigate(createPageUrl('Referrals'))}
+                  variant="outline"
+                  className="border-2 border-purple-400 hover:bg-purple-50"
+                >
+                  View Details
+                </Button>
+              </div>
             </div>
-            <h3 className="text-2xl font-bold text-blue-900 mb-2">Referral Program</h3>
-            <p className="text-gray-600 mb-6">Earn 20% recurring commission on all referred users</p>
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6 mb-6">
-              <p className="text-sm text-gray-700 mb-2">Your Referral Code</p>
-              <p className="text-3xl font-bold text-purple-900">CREATOR{user?.email?.slice(0, 4).toUpperCase()}</p>
-            </div>
-            <Button className="gradient-bg-primary text-white shadow-glow">
-              Share Referral Link
-            </Button>
+
+            {/* Referral List */}
+            {referrals.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-lg font-bold text-blue-900">Recent Referrals</h4>
+                {referrals.slice(0, 5).map((referral) => (
+                  <ReferralCard key={referral.id} referral={referral} />
+                ))}
+              </div>
+            )}
           </motion.div>
         </TabsContent>
 
@@ -157,16 +310,109 @@ export default function CreatorEconomy() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow text-center"
+            className="space-y-6"
           >
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-glow">
-              <ShoppingBag className="w-10 h-10 text-white" />
+            {/* Shop Header */}
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Creator Shop</h3>
+                  <p className="text-gray-600">Sell products and services to your audience</p>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center shadow-glow">
+                  <ShoppingBag className="w-10 h-10 text-white" />
+                </div>
+              </div>
+
+              {creatorShop ? (
+                <div className="space-y-4">
+                  {/* Shop Stats */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
+                      <p className="text-sm text-gray-600 mb-1">Products</p>
+                      <p className="text-3xl font-bold text-blue-900">{creatorShop.product_count || 0}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                      <p className="text-sm text-gray-600 mb-1">Sales</p>
+                      <p className="text-3xl font-bold text-green-900">{creatorShop.total_sales || 0}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                      <p className="text-sm text-gray-600 mb-1">Revenue</p>
+                      <p className="text-3xl font-bold text-purple-900">${(creatorShop.total_revenue || 0).toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  {/* Shop Info */}
+                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-300 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Shop Name</p>
+                        <p className="text-xl font-bold text-blue-900">{creatorShop.shop_name}</p>
+                      </div>
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="border-2 border-pink-400"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Shop
+                      </Button>
+                    </div>
+                    <p className="text-sm text-gray-700">{creatorShop.description}</p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={() => navigate(createPageUrl('Explore'))}
+                      className="flex-1 gradient-bg-primary text-white shadow-glow"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Product
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      className="border-2 border-pink-400 hover:bg-pink-50"
+                    >
+                      Manage Shop
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="mb-6">
+                    <p className="text-gray-600 mb-4">
+                      Create your shop to start selling digital products, merch, and services
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-2 text-left max-w-md mx-auto">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                        Sell digital downloads, courses, and templates
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                        Offer physical merchandise and products
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                        Provide services and consultations
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                        Keep 90% of all sales revenue
+                      </li>
+                    </ul>
+                  </div>
+                  <Button 
+                    onClick={handleSetupShop}
+                    className="gradient-bg-primary text-white shadow-glow"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Setup Your Shop
+                  </Button>
+                </div>
+              )}
             </div>
-            <h3 className="text-2xl font-bold text-blue-900 mb-2">Creator Shop</h3>
-            <p className="text-gray-600 mb-6">Sell digital products, merch, and services directly to your audience</p>
-            <Button className="gradient-bg-primary text-white shadow-glow">
-              Setup Your Shop
-            </Button>
           </motion.div>
         </TabsContent>
       </Tabs>
