@@ -50,7 +50,7 @@ const tabs = [
 
 export default function TrendingTabs({ activeTab, onTabChange }) {
   return (
-    <div className="w-full overflow-x-auto custom-scrollbar bg-black/50 backdrop-blur-lg border-b border-zinc-800">
+    <div className="w-full overflow-x-auto custom-scrollbar bg-white border-b-2 border-gray-200">
       <div className="flex gap-2 p-4 min-w-max">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -64,10 +64,10 @@ export default function TrendingTabs({ activeTab, onTabChange }) {
               onClick={() => onTabChange(tab)}
               className={cn(
                 "relative flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all",
-                "border backdrop-blur-sm",
+                "border-2",
                 isActive
-                  ? "bg-gradient-to-r border-purple-500/50 shadow-glow"
-                  : "bg-zinc-900/50 border-zinc-800 hover:border-zinc-700"
+                  ? "bg-gradient-to-r border-purple-500 shadow-glow"
+                  : "bg-white border-gray-300 hover:border-purple-400 realistic-shadow"
               )}
             >
               <div className={cn(
@@ -79,7 +79,7 @@ export default function TrendingTabs({ activeTab, onTabChange }) {
               </div>
               <span className={cn(
                 "font-semibold text-sm whitespace-nowrap",
-                isActive ? "text-white" : "text-zinc-400"
+                isActive ? "text-white" : "text-blue-900"
               )}>
                 {tab.name}
               </span>

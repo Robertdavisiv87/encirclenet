@@ -13,7 +13,7 @@ const trendingTopics = [
 
 export default function TrendingRibbon({ onSelectTrend }) {
   return (
-    <div className="w-full overflow-x-auto custom-scrollbar py-3 px-4 border-b border-zinc-800 bg-black/50 backdrop-blur-lg">
+    <div className="w-full overflow-x-auto custom-scrollbar py-3 px-4 border-b-2 border-gray-200 bg-white">
       <div className="flex gap-3 min-w-max">
         {trendingTopics.map((topic, index) => {
           const Icon = topic.icon;
@@ -26,8 +26,8 @@ export default function TrendingRibbon({ onSelectTrend }) {
               onClick={() => onSelectTrend && onSelectTrend(topic)}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full",
-                "bg-zinc-900 border border-zinc-800",
-                "hover-lift hover:border-purple-500/50 transition-all"
+                "bg-white border-2 border-gray-300",
+                "hover-lift hover:border-purple-500 transition-all realistic-shadow"
               )}
             >
               <div className={cn(
@@ -38,8 +38,8 @@ export default function TrendingRibbon({ onSelectTrend }) {
               )}>
                 <Icon className="w-3 h-3 text-white" />
               </div>
-              <span className="text-sm font-semibold">{topic.label}</span>
-              <span className="text-xs text-zinc-500">{topic.tag}</span>
+              <span className="text-sm font-semibold text-blue-900">{topic.label}</span>
+              <span className="text-xs text-gray-600">{topic.tag}</span>
             </motion.button>
           );
         })}
