@@ -157,7 +157,7 @@ export default function Explore() {
 
       <Tabs defaultValue="feed" className="w-full">
         <TabsList className="w-full bg-gradient-to-r from-purple-50 to-blue-50 mb-6 overflow-x-auto shadow-md">
-          <TabsTrigger value="feed" className="flex-1" onClick={() => navigate(createPageUrl('Home'))}>
+          <TabsTrigger value="feed" className="flex-1">
             <TrendingUp className="w-4 h-4 mr-2" />
             Feed
           </TabsTrigger>
@@ -169,8 +169,8 @@ export default function Explore() {
             <Grid3X3 className="w-4 h-4 mr-2" />
             Posts
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="flex-1" onClick={() => navigate(createPageUrl('Gamification'))}>
-            <TrendingUp className="w-4 h-4 mr-2" />
+          <TabsTrigger value="leaderboard" className="flex-1">
+            <Crown className="w-4 h-4 mr-2" />
             Leaderboard
           </TabsTrigger>
           <TabsTrigger value="circles" className="flex-1">
@@ -184,24 +184,53 @@ export default function Explore() {
         </TabsList>
 
         <TabsContent value="feed">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold gradient-text mb-4">Trending Feed</h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Discover the most engaging content across all categories
+            </p>
+          </div>
+          
           {activeTab === 'remote' ? (
             <RemoteJobsSection />
           ) : activeTab === 'tech' ? (
             <TechProductsSection />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tabPosts.map((post) => (
-                <InteractivePost
-                  key={post.id}
-                  post={post}
-                  userTier={userTier}
-                />
-              ))}
-            </div>
+            <>
+              {tabPosts.length === 0 ? (
+                <div className="text-center py-20">
+                  <TrendingUp className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-600">No posts available in this category</p>
+                  <Button 
+                    className="mt-4 gradient-bg-primary text-white shadow-glow"
+                    onClick={() => navigate(createPageUrl('Create'))}
+                  >
+                    Create First Post
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {tabPosts.map((post) => (
+                    <InteractivePost
+                      key={post.id}
+                      post={post}
+                      userTier={userTier}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </TabsContent>
 
         <TabsContent value="niches">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold gradient-text mb-4">Explore Niches</h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Dive deep into specialized communities and trending topics
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {niches.map((niche) => (
               <NicheCard
@@ -209,15 +238,48 @@ export default function Explore() {
                 niche={niche}
                 trending={niche.postCount > 2000}
                 activeUsers={Math.floor(niche.postCount * 0.3)}
-                onClick={() => setSelectedNiche(niche)}
+                onClick={() => {
+                  setSelectedNiche(niche);
+                  if (!niche.isJobs) {
+                    setActiveTab(niche.id);
+                  }
+                }}
               />
             ))}
           </div>
 
-          {/* Show Jobs Section when Work From Home niche is selected */}
-          {selectedNiche?.isJobs && (
+          {/* Show content based on selected niche */}
+          {selectedNiche && (
             <div className="mt-8">
-              <RemoteJobsSection />
+              {selectedNiche.isJobs ? (
+                <RemoteJobsSection />
+              ) : (
+                <div>
+                  <h3 className="text-lg font-bold mb-4 text-blue-900">
+                    Popular in {selectedNiche.name}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {allPosts
+                      .filter(p => {
+                        const themeMap = {
+                          fitness: 'workout',
+                          nutrition: 'nutrition',
+                          professional: 'professional',
+                          lifestyle: 'wellness'
+                        };
+                        return p.theme === themeMap[selectedNiche.id];
+                      })
+                      .slice(0, 12)
+                      .map((post) => (
+                        <InteractivePost
+                          key={post.id}
+                          post={post}
+                          userTier={userTier}
+                        />
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </TabsContent>
@@ -298,7 +360,33 @@ export default function Explore() {
         </TabsContent>
 
         <TabsContent value="leaderboard">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold gradient-text mb-4 flex items-center gap-2">
+              <Crown className="w-6 h-6" />
+              Top Creators
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              See who's leading the platform in engagement and earnings
+            </p>
+          </div>
+
           <div className="space-y-6">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-blue-900 mb-1">🏆 Weekly Competition</h3>
+                  <p className="text-xs text-gray-600">Top creators win exclusive rewards</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(createPageUrl('Gamification'))}
+                >
+                  View All Rewards
+                </Button>
+              </div>
+            </div>
+
             <CreatorLeaderboard 
               creators={topCreatorsByEngagement}
               type="engagement"
@@ -307,56 +395,102 @@ export default function Explore() {
               creators={topCreatorsByEarnings}
               type="earnings"
             />
+
+            <div className="text-center py-8">
+              <Button 
+                className="gradient-bg-primary text-white shadow-glow"
+                onClick={() => navigate(createPageUrl('Create'))}
+              >
+                Start Creating to Join the Leaderboard
+              </Button>
+            </div>
           </div>
         </TabsContent>
 
         <TabsContent value="circles">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold gradient-text mb-4 flex items-center gap-2">
+              <Users className="w-6 h-6" />
+              Discover Circles
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Join exclusive communities and connect with like-minded creators
+            </p>
+          </div>
+
           {circles.length === 0 ? (
-            <div className="text-center py-20 text-gray-600">
-              <Users className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p>No circles yet</p>
-              <Button className="mt-4 gradient-bg-primary text-white shadow-glow">
-                Create a Circle
+            <div className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
+                <Users className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-blue-900">No Circles Yet</h3>
+              <p className="text-gray-600 mb-6">
+                Be the first to create a circle and build your community
+              </p>
+              <Button 
+                className="gradient-bg-primary text-white shadow-glow"
+                onClick={() => navigate(createPageUrl('MyCircle'))}
+              >
+                Create Your Circle
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {circles.map(circle => (
-                <div 
-                  key={circle.id}
-                  className="bg-white rounded-xl p-4 border border-gray-200 hover:border-purple-500/50 transition-colors shadow-md"
-                >
-                  <div className="flex items-start gap-4">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage src={circle.cover_image} />
-                      <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-500 text-xl">
-                        {circle.name?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-blue-900">{circle.name}</h3>
-                        {circle.is_premium && (
-                          <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">
-                            Premium
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {circles.map(circle => (
+                  <motion.div 
+                    key={circle.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-xl p-4 border border-gray-200 hover:border-purple-500/50 transition-all shadow-md hover:shadow-xl cursor-pointer"
+                  >
+                    <div className="flex items-start gap-4">
+                      <Avatar className="w-16 h-16 shadow-md">
+                        <AvatarImage src={circle.cover_image} />
+                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-500 text-xl font-bold text-white">
+                          {circle.name?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-bold text-blue-900">{circle.name}</h3>
+                          {circle.is_premium && (
+                            <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full font-semibold">
+                              Premium
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-3">{circle.description}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <span className="flex items-center gap-1">
+                            <Users className="w-4 h-4" />
+                            {circle.members_count || 0}
                           </span>
-                        )}
+                          {circle.is_premium && (
+                            <span className="text-yellow-600 font-semibold">
+                              ${circle.subscription_price}/mo
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-2 mt-1">{circle.description}</p>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                        <span>{circle.members_count || 0} members</span>
-                        {circle.is_premium && (
-                          <span className="text-yellow-600">${circle.subscription_price}/mo</span>
-                        )}
-                        </div>
-                        </div>
-                        </div>
-                        <Button className="w-full mt-4 gradient-bg-primary text-white shadow-glow">
-                        Join Circle
-                        </Button>
-                </div>
-              ))}
-            </div>
+                    </div>
+                    <Button className="w-full mt-4 gradient-bg-primary text-white shadow-glow hover-lift">
+                      Join Circle
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="text-center py-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
+                <p className="text-sm text-gray-700 mb-3">Want to create your own circle?</p>
+                <Button 
+                  variant="outline"
+                  onClick={() => navigate(createPageUrl('MyCircle'))}
+                >
+                  Create Circle
+                </Button>
+              </div>
+            </>
           )}
         </TabsContent>
 
