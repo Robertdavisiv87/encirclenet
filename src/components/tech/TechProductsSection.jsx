@@ -33,7 +33,7 @@ export default function TechProductsSection() {
     loadUser();
   }, []);
 
-  const { data: products, isLoading } = useQuery({
+  const { data: products, isLoading, error } = useQuery({
     queryKey: ['tech-products', category],
     queryFn: async () => {
       const existingProducts = await base44.entities.TechProduct.list('-created_date', 50);
@@ -45,6 +45,8 @@ export default function TechProductsSection() {
       return response.data.products || [];
     },
     staleTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+    retryDelay: 1000
   });
 
   const createAffiliatePromotion = useMutation({
@@ -134,7 +136,25 @@ export default function TechProductsSection() {
       {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+          <div className="text-center">
+            <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-3" />
+            <p className="text-blue-900 font-medium">Loading tech products...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && !isLoading && (
+        <div className="text-center py-20">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h3 className="text-xl font-bold mb-2 text-blue-900">Error Loading Products</h3>
+          <p className="text-gray-600 mb-4">We couldn't load products right now.</p>
+          <Button onClick={() => window.location.reload()} className="gradient-bg-primary text-white shadow-glow">
+            <Loader2 className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
         </div>
       )}
 
