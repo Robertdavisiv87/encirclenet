@@ -70,8 +70,8 @@ Return 20 diverse remote job listings.`;
 
     // Generate working search URLs for each job
     const jobsWithUrls = (jobs.jobs || []).map(job => ({
-     ...job,
-     apply_url: `https://www.google.com/search?q=${encodeURIComponent(`${job.job_title} ${job.company} remote job apply`)}&btnI`
+      ...job,
+      apply_url: `https://www.google.com/search?q=${encodeURIComponent(`${job.job_title} at ${job.company} remote job application`)}`
     }));
 
     return Response.json({ jobs: jobsWithUrls });
