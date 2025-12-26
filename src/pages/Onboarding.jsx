@@ -1,279 +1,296 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { createPageUrl } from '../utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { createPageUrl } from '@/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, 
-  User, 
   Heart, 
   DollarSign, 
-  Flame,
+  Users, 
+  TrendingUp,
+  Crown,
   ArrowRight,
-  CheckCircle
+  Check
 } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
+const steps = [
+  {
+    id: 'welcome',
+    title: 'Welcome to EncircleNet',
+    subtitle: 'Your World • Your Voice • Your Value',
+    icon: Sparkles,
+    gradient: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'monetize',
+    title: 'Turn Your Voice Into Value',
+    subtitle: 'Earn from tips, subscriptions, and referrals',
+    icon: DollarSign,
+    gradient: 'from-green-500 to-emerald-500'
+  },
+  {
+    id: 'engage',
+    title: 'Build Your Circle',
+    subtitle: 'Connect with like-minded creators and fans',
+    icon: Users,
+    gradient: 'from-blue-500 to-cyan-500'
+  },
+  {
+    id: 'profile',
+    title: 'Complete Your Profile',
+    subtitle: 'Let the world know who you are',
+    icon: Crown,
+    gradient: 'from-orange-500 to-yellow-500'
+  }
+];
 
 export default function Onboarding() {
+  const [currentStep, setCurrentStep] = useState(0);
   const [user, setUser] = useState(null);
-  const [step, setStep] = useState(0);
-  const [profileData, setProfileData] = useState({
-    bio: '',
-    avatar: ''
-  });
+  const [bio, setBio] = useState('');
+  const [website, setWebsite] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
-        
-        // Check if user has completed onboarding
-        if (currentUser.onboarding_completed) {
-          window.location.href = createPageUrl('Home');
-        }
       } catch (e) {
-        base44.auth.redirectToLogin();
+        window.location.href = createPageUrl('Home');
       }
     };
     loadUser();
   }, []);
 
-  const steps = [
-    {
-      title: 'Welcome to EncircleNet!',
-      subtitle: 'Connect, share, and earn rewards while being yourself. Let\'s set up your profile!',
-      icon: Sparkles,
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      title: 'Complete Your Profile',
-      subtitle: 'Add your bio and pick your favorite theme. Complete your profile to unlock perks!',
-      icon: User,
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      title: 'Explore the Feed',
-      subtitle: 'Scroll through your feed! Like, comment, share, and try reels/stories for maximum engagement.',
-      icon: Heart,
-      color: 'from-pink-500 to-rose-500'
-    },
-    {
-      title: 'Earn Rewards',
-      subtitle: 'Invite friends, post content, and unlock Pro/Elite monetization tools.',
-      icon: DollarSign,
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      title: 'Start Your Streak',
-      subtitle: 'Complete your first post today and start your streak! Daily engagement = points & rewards.',
-      icon: Flame,
-      color: 'from-orange-500 to-red-500'
-    }
-  ];
+  const handleComplete = async () => {
+    setIsLoading(true);
+    try {
+      await base44.auth.updateMe({
+        bio: bio,
+        website: website,
+        onboarding_completed: true
+      });
+      
+      // Create initial user stats
+      await base44.entities.UserStats.create({
+        user_email: user.email,
+        points: 100,
+        level: 1,
+        current_streak: 1,
+        longest_streak: 1,
+        last_activity_date: new Date().toISOString()
+      });
 
-  const currentStep = steps[step];
-  const Icon = currentStep.icon;
-  const progress = ((step + 1) / steps.length) * 100;
+      // Award early adopter badge
+      await base44.entities.Badge.create({
+        user_email: user.email,
+        badge_type: 'early_adopter',
+        display_name: 'Early Adopter',
+        icon: '🚀',
+        earned_date: new Date().toISOString()
+      });
 
-  const handleNext = async () => {
-    if (step === 1) {
-      // Save profile data
-      try {
-        await base44.auth.updateMe({
-          bio: profileData.bio,
-          onboarding_step: 2
-        });
-      } catch (e) {}
-    }
-
-    if (step === steps.length - 1) {
-      // Complete onboarding
-      try {
-        await base44.auth.updateMe({ onboarding_completed: true });
-        
-        // Initialize user stats
-        await base44.entities.UserStats.create({
-          user_email: user.email,
-          points: 100,
-          level: 1,
-          current_streak: 0,
-          longest_streak: 0,
-          last_activity_date: new Date().toISOString().split('T')[0]
-        });
-
-        // Award first badge
-        await base44.entities.Badge.create({
-          user_email: user.email,
-          badge_type: 'early_adopter',
-          earned_date: new Date().toISOString(),
-          display_name: 'Early Adopter',
-          icon: '🌟'
-        });
-
-        window.location.href = createPageUrl('Home');
-      } catch (e) {
-        window.location.href = createPageUrl('Home');
-      }
-    } else {
-      setStep(step + 1);
+      window.location.href = createPageUrl('Home');
+    } catch (error) {
+      console.error('Onboarding error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (!user) return null;
+  const step = steps[currentStep];
+  const Icon = step.icon;
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="max-w-md w-full"
+      >
         {/* Progress Bar */}
         <div className="mb-8">
-          <div className="flex justify-between text-xs text-zinc-500 mb-2">
-            <span>Step {step + 1} of {steps.length}</span>
-            <span>{Math.round(progress)}% Complete</span>
+          <div className="flex justify-between mb-2">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.id}
+                className={`w-full h-2 rounded-full mx-1 ${
+                  i <= currentStep ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gray-200'
+                }`}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: i <= currentStep ? 1 : 0 }}
+                transition={{ duration: 0.5 }}
+              />
+            ))}
           </div>
-          <Progress value={progress} className="h-2" />
+          <p className="text-sm text-gray-600 text-center">
+            Step {currentStep + 1} of {steps.length}
+          </p>
         </div>
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
+            key={currentStep}
+            initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="text-center"
+            exit={{ opacity: 0, x: -50 }}
+            className="bg-white rounded-3xl p-8 shadow-xl"
           >
             {/* Icon */}
-            <div className={`w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br ${currentStep.color} flex items-center justify-center`}>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1, rotate: 360 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className={`w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br ${step.gradient} flex items-center justify-center shadow-glow`}
+            >
               <Icon className="w-12 h-12 text-white" />
-            </div>
+            </motion.div>
 
-            {/* Title & Subtitle */}
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{currentStep.title}</h1>
-            <p className="text-zinc-400 text-lg mb-8">{currentStep.subtitle}</p>
+            {/* Content */}
+            <h2 className="text-3xl font-bold text-center mb-3 text-blue-900">
+              {step.title}
+            </h2>
+            <p className="text-center text-gray-600 mb-8">
+              {step.subtitle}
+            </p>
 
             {/* Step-specific content */}
-            {step === 0 && (
-              <div className="grid grid-cols-2 gap-4 mb-8 max-w-md mx-auto">
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="text-3xl mb-2">💬</div>
-                  <p className="text-sm">Share Your Story</p>
-                </div>
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="text-3xl mb-2">🎥</div>
-                  <p className="text-sm">Create Reels</p>
-                </div>
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="text-3xl mb-2">💰</div>
-                  <p className="text-sm">Earn Rewards</p>
-                </div>
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="text-3xl mb-2">🌟</div>
-                  <p className="text-sm">Unlock Perks</p>
-                </div>
-              </div>
-            )}
-
-            {step === 1 && (
-              <div className="max-w-md mx-auto mb-8 space-y-4">
-                <Textarea
-                  placeholder="Tell us about yourself..."
-                  value={profileData.bio}
-                  onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                  className="bg-zinc-900 border-zinc-800 min-h-[100px]"
-                />
-                <p className="text-sm text-zinc-500">Complete your profile to unlock 50 bonus points!</p>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="bg-zinc-900 rounded-xl p-6 max-w-md mx-auto mb-8 border border-zinc-800">
-                <div className="space-y-3 text-left">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Like and comment on posts</span>
+            {currentStep === 0 && (
+              <div className="space-y-4 text-blue-900">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-4 h-4 text-purple-600" />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Share stories and reels</span>
+                  <div>
+                    <h3 className="font-semibold">Share Your Story</h3>
+                    <p className="text-sm text-gray-600">Post photos, videos, and thoughts</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Discover new content</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <DollarSign className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Earn CircleValue</h3>
+                    <p className="text-sm text-gray-600">Monetize your content and influence</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Grow Your Circle</h3>
+                    <p className="text-sm text-gray-600">Build a community around what you love</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {step === 3 && (
-              <div className="grid gap-4 max-w-md mx-auto mb-8">
-                <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-4 border border-purple-400/40">
-                  <p className="font-semibold mb-1">💸 Engagement Revenue</p>
-                  <p className="text-sm text-zinc-300">Earn automatically from likes, comments & shares</p>
+            {currentStep === 1 && (
+              <div className="space-y-4">
+                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                  <h3 className="font-semibold text-blue-900 mb-2">💰 Multiple Revenue Streams</h3>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• Tips & Boosts from fans</li>
+                    <li>• Premium Circle subscriptions</li>
+                    <li>• Referral commissions</li>
+                    <li>• Affiliate partnerships</li>
+                  </ul>
                 </div>
-                <div className="bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-xl p-4 border border-blue-400/40">
-                  <p className="font-semibold mb-1">🎯 Referral Income</p>
-                  <p className="text-sm text-zinc-300">$5 per signup + 10% of their earnings forever</p>
+                <p className="text-sm text-center text-gray-600 italic">
+                  "Turn your passion into income. Start earning from day one."
+                </p>
+              </div>
+            )}
+
+            {currentStep === 2 && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {['🎨 Creators', '💪 Fitness', '🍳 Cooking', '💼 Business', '🌟 Lifestyle', '🎵 Music'].map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl text-center border border-purple-200"
+                    >
+                      <span className="text-2xl mb-1 block">{item.split(' ')[0]}</span>
+                      <span className="text-xs font-medium text-blue-900">{item.split(' ')[1]}</span>
+                    </motion.div>
+                  ))}
                 </div>
-                <div className="bg-gradient-to-r from-green-500/20 to-orange-500/20 rounded-xl p-4 border border-green-400/40">
-                  <p className="font-semibold mb-1">🚀 Passive Growth</p>
-                  <p className="text-sm text-zinc-300">Your content earns while you sleep (Pro/Elite)</p>
+                <p className="text-sm text-center text-gray-600">
+                  Join thousands of creators in your niche
+                </p>
+              </div>
+            )}
+
+            {currentStep === 3 && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                  <Textarea
+                    placeholder="Tell us about yourself..."
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="bg-white border-gray-300 text-blue-900"
+                    rows={3}
+                  />
                 </div>
-                <div className="bg-gradient-to-r from-orange-500/20 to-purple-500/20 rounded-xl p-4 border border-orange-400/40">
-                  <p className="font-semibold mb-1">💎 Tiered Bonuses</p>
-                  <p className="text-sm text-zinc-300">Higher tiers = higher % from participation</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Website (optional)</label>
+                  <Input
+                    placeholder="https://yourwebsite.com"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    className="bg-white border-gray-300 text-blue-900"
+                  />
                 </div>
               </div>
             )}
 
-            {step === 4 && (
-              <div className="bg-zinc-900 rounded-xl p-8 max-w-md mx-auto mb-8 border border-zinc-800">
-                <div className="text-6xl mb-4">🔥</div>
-                <p className="text-xl font-bold mb-2">Start with 100 Points!</p>
-                <p className="text-zinc-400">Post daily to maintain your streak and earn rewards</p>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex gap-4 justify-center">
-              {step > 0 && (
+            {/* Buttons */}
+            <div className="flex gap-3 mt-8">
+              {currentStep > 0 && (
                 <Button
                   variant="outline"
-                  onClick={() => setStep(step - 1)}
-                  className="border-zinc-700"
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                  className="flex-1"
                 >
                   Back
                 </Button>
               )}
-              <Button
-                onClick={handleNext}
-                className={`bg-gradient-to-r ${currentStep.color} hover:opacity-90 px-8`}
-              >
-                {step === steps.length - 1 ? "Let's Go!" : 'Next'}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+              {currentStep < steps.length - 1 ? (
+                <Button
+                  onClick={() => setCurrentStep(currentStep + 1)}
+                  className="flex-1 gradient-bg-primary text-white shadow-glow"
+                >
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleComplete}
+                  disabled={isLoading}
+                  className="flex-1 gradient-bg-primary text-white shadow-glow"
+                >
+                  {isLoading ? 'Setting up...' : (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Complete
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
-
-            {/* Skip Option */}
-            {step > 0 && step < steps.length - 1 && (
-              <button
-                onClick={() => setStep(steps.length - 1)}
-                className="text-zinc-500 text-sm mt-4 hover:text-zinc-300"
-              >
-                Skip tutorial
-              </button>
-            )}
           </motion.div>
         </AnimatePresence>
-
-        {/* Help Link */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-zinc-500">
-            Need help? Tap <span className="text-purple-400">?</span> for tutorials or support anytime
-          </p>
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
