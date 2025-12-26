@@ -352,6 +352,14 @@ export default function Profile() {
                       alt="" 
                       className="w-full h-full object-cover hover:opacity-95 transition-opacity"
                     />
+                  ) : post.content_type === 'video' && post.media_url ? (
+                    <video 
+                      src={post.media_url} 
+                      className="w-full h-full object-cover"
+                      muted
+                      playsInline
+                      preload="metadata"
+                    />
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
                       <p className="text-sm text-center line-clamp-3">{post.caption}</p>

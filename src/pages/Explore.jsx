@@ -412,25 +412,25 @@ export default function Explore() {
                         alt="" 
                         className="w-full h-full object-cover"
                       />
+                    ) : post.content_type === 'video' && post.media_url ? (
+                      <video 
+                        src={post.media_url} 
+                        className="w-full h-full object-cover"
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                      />
                     ) : post.content_type === 'text' ? (
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
                         <p className="text-sm text-center line-clamp-3 text-blue-900">{post.caption}</p>
                       </div>
-                    ) : post.content_type === 'video' && post.media_url ? (
-                     <video 
-                       src={post.media_url} 
-                       className="w-full h-full object-cover"
-                       autoPlay
-                       muted
-                       loop
-                       playsInline
-                     />
                     ) : (
-                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                       <span className="text-2xl">
-                         {post.content_type === 'video' ? '🎬' : '🎤'}
-                       </span>
-                     </div>
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <span className="text-2xl">
+                          {post.content_type === 'video' ? '🎬' : '🎤'}
+                        </span>
+                      </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-4">
                       <span className="text-white font-bold text-lg drop-shadow-lg animate-bounce-in">❤️ {post.likes_count || 0}</span>
