@@ -154,16 +154,35 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <div className="relative w-full aspect-square bg-black">
+          <div 
+            className="relative w-full aspect-square bg-black cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              const video = e.currentTarget.querySelector('video');
+              if (video) {
+                if (video.paused) {
+                  video.play().catch(err => console.error('Play error:', err));
+                } else {
+                  video.pause();
+                }
+              }
+            }}
+          >
             <video 
               className="w-full h-full object-contain"
-              controls
               playsInline
+              preload="auto"
             >
               <source src={post.media_url} type="video/mp4" />
               <source src={post.media_url} type="video/webm" />
-              <source src={post.media_url} type="video/quicktime" />
             </video>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-16 h-16 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
           </div>
         )}
         {post.content_type === 'voice' && (
