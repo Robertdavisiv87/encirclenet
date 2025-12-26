@@ -192,6 +192,7 @@ export default function CreatorEconomy() {
           >
             <p className="text-sm opacity-90 mb-1">Total Earnings</p>
             <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
+            <p className="text-xs opacity-75 mt-2">Beta: Tracking & Accruing</p>
           </motion.div>
         </div>
 
@@ -224,6 +225,13 @@ export default function CreatorEconomy() {
               </motion.div>
             );
           })}
+        </div>
+
+        {/* Beta Disclaimer */}
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl">
+          <p className="text-sm text-blue-900">
+            <strong>Beta Notice:</strong> Earnings shown during beta represent tracked and accruing revenue. Cash payouts activate once monetization streams go live.
+          </p>
         </div>
       </motion.div>
 
