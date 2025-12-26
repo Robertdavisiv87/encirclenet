@@ -19,8 +19,8 @@ const tabs = [
     monetization: ['affiliate', 'tips']
   },
   { 
-    id: 'professional', 
-    name: 'Work-from-Home', 
+    id: 'remote', 
+    name: 'Work-from-Home Jobs', 
     icon: Home, 
     color: 'from-blue-500 to-cyan-500',
     monetization: ['affiliate', 'sponsored', 'tips']
