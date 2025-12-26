@@ -83,15 +83,17 @@ export default function AdminRevenue() {
 
   return (
     <AdminProtection>
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold gradient-text mb-2">Platform Revenue</h1>
-          <p className="text-zinc-400">Admin: {user?.full_name || 'Robert Davis'}</p>
-        </div>
+    <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold gradient-text mb-2">💰 Your Earnings, Your Growth!</h1>
+        <p className="text-blue-900 font-medium">Track your total revenue across multiple streams in real-time. Share, post, and engage to boost your earnings automatically!</p>
+        <p className="text-gray-600 text-sm mt-2">Admin: {user?.full_name || 'Robert Davis'}</p>
+      </div>
+
+      <div className="flex justify-end mb-6">
         <Button 
           onClick={handleCashOut}
-          className="bg-gradient-to-r from-green-600 to-emerald-500 hover:opacity-90"
+          className="gradient-bg-primary text-white shadow-glow hover-lift"
         >
           <Download className="w-5 h-5 mr-2" />
           Cash Out
@@ -103,16 +105,16 @@ export default function AdminRevenue() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/50 mb-8">
+        <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 realistic-shadow mb-8">
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-zinc-400 mb-2">Total Platform Revenue</p>
+                <p className="text-blue-900 font-semibold mb-2">Total Platform Revenue</p>
                 <h2 className="text-5xl font-bold gradient-text">
                   ${totalPlatformRevenue.toFixed(2)}
                 </h2>
               </div>
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-600 to-emerald-500 flex items-center justify-center shadow-glow">
+              <div className="w-20 h-20 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
                 <DollarSign className="w-10 h-10 text-white" />
               </div>
             </div>
@@ -129,18 +131,18 @@ export default function AdminRevenue() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift">
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-zinc-400">
+                <CardTitle className="text-sm font-semibold text-blue-900">
                   {item.source}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <h3 className="text-2xl font-bold">${item.amount.toFixed(2)}</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Platform Share: {item.share}</p>
+                  <h3 className="text-2xl font-bold text-blue-900">${item.amount.toFixed(2)}</h3>
+                  <p className="text-xs text-gray-600 mt-1">Platform Share: {item.share}</p>
                 </div>
-                <div className={`h-2 rounded-full bg-gradient-to-r ${item.color}`}></div>
+                <div className={`h-3 rounded-full bg-gradient-to-r ${item.color} shadow-md`}></div>
               </CardContent>
             </Card>
           </motion.div>
@@ -148,21 +150,21 @@ export default function AdminRevenue() {
       </div>
 
       {/* Recent Transactions */}
-      <Card className="bg-zinc-900 border-zinc-800">
+      <Card className="bg-white border-2 border-gray-200 realistic-shadow">
         <CardHeader>
-          <CardTitle>Recent Platform Revenue</CardTitle>
+          <CardTitle className="text-blue-900">Recent Platform Revenue</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {allRevenue.slice(0, 10).map((rev) => (
-              <div key={rev.id} className="flex items-center justify-between p-3 bg-zinc-800 rounded-lg">
+              <div key={rev.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-gray-200 rounded-xl hover-lift">
                 <div className="flex-1">
-                  <p className="font-semibold text-sm capitalize">{rev.source}</p>
-                  <p className="text-xs text-zinc-500">{rev.user_email}</p>
+                  <p className="font-semibold text-sm capitalize text-blue-900">{rev.source}</p>
+                  <p className="text-xs text-gray-600">{rev.user_email}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-green-400">${rev.amount.toFixed(2)}</p>
-                  <p className={`text-xs ${rev.status === 'paid' ? 'text-green-500' : 'text-yellow-500'}`}>
+                  <p className="font-bold text-green-600">${rev.amount.toFixed(2)}</p>
+                  <p className={`text-xs font-medium ${rev.status === 'paid' ? 'text-green-600' : 'text-yellow-600'}`}>
                     {rev.status}
                   </p>
                 </div>

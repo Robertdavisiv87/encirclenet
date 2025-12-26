@@ -2,6 +2,7 @@ import Admin from './pages/Admin';
 import AdminRevenue from './pages/AdminRevenue';
 import Analytics from './pages/Analytics';
 import Create from './pages/Create';
+import CreatorEconomy from './pages/CreatorEconomy';
 import Earnings from './pages/Earnings';
 import Explore from './pages/Explore';
 import Gamification from './pages/Gamification';
@@ -9,9 +10,8 @@ import Home from './pages/Home';
 import Messages from './pages/Messages';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
-import Subscription from './pages/Subscription';
-import CreatorEconomy from './pages/CreatorEconomy';
 import Referrals from './pages/Referrals';
+import Subscription from './pages/Subscription';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +20,7 @@ export const PAGES = {
     "AdminRevenue": AdminRevenue,
     "Analytics": Analytics,
     "Create": Create,
+    "CreatorEconomy": CreatorEconomy,
     "Earnings": Earnings,
     "Explore": Explore,
     "Gamification": Gamification,
@@ -27,9 +28,8 @@ export const PAGES = {
     "Messages": Messages,
     "Onboarding": Onboarding,
     "Profile": Profile,
-    "Subscription": Subscription,
-    "CreatorEconomy": CreatorEconomy,
     "Referrals": Referrals,
+    "Subscription": Subscription,
 }
 
 export const pagesConfig = {

@@ -81,78 +81,102 @@ export default function Gamification() {
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold gradient-text mb-2">Achievements & Rewards</h1>
-        <p className="text-gray-600">Complete challenges, earn badges, level up!</p>
+        <h1 className="text-3xl font-bold gradient-text mb-2">🏆 Daily Challenges & Achievements</h1>
+        <p className="text-blue-900 font-medium">Complete challenges, earn rewards, and level up your profile. Each action fuels your growth and unlocks new opportunities to earn!</p>
       </div>
 
       {/* Level & Points */}
-      <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 realistic-shadow mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-2xl font-bold text-blue-900">Level {level}</h3>
-              <p className="text-sm text-gray-600">{points} / {nextLevelPoints} XP</p>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 realistic-shadow mb-6 hover-lift">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-2xl font-bold text-blue-900">Level {level}</h3>
+                <p className="text-sm text-gray-600">{points} / {nextLevelPoints} XP</p>
+              </div>
+              <div className="w-16 h-16 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow animate-pulse-glow">
+                <Star className="w-8 h-8 text-white" />
+              </div>
             </div>
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-glow">
-              <Star className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <Progress value={levelProgress} className="h-3" />
-        </CardContent>
-      </Card>
+            <Progress value={levelProgress} className="h-3" />
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Streak */}
-      <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6">
-        <CardContent className="p-6">
-          <StreakDisplay 
-            currentStreak={userStats?.current_streak || 0}
-            longestStreak={userStats?.longest_streak || 0}
-          />
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6 hover-lift">
+          <CardContent className="p-6">
+            <StreakDisplay 
+              currentStreak={userStats?.current_streak || 0}
+              longestStreak={userStats?.longest_streak || 0}
+            />
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Badges */}
-      <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-900">
-            <Award className="w-5 h-5 text-yellow-600" />
-            Your Badges ({badges.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {badges.length > 0 ? (
-            <BadgeShowcase badges={badges} maxDisplay={10} />
-          ) : (
-            <p className="text-gray-600 text-center py-8">
-              Complete challenges to earn your first badge! 🎯
-            </p>
-          )}
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6 hover-lift">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Award className="w-5 h-5 text-yellow-600" />
+              Your Badges ({badges.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {badges.length > 0 ? (
+              <BadgeShowcase badges={badges} maxDisplay={10} />
+            ) : (
+              <p className="text-gray-600 text-center py-8">
+                Complete challenges to earn your first badge! 🎯
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Daily Challenges */}
-      <Card className="bg-white border-2 border-gray-200 realistic-shadow">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-900">
-            <Gift className="w-5 h-5 text-purple-600" />
-            Daily Challenges
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            {challenges.map((challenge, index) => (
-              <motion.div
-                key={challenge.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <ChallengeCard challenge={challenge} />
-              </motion.div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Gift className="w-5 h-5 text-purple-600" />
+              Daily Challenges
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4">
+              {challenges.map((challenge, index) => (
+                <motion.div
+                  key={challenge.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                >
+                  <ChallengeCard challenge={challenge} />
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
