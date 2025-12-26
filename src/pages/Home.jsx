@@ -94,7 +94,13 @@ export default function Home() {
         {/* Floating Header */}
         <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
           <div className="flex items-center justify-between max-w-lg mx-auto">
-            <h1 className="text-2xl font-bold gradient-text">Encircle Net</h1>
+            <h1 className="text-2xl font-bold gradient-text flex items-center gap-2">
+              Encircle 
+              <span className="w-8 h-8 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
+                <span className="text-white text-sm">◉</span>
+              </span>
+              Net
+            </h1>
             <div className="flex gap-2">
               <Button 
                 variant="ghost" 
@@ -137,7 +143,13 @@ export default function Home() {
       {/* Header */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-2xl font-bold gradient-text animate-shimmer">EncircleNet</h1>
+          <h1 className="text-2xl font-bold gradient-text animate-shimmer flex items-center gap-2">
+            Encircle 
+            <span className="w-8 h-8 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
+              <span className="text-white text-sm">◉</span>
+            </span>
+            Net
+          </h1>
           <div className="flex gap-2">
             <Button 
               variant="ghost" 
