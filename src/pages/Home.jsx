@@ -181,7 +181,7 @@ export default function Home() {
             Encircle Net
           </h1>
           <div className="flex gap-2">
-            <NotificationBell user={user} />
+            <NotificationDropdown user={user} />
             <Button 
               variant="ghost" 
               size="icon" 
