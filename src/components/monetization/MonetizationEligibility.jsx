@@ -41,23 +41,23 @@ export default function MonetizationEligibility({ userTier, feature }) {
       animate={{ opacity: 1, scale: 1 }}
       className="my-4"
     >
-      <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/50 overflow-hidden">
+      <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 overflow-hidden realistic-shadow">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-glow flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl gradient-bg-primary flex items-center justify-center shadow-glow flex-shrink-0">
               <Icon className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <Lock className="w-4 h-4 text-purple-400" />
-                <h3 className="font-bold text-lg">{config.title}</h3>
+                <Lock className="w-4 h-4 text-purple-600" />
+                <h3 className="font-bold text-lg text-blue-900">{config.title}</h3>
               </div>
-              <p className="text-sm text-zinc-300 mb-3">{config.description}</p>
-              <div className="bg-black/30 rounded-lg p-3 mb-4">
-                <p className="text-xs text-green-400 font-semibold">✓ {config.benefit}</p>
+              <p className="text-sm text-gray-700 mb-3">{config.description}</p>
+              <div className="bg-green-50 rounded-lg p-3 mb-4 border border-green-200">
+                <p className="text-xs text-green-700 font-semibold">✓ {config.benefit}</p>
               </div>
               <Link to={createPageUrl('Subscription')}>
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90">
+                <Button className="w-full gradient-bg-primary text-white shadow-glow hover-lift">
                   <Zap className="w-4 h-4 mr-2" />
                   Upgrade to Pro
                 </Button>
