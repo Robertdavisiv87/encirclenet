@@ -23,6 +23,7 @@ import StreakDisplay from '../components/gamification/StreakDisplay';
 import SEO from '../components/SEO';
 import EditProfileModal from '../components/profile/EditProfileModal';
 import StreakModal from '../components/gamification/StreakModal';
+import FollowersModal from '../components/profile/FollowersModal';
 import { createPageUrl } from '../utils';
 import { Switch } from '@/components/ui/switch';
 
@@ -30,6 +31,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showStreakModal, setShowStreakModal] = useState(false);
+  const [showFollowersModal, setShowFollowersModal] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -207,11 +209,17 @@ export default function Profile() {
                 <p className="font-bold">{myPosts.length}</p>
                 <p className="text-sm text-zinc-500">Posts</p>
               </div>
-              <div className="text-center">
+              <div 
+                className="text-center cursor-pointer hover:opacity-70 transition-opacity"
+                onClick={() => setShowFollowersModal(true)}
+              >
                 <p className="font-bold">{followers.length}</p>
                 <p className="text-sm text-zinc-500">Followers</p>
               </div>
-              <div className="text-center">
+              <div 
+                className="text-center cursor-pointer hover:opacity-70 transition-opacity"
+                onClick={() => setShowFollowersModal(true)}
+              >
                 <p className="font-bold">{following.length}</p>
                 <p className="text-sm text-zinc-500">Following</p>
               </div>
@@ -391,6 +399,15 @@ export default function Profile() {
         onClose={() => setShowStreakModal(false)}
         userStats={userStats}
         posts={myPosts}
+      />
+
+      {/* Followers Modal */}
+      <FollowersModal 
+        isOpen={showFollowersModal}
+        onClose={() => setShowFollowersModal(false)}
+        followers={followers}
+        following={following}
+        currentUser={user}
       />
     </div>
   );
