@@ -223,56 +223,56 @@ export default function Subscription() {
       </div>
 
       {/* Passive Income Explainer */}
-      <Card className="bg-gradient-to-br from-green-500/20 via-blue-500/20 to-purple-500/20 border-green-400/40 mt-12 shadow-glow-green">
+      <Card className="bg-gradient-to-br from-purple-50 via-white to-pink-50 border-2 border-purple-300 mt-12 shadow-glow">
         <CardContent className="p-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center shadow-glow-green">
+            <div className="w-12 h-12 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
               <DollarSign className="w-6 h-6 text-white" />
             </div>
             <div>
               <h3 className="text-2xl font-bold gradient-text">Automatic Passive Income</h3>
-              <p className="text-sm text-zinc-300">Earn money while you sleep from your participation</p>
+              <p className="text-sm text-gray-700">Earn money while you sleep from your participation</p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-black/40 rounded-xl p-5 border border-zinc-700">
-              <p className="text-xs text-zinc-400 mb-2">Free Tier</p>
-              <p className="text-3xl font-bold mb-1">1x</p>
-              <p className="text-xs text-zinc-400">$0.01 per engagement</p>
+            <div className="bg-white rounded-xl p-5 border-2 border-gray-300 realistic-shadow">
+              <p className="text-xs text-gray-600 mb-2">Free Tier</p>
+              <p className="text-3xl font-bold text-blue-900 mb-1">1x</p>
+              <p className="text-xs text-gray-700">$0.01 per engagement</p>
             </div>
-            <div className="bg-black/40 rounded-xl p-5 border-2 border-purple-500/50 shadow-glow-blue">
-              <p className="text-xs text-purple-300 mb-2">Pro Tier</p>
-              <p className="text-3xl font-bold text-purple-400 mb-1">3x</p>
-              <p className="text-xs text-zinc-300">$0.05 per engagement + royalties</p>
+            <div className="bg-white rounded-xl p-5 border-2 border-purple-400 shadow-glow">
+              <p className="text-xs text-purple-600 mb-2">Pro Tier</p>
+              <p className="text-3xl font-bold text-purple-700 mb-1">3x</p>
+              <p className="text-xs text-blue-900">$0.05 per engagement + royalties</p>
             </div>
-            <div className="bg-black/40 rounded-xl p-5 border-2 border-orange-500/50 shadow-glow-orange">
-              <p className="text-xs text-orange-300 mb-2">Elite Tier</p>
-              <p className="text-3xl font-bold text-orange-400 mb-1">10x</p>
-              <p className="text-xs text-zinc-300">$0.10 per engagement + full passive income</p>
+            <div className="bg-white rounded-xl p-5 border-2 border-yellow-500 shadow-glow-gold">
+              <p className="text-xs text-yellow-700 mb-2">Elite Tier</p>
+              <p className="text-3xl font-bold text-yellow-600 mb-1">10x</p>
+              <p className="text-xs text-blue-900">$0.10 per engagement + full passive income</p>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-500/10 to-orange-500/10 rounded-xl p-6 border border-purple-400/30">
-            <h4 className="font-bold mb-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border-2 border-purple-300">
+            <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-yellow-500" />
               How It Works
             </h4>
-            <ul className="space-y-2 text-sm text-zinc-300">
+            <ul className="space-y-2 text-sm text-blue-800">
               <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
                 <span>Every like, comment, share, and post you make earns you money</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
                 <span>Your content continues earning views & engagement while you sleep</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
                 <span>Referrals earn you 10% of their earnings, forever</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
                 <span>Elite members get 10% profit share from entire platform revenue</span>
               </li>
             </ul>
