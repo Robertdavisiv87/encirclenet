@@ -105,17 +105,17 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-auto bg-gradient-to-b from-purple-50 via-white to-pink-50 min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 bg-black/90 backdrop-blur-lg z-40 border-b border-zinc-800">
+      <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
+          <h1 className="text-2xl font-bold gradient-text animate-shimmer">EncircleNet</h1>
           <div className="flex gap-2">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setFeedMode('tiktok')}
-              className="text-zinc-400 hover:text-white"
+              className="text-gray-600 hover:text-gray-900 hover-scale"
               title="TikTok Mode"
             >
               <LayoutGrid className="w-5 h-5" />
@@ -124,7 +124,7 @@ export default function Home() {
               variant="ghost" 
               size="icon" 
               onClick={handleRefresh}
-              className="text-zinc-400 hover:text-white"
+              className="text-gray-600 hover:text-gray-900 hover-scale"
             >
               <RefreshCw className="w-5 h-5" />
             </Button>
@@ -133,7 +133,7 @@ export default function Home() {
       </div>
 
       {/* Stories */}
-      <div className="border-b border-zinc-800">
+      <div className="border-b border-gray-200 bg-white">
         <StoryBar currentUser={user} />
       </div>
 
@@ -144,14 +144,14 @@ export default function Home() {
       <div className="p-4">
         {posts.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
               <span className="text-4xl">🌟</span>
             </div>
-            <h3 className="text-xl font-bold mb-2">Welcome to EncircleNet!</h3>
-            <p className="text-zinc-500 mb-6">
+            <h3 className="text-xl font-bold mb-2 text-gray-900">Welcome to EncircleNet!</h3>
+            <p className="text-gray-600 mb-6">
               Your feed is empty. Start creating content or follow others to see posts.
             </p>
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-500">
+            <Button className="gradient-bg-primary text-white shadow-glow hover-glow">
               Create Your First Post
             </Button>
           </div>
