@@ -89,17 +89,20 @@ export default function Subscription() {
   const subscribeMutation = useMutation({
     mutationFn: async (tier) => {
       const tierData = tiers.find(t => t.id === tier);
+      // Add 1 month free: next billing is 60 days from now (30 days + 30 days free)
+      const freeTrial = 60 * 24 * 60 * 60 * 1000;
       return base44.entities.Subscription.create({
         user_email: user.email,
         tier: tier,
         status: 'active',
         price: tierData.price,
         billing_cycle: 'monthly',
-        next_billing_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        next_billing_date: new Date(Date.now() + freeTrial).toISOString().split('T')[0]
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['my-subscription']);
+      alert('🎉 Subscription activated! You get 1 month FREE!');
     }
   });
 
@@ -181,6 +184,11 @@ export default function Subscription() {
                     <span className="text-4xl font-bold">${tier.price}</span>
                     <span className="text-zinc-500">/month</span>
                   </div>
+                  {tier.price > 0 && (
+                    <p className="text-xs text-green-400 font-semibold mt-2">
+                      🎁 First month FREE
+                    </p>
+                  )}
                 </CardHeader>
 
                 <CardContent className="space-y-6">
