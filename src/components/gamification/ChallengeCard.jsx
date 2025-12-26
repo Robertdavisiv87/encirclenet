@@ -2,7 +2,10 @@ import React from 'react';
 import { CheckCircle, Clock, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const challengeConfig = {
   post_3_times: { label: 'Post 3 Times', icon: '📝', target: 3 },
@@ -15,9 +18,38 @@ const challengeConfig = {
 };
 
 export default function ChallengeCard({ challenge }) {
+  const navigate = useNavigate();
   const config = challengeConfig[challenge.challenge_type] || { label: 'Challenge', icon: '🎯', target: 1 };
   const progress = (challenge.progress / (challenge.target || config.target)) * 100;
   const isCompleted = challenge.status === 'completed';
+
+  const handleAction = () => {
+    switch (challenge.challenge_type) {
+      case 'post_3_times':
+        navigate(createPageUrl('Create'));
+        break;
+      case 'get_10_likes':
+        navigate(createPageUrl('Home'));
+        break;
+      case 'comment_5_times':
+        navigate(createPageUrl('Explore'));
+        break;
+      case 'share_story':
+        navigate(createPageUrl('Create'));
+        break;
+      case 'invite_friend':
+        navigate(createPageUrl('Referrals'));
+        break;
+      case 'tip_creator':
+        navigate(createPageUrl('Explore'));
+        break;
+      case 'complete_profile':
+        navigate(createPageUrl('Profile'));
+        break;
+      default:
+        navigate(createPageUrl('Home'));
+    }
+  };
 
   return (
     <Card className={cn(
@@ -45,14 +77,30 @@ export default function ChallengeCard({ challenge }) {
           )}
         </div>
 
-        <Progress value={progress} className="h-2 mb-2" />
+        <Progress value={progress} className="h-2 mb-3" />
         
-        {challenge.expires_date && !isCompleted && (
-          <div className="flex items-center gap-1 text-xs text-gray-600">
-            <Clock className="w-3 h-3" />
-            Expires {new Date(challenge.expires_date).toLocaleDateString()}
-          </div>
-        )}
+        <div className="flex items-center justify-between">
+          {challenge.expires_date && !isCompleted && (
+            <div className="flex items-center gap-1 text-xs text-gray-600">
+              <Clock className="w-3 h-3" />
+              Expires {new Date(challenge.expires_date).toLocaleDateString()}
+            </div>
+          )}
+          
+          {!isCompleted && (
+            <Button 
+              size="sm" 
+              onClick={handleAction}
+              className="gradient-bg-primary text-white shadow-glow hover-lift ml-auto"
+            >
+              Start Challenge
+            </Button>
+          )}
+
+          {isCompleted && (
+            <span className="text-sm font-semibold text-green-600 ml-auto">✅ Completed!</span>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
