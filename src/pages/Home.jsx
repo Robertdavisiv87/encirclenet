@@ -55,11 +55,13 @@ export default function Home() {
 
   const { data: posts, isLoading, refetch, error } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 50),
+    queryFn: () => base44.entities.Post.list('-created_date', 100),
     initialData: [],
     retry: 3,
     retryDelay: 1000,
-    staleTime: 30000
+    staleTime: 0, // Always fetch fresh to show new videos immediately
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true
   });
 
   const { data: userSubscription } = useQuery({
