@@ -62,20 +62,26 @@ export default function Admin() {
   const subscriptionRevenue = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0);
   const adRevenue = adClicks.reduce((sum, a) => sum + (a.click_value || 0), 0);
   const referralRevenue = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  
+  const verifiedTotal = subscriptionRevenue + adRevenue + referralRevenue;
 
   const stats = [
-    { label: 'Total Revenue', value: `$${totalRevenue.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
+    { label: 'Total Revenue', value: `$${accurateTotal.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
     { label: 'Subscriptions', value: subscriptions.filter(s => s.status === 'active').length, icon: Crown, color: 'from-purple-500 to-pink-500' },
     { label: 'Ad Clicks', value: adClicks.length, icon: MousePointerClick, color: 'from-blue-500 to-cyan-500' },
     { label: 'Referrals', value: referrals.length, icon: Target, color: 'from-orange-500 to-red-500' }
   ];
 
+  const tipsRevenue = allRevenue.filter(r => r.source === 'tips').reduce((sum, r) => sum + (r.amount || 0), 0);
+  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + (r.amount || 0), 0);
+  const accurateTotal = subscriptionRevenue + tipsRevenue + adRevenue + affiliateRevenue + referralRevenue;
+  
   const revenueBreakdown = [
-    { label: 'Subscriptions', amount: subscriptionRevenue, percentage: (subscriptionRevenue / totalRevenue * 100) || 0 },
-    { label: 'Tips & Boosts', amount: allRevenue.filter(r => r.source === 'tips').reduce((sum, r) => sum + r.amount, 0), percentage: 0 },
-    { label: 'Ad Revenue', amount: adRevenue, percentage: (adRevenue / totalRevenue * 100) || 0 },
-    { label: 'Affiliate', amount: allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + r.amount, 0), percentage: 0 },
-    { label: 'Referrals', amount: referralRevenue, percentage: (referralRevenue / totalRevenue * 100) || 0 }
+    { label: 'Subscriptions', amount: subscriptionRevenue, percentage: accurateTotal > 0 ? (subscriptionRevenue / accurateTotal * 100) : 0 },
+    { label: 'Tips & Boosts', amount: tipsRevenue, percentage: accurateTotal > 0 ? (tipsRevenue / accurateTotal * 100) : 0 },
+    { label: 'Ad Revenue', amount: adRevenue, percentage: accurateTotal > 0 ? (adRevenue / accurateTotal * 100) : 0 },
+    { label: 'Affiliate', amount: affiliateRevenue, percentage: accurateTotal > 0 ? (affiliateRevenue / accurateTotal * 100) : 0 },
+    { label: 'Referrals', amount: referralRevenue, percentage: accurateTotal > 0 ? (referralRevenue / accurateTotal * 100) : 0 }
   ];
 
   if (!user || user.role !== 'admin') return null;

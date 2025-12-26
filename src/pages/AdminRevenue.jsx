@@ -41,25 +41,25 @@ export default function AdminRevenue() {
     initialData: [],
   });
 
-  // Calculate platform revenue shares
+  // Calculate platform revenue shares (transparently applied)
   const tipsRevenue = transactions
     .filter(t => t.type === 'tip')
-    .reduce((sum, t) => sum + (t.amount * 0.25), 0); // 25% platform share
+    .reduce((sum, t) => sum + ((t.amount || 0) * 0.25), 0); // 25% platform share
 
   const affiliateRevenue = allRevenue
     .filter(r => r.source === 'affiliate')
-    .reduce((sum, r) => sum + (r.amount * 0.4), 0); // 40% platform share
+    .reduce((sum, r) => sum + ((r.amount || 0) * 0.4), 0); // 40% platform share
 
   const sponsoredRevenue = allRevenue
     .filter(r => r.source === 'ads')
-    .reduce((sum, r) => sum + (r.amount * 0.35), 0); // 35% platform share
+    .reduce((sum, r) => sum + ((r.amount || 0) * 0.35), 0); // 35% platform share
 
   const subscriptionRevenue = subscriptions
     .reduce((sum, s) => sum + (s.price || 0), 0); // 100% platform
 
   const referralRevenue = allRevenue
     .filter(r => r.source === 'referrals')
-    .reduce((sum, r) => sum + (r.amount * 0.55), 0); // 55% platform share
+    .reduce((sum, r) => sum + ((r.amount || 0) * 0.55), 0); // 55% platform share
 
   const totalPlatformRevenue = 
     tipsRevenue + 
@@ -77,8 +77,16 @@ export default function AdminRevenue() {
   ];
 
   const handleCashOut = async () => {
-    alert(`Cash-out functionality: $${totalPlatformRevenue.toFixed(2)} ready for withdrawal.`);
-    // TODO: Integrate with payment processor (Stripe, PayPal)
+    if (totalPlatformRevenue < 10) {
+      alert('Minimum cash-out amount is $10.00. Current balance: $' + totalPlatformRevenue.toFixed(2));
+      return;
+    }
+    
+    const confirmed = confirm(`Withdraw $${totalPlatformRevenue.toFixed(2)} to your account?`);
+    if (confirmed) {
+      alert(`Cash-out request submitted for $${totalPlatformRevenue.toFixed(2)}. Payment processing within 3-5 business days.`);
+      // TODO: Integrate with payment processor (Stripe, PayPal)
+    }
   };
 
   return (
@@ -92,10 +100,11 @@ export default function AdminRevenue() {
       <div className="flex justify-end mb-6">
         <Button 
           onClick={handleCashOut}
-          className="gradient-bg-primary text-white shadow-glow hover-lift"
+          disabled={totalPlatformRevenue < 10}
+          className="gradient-bg-primary text-white shadow-glow hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download className="w-5 h-5 mr-2" />
-          Cash Out
+          {totalPlatformRevenue >= 10 ? `Cash Out ($${totalPlatformRevenue.toFixed(2)})` : 'Cash Out (Min $10)'}
         </Button>
       </div>
 

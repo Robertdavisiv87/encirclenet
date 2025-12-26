@@ -72,12 +72,12 @@ export default function Earnings() {
   });
 
   const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
-  const adRevenue = allRevenue.filter(r => r.source === 'ads').reduce((sum, r) => sum + r.amount, 0);
-  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + r.amount, 0);
-  const tipsEarnings = transactions.filter(t => t.type === 'tip').reduce((sum, t) => sum + t.amount, 0);
-  const subscriptionRevenue = allRevenue.filter(r => r.source === 'subscriptions').reduce((sum, r) => sum + r.amount, 0);
+  const adRevenue = allRevenue.filter(r => r.source === 'ads').reduce((sum, r) => sum + (r.amount || 0), 0);
+  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + (r.amount || 0), 0);
+  const tipsEarnings = transactions.filter(t => t.type === 'tip').reduce((sum, t) => sum + (t.amount || 0), 0);
+  const subscriptionRevenue = allRevenue.filter(r => r.source === 'subscriptions').reduce((sum, r) => sum + (r.amount || 0), 0);
 
-  const totalEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+  const totalEarnings = tipsEarnings + referralEarnings + adRevenue + affiliateRevenue + subscriptionRevenue;
   const tipsCount = transactions.filter(t => t.type === 'tip').length;
   const boostsCount = transactions.filter(t => t.type === 'boost').length;
 
@@ -85,8 +85,8 @@ export default function Earnings() {
   const earningsTrend = 12.5;
 
   const stats = [
-    { label: 'Total Earned', value: `$${(totalEarnings + referralEarnings + adRevenue + affiliateRevenue).toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
-    { label: 'Tips & Boosts', value: `$${totalEarnings.toFixed(2)}`, icon: Gift, color: 'from-pink-500 to-rose-500' },
+    { label: 'Total Earned', value: `$${totalEarnings.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
+    { label: 'Tips & Boosts', value: `$${tipsEarnings.toFixed(2)}`, icon: Gift, color: 'from-pink-500 to-rose-500' },
     { label: 'Referrals', value: `$${referralEarnings.toFixed(2)}`, icon: Users, color: 'from-purple-500 to-indigo-500' },
     { label: 'Ads & Affiliate', value: `$${(adRevenue + affiliateRevenue).toFixed(2)}`, icon: TrendingUp, color: 'from-yellow-500 to-orange-500' },
   ];
@@ -117,7 +117,7 @@ export default function Earnings() {
               <p className="text-sm text-zinc-400 mb-1">Total Earnings</p>
               <div className="flex items-baseline gap-3">
                 <h2 className="text-5xl font-bold text-green-400">
-                  ${(totalEarnings + referralEarnings + adRevenue + affiliateRevenue).toFixed(2)}
+                  ${totalEarnings.toFixed(2)}
                 </h2>
                 <div className="flex items-center gap-1 text-green-400 text-sm">
                   <TrendingUp className="w-4 h-4" />
@@ -252,22 +252,45 @@ export default function Earnings() {
       {/* Payout Info */}
       <Card className="bg-zinc-900 border-zinc-800 mt-6">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-500" />
+          {totalEarnings > 0 ? (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Available for Payout</p>
+                  <p className="text-2xl font-bold text-green-400">${totalEarnings.toFixed(2)}</p>
+                  <p className="text-xs text-gray-500 mt-1">Minimum payout: $10.00</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">Available for Payout</p>
-                <p className="text-2xl font-bold text-green-400">${totalEarnings.toFixed(2)}</p>
+              <Button 
+                className="bg-gradient-to-r from-green-600 to-emerald-500"
+                disabled={totalEarnings < 10}
+              >
+                {totalEarnings >= 10 ? 'Withdraw' : 'Not Available'}
+              </Button>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="w-8 h-8 text-gray-600" />
+              </div>
+              <h3 className="text-lg font-bold mb-2">Start Earning Today</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Your earnings will appear here. Start creating content, inviting friends, and engaging to earn!
+              </p>
+              <div className="bg-zinc-800/50 rounded-xl p-4 text-left max-w-md mx-auto">
+                <p className="text-sm font-semibold mb-2">Quick earning tips:</p>
+                <ul className="space-y-1 text-xs text-gray-400">
+                  <li>• Post quality content to receive tips</li>
+                  <li>• Share your referral code to earn $5-$50 per signup</li>
+                  <li>• Join affiliate programs for commission</li>
+                  <li>• Engage with ads to earn PPC revenue</li>
+                </ul>
               </div>
             </div>
-            <Button className="bg-gradient-to-r from-green-600 to-emerald-500">
-              Withdraw
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          )}
     </div>
   );
 }

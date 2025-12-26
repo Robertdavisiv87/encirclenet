@@ -155,17 +155,21 @@ export default function CreatorEconomy() {
     }
   };
 
-  // Mock earnings data (replace with real data)
+  // Calculate accurate earnings from all sources
+  const tipsTotal = tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0);
+  const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  
   const earnings = {
-    tips: 234.50,
-    subscriptions: 890.00,
-    affiliate: 1234.75,
-    referrals: 456.30,
-    shop: 678.90,
-    brands: 1890.50
+    tips: tipsTotal,
+    subscriptions: subscriptionsTotal,
+    affiliate: 0, // Will be calculated from AffiliateLink entity
+    referrals: referralsTotal,
+    shop: creatorShop?.total_revenue || 0,
+    brands: brandAccount?.total_spent || 0
   };
 
-  const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + val, 0);
+  const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
 
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
