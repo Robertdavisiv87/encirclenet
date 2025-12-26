@@ -178,15 +178,19 @@ export default function Explore() {
         </TabsList>
 
         <TabsContent value="feed">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tabPosts.map((post) => (
-              <InteractivePost
-                key={post.id}
-                post={post}
-                userTier={userTier}
-              />
-            ))}
-          </div>
+          {activeTab === 'remote' ? (
+            <RemoteJobsSection />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {tabPosts.map((post) => (
+                <InteractivePost
+                  key={post.id}
+                  post={post}
+                  userTier={userTier}
+                />
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="niches">
