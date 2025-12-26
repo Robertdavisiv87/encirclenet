@@ -95,13 +95,12 @@ export default function Home() {
         <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <h1 className="text-2xl font-bold gradient-text flex items-center gap-2">
-              Encircle 
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
                 alt="Encircle Net" 
                 className="w-8 h-8 rounded-full shadow-glow"
               />
-              Net
+              Encircle Net
             </h1>
             <div className="flex gap-2">
               <Button 
@@ -146,13 +145,12 @@ export default function Home() {
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
           <h1 className="text-2xl font-bold gradient-text animate-shimmer flex items-center gap-2">
-            Encircle 
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
               alt="Encircle Net" 
               className="w-8 h-8 rounded-full shadow-glow"
             />
-            Net
+            Encircle Net
           </h1>
           <div className="flex gap-2">
             <Button 
