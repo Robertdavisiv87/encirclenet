@@ -21,9 +21,12 @@ import TierBadge from '../components/monetization/TierBadge';
 import BadgeShowcase from '../components/gamification/BadgeShowcase';
 import StreakDisplay from '../components/gamification/StreakDisplay';
 import SEO from '../components/SEO';
+import EditProfileModal from '../components/profile/EditProfileModal';
+import { createPageUrl } from '../utils';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -174,7 +177,12 @@ export default function Profile() {
             <div className="flex items-center gap-4 mb-4 flex-wrap">
               <h2 className="text-xl font-bold">{user.full_name || 'User'}</h2>
               <TierBadge tier={subscription?.tier || 'free'} size="md" />
-              <Button variant="outline" size="sm" className="border-zinc-700">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-zinc-700"
+                onClick={() => setShowEditModal(true)}
+              >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
               </Button>
@@ -229,14 +237,17 @@ export default function Profile() {
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <Button 
-            onClick={() => window.location.href = '/subscription'}
+            onClick={() => window.location.href = createPageUrl('Subscription')}
             variant="outline"
             className="border-purple-500/50"
           >
             <Crown className="w-4 h-4 mr-2" />
-            Upgrade Tier
+            {subscription?.tier === 'free' ? 'Upgrade (Free)' : `Tier: ${subscription?.tier || 'Free'}`}
           </Button>
-          <Button className="bg-gradient-to-r from-purple-600 to-pink-500">
+          <Button 
+            className="bg-gradient-to-r from-purple-600 to-pink-500"
+            onClick={() => window.location.href = createPageUrl('Explore')}
+          >
             <Users className="w-4 h-4 mr-2" />
             My Circle
           </Button>
@@ -325,6 +336,20 @@ export default function Profile() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal 
+        show={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        currentUser={user}
+        onSave={() => {
+          const loadUser = async () => {
+            const currentUser = await base44.auth.me();
+            setUser(currentUser);
+          };
+          loadUser();
+        }}
+      />
     </div>
   );
 }
