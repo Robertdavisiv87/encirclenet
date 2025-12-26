@@ -171,12 +171,18 @@ export default function Create() {
       // Upload media file if present
       if (mediaFile) {
         try {
+          console.log('Starting upload for:', contentType, 'File size:', mediaFile.size);
           const { file_url } = await base44.integrations.Core.UploadFile({ file: mediaFile });
           mediaUrl = file_url;
-          console.log('Media uploaded:', file_url);
+          console.log('✅ Media uploaded successfully:', file_url);
+          
+          // Verify URL is accessible
+          if (!file_url || file_url.trim() === '') {
+            throw new Error('Upload returned empty URL');
+          }
         } catch (uploadError) {
-          console.error('Upload error:', uploadError);
-          alert('Failed to upload media. Please try a smaller file or different format.');
+          console.error('❌ Upload error:', uploadError);
+          alert('Failed to upload media. Please try again or use a different file.');
           setIsLoading(false);
           return;
         }
@@ -318,7 +324,17 @@ export default function Create() {
                 <img src={mediaPreview} alt="Preview" className="w-full aspect-square object-cover" />
               )}
               {contentType === 'video' && (
-                <video src={mediaPreview} className="w-full aspect-square object-cover" controls />
+                <video 
+                  src={mediaPreview} 
+                  className="w-full aspect-square object-cover" 
+                  controls
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src={mediaPreview} type="video/mp4" />
+                  <source src={mediaPreview} type="video/quicktime" />
+                  <source src={mediaPreview} type="video/webm" />
+                </video>
               )}
               {contentType === 'voice' && (
                 <div className="w-full aspect-video bg-zinc-900 flex items-center justify-center">
