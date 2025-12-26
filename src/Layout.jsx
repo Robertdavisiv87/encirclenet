@@ -15,7 +15,8 @@ import {
   DollarSign,
   TrendingUp,
   Trophy,
-  Shield
+  Shield,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +40,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
     { name: 'Explore', icon: Compass, page: 'Explore' },
+    { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'Messages', icon: MessageCircle, page: 'Messages' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
