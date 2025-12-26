@@ -24,23 +24,21 @@ Deno.serve(async (req) => {
 
     const searchQuery = categoryPrompts[category] || categoryPrompts['all'];
 
-    const prompt = `Find the latest ${searchQuery} currently posted on job platforms like LinkedIn Jobs, Indeed, ZipRecruiter, FlexJobs, We Work Remotely, Remote.co, Upwork, and other major job boards.
-
-CRITICAL: For each job, provide REAL, WORKING application URLs that directly link to the actual job posting on the platform.
+    const prompt = `Find the latest ${searchQuery} currently available.
 
 For each job, provide:
-- job_title: The exact position title as listed on the platform
-- company: Real company name currently hiring
+- job_title: The position title
+- company: Company name
 - location: Remote location info (e.g., "Remote - US", "Remote - Worldwide")
 - job_type: Full-time, Part-time, Contract, or Freelance
-- salary_range: Real salary range if available, otherwise "Not disclosed"
-- description: Accurate 2-3 sentence job description with real requirements
-- requirements: Real key requirements (2-3 specific ones from the actual job posting)
-- apply_url: REAL, WORKING direct application URL to the actual job posting (must be a valid URL like https://linkedin.com/jobs/view/12345 or https://indeed.com/viewjob?jk=abc123)
-- posted_date: Accurate posting date (e.g., "2 days ago", "1 week ago")
+- salary_range: Estimated salary range or "Competitive"
+- description: 2-3 sentence job description
+- requirements: Key requirements (2-3 items)
+- apply_url: Leave empty - we'll generate search URLs
+- posted_date: "Recently posted"
 - category: One of: customer_service, healthcare, it_helpdesk, cloud_infrastructure, admin, freelance, general
 
-Return 20 diverse REAL job listings with VALID application URLs that are actively hiring right now.`;
+Return 20 diverse remote job listings.`;
 
     const jobs = await base44.integrations.Core.InvokeLLM({
       prompt: prompt,
@@ -70,7 +68,13 @@ Return 20 diverse REAL job listings with VALID application URLs that are activel
       }
     });
 
-    return Response.json({ jobs: jobs.jobs || [] });
+    // Generate working search URLs for each job
+    const jobsWithUrls = (jobs.jobs || []).map(job => ({
+     ...job,
+     apply_url: `https://www.google.com/search?q=${encodeURIComponent(`${job.job_title} ${job.company} remote job apply`)}&btnI`
+    }));
+
+    return Response.json({ jobs: jobsWithUrls });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
