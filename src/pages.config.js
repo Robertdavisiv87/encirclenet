@@ -14,6 +14,7 @@ import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import Subscription from './pages/Subscription';
 import ViewProfile from './pages/ViewProfile';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -34,6 +35,7 @@ export const PAGES = {
     "Referrals": Referrals,
     "Subscription": Subscription,
     "ViewProfile": ViewProfile,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

@@ -128,7 +128,12 @@ export default function Profile() {
       <div className="p-4 flex items-center justify-between border-b border-zinc-800">
         <h1 className="text-xl font-bold">{user.full_name || 'User'}</h1>
         <div className="flex gap-2">
-          <Button variant="ghost" size="icon" className="text-zinc-400">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-zinc-400"
+            onClick={() => window.location.href = createPageUrl('Settings')}
+          >
             <Settings className="w-5 h-5" />
           </Button>
           <Button 
