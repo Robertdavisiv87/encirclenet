@@ -52,7 +52,8 @@ export default function Layout({ children, currentPageName }) {
   // Only show admin items to robertdavisiv87@gmail.com
   const adminItems = user?.email === ADMIN_EMAIL ? [
     { name: 'Admin', icon: Shield, page: 'Admin' },
-    { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' }
+    { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' },
+    { name: 'System', icon: TrendingUp, page: 'SystemStatus' }
   ] : [];
 
   return (

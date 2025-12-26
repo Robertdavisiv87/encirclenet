@@ -16,6 +16,7 @@ import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import SystemStatus from './pages/SystemStatus';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +39,7 @@ export const PAGES = {
     "Subscription": Subscription,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "SystemStatus": SystemStatus,
 }
 
 export const pagesConfig = {
