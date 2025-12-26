@@ -166,8 +166,8 @@ export default function Home() {
         <StoryBar currentUser={user} />
       </div>
 
-      {/* Trending Ribbon */}
-      <TrendingRibbon onSelectTrend={(trend) => console.log('Selected:', trend)} />
+      {/* Trending Ribbon - Commented out for now */}
+      {/* <TrendingRibbon onSelectTrend={(trend) => console.log('Selected:', trend)} /> */}
 
       {/* Feed */}
       <div className="p-4">
