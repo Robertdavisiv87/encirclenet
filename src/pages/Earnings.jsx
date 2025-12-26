@@ -291,6 +291,8 @@ export default function Earnings() {
               </div>
             </div>
           )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
