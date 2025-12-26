@@ -79,21 +79,21 @@ export default function Gamification() {
   const levelProgress = (points % nextLevelPoints) / nextLevelPoints * 100;
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Achievements & Rewards</h1>
-        <p className="text-zinc-500">Complete challenges, earn badges, level up!</p>
+        <h1 className="text-3xl font-bold gradient-text mb-2">Achievements & Rewards</h1>
+        <p className="text-gray-600">Complete challenges, earn badges, level up!</p>
       </div>
 
       {/* Level & Points */}
-      <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/30 mb-6">
+      <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 realistic-shadow mb-6">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-2xl font-bold">Level {level}</h3>
-              <p className="text-sm text-zinc-400">{points} / {nextLevelPoints} XP</p>
+              <h3 className="text-2xl font-bold text-blue-900">Level {level}</h3>
+              <p className="text-sm text-gray-600">{points} / {nextLevelPoints} XP</p>
             </div>
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-glow">
               <Star className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function Gamification() {
       </Card>
 
       {/* Streak */}
-      <Card className="bg-zinc-900 border-zinc-800 mb-6">
+      <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6">
         <CardContent className="p-6">
           <StreakDisplay 
             currentStreak={userStats?.current_streak || 0}
@@ -112,10 +112,10 @@ export default function Gamification() {
       </Card>
 
       {/* Badges */}
-      <Card className="bg-zinc-900 border-zinc-800 mb-6">
+      <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-6">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-yellow-400" />
+          <CardTitle className="flex items-center gap-2 text-blue-900">
+            <Award className="w-5 h-5 text-yellow-600" />
             Your Badges ({badges.length})
           </CardTitle>
         </CardHeader>
@@ -123,7 +123,7 @@ export default function Gamification() {
           {badges.length > 0 ? (
             <BadgeShowcase badges={badges} maxDisplay={10} />
           ) : (
-            <p className="text-zinc-500 text-center py-8">
+            <p className="text-gray-600 text-center py-8">
               Complete challenges to earn your first badge! 🎯
             </p>
           )}
@@ -131,10 +131,10 @@ export default function Gamification() {
       </Card>
 
       {/* Daily Challenges */}
-      <Card className="bg-zinc-900 border-zinc-800">
+      <Card className="bg-white border-2 border-gray-200 realistic-shadow">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Gift className="w-5 h-5 text-purple-400" />
+          <CardTitle className="flex items-center gap-2 text-blue-900">
+            <Gift className="w-5 h-5 text-purple-600" />
             Daily Challenges
           </CardTitle>
         </CardHeader>

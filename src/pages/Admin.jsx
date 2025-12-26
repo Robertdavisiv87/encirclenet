@@ -82,10 +82,10 @@ export default function Admin() {
 
   return (
     <AdminProtection>
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-7xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-zinc-500">Platform analytics and revenue insights</p>
+        <h1 className="text-3xl font-bold gradient-text mb-2">Admin Dashboard</h1>
+        <p className="text-gray-600">Platform analytics and revenue insights</p>
       </div>
 
       {/* Stats Grid */}
@@ -99,13 +99,13 @@ export default function Admin() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="bg-zinc-900 border-zinc-800">
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift">
                 <CardContent className="p-4">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3`}>
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3 shadow-md`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-zinc-500">{stat.label}</p>
+                  <p className="text-2xl font-bold text-blue-900">{stat.value}</p>
+                  <p className="text-sm text-gray-600">{stat.label}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -114,10 +114,10 @@ export default function Admin() {
       </div>
 
       {/* Revenue Breakdown */}
-      <Card className="bg-zinc-900 border-zinc-800 mb-8">
+      <Card className="bg-white border-2 border-gray-200 realistic-shadow mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-blue-900">
+            <TrendingUp className="w-5 h-5 text-purple-600" />
             Revenue Breakdown
           </CardTitle>
         </CardHeader>
@@ -127,17 +127,17 @@ export default function Admin() {
               <div key={index} className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium">{item.label}</span>
-                    <span className="text-sm text-zinc-500">{item.percentage.toFixed(1)}%</span>
+                    <span className="text-sm font-medium text-blue-900">{item.label}</span>
+                    <span className="text-sm text-gray-600">{item.percentage.toFixed(1)}%</span>
                   </div>
-                  <div className="w-full bg-zinc-800 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-gradient-to-r from-purple-600 to-pink-500 h-2 rounded-full transition-all"
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
                 </div>
-                <span className="text-lg font-bold ml-6 text-green-400">
+                <span className="text-lg font-bold ml-6 text-green-600">
                   ${item.amount.toFixed(2)}
                 </span>
               </div>
@@ -148,49 +148,49 @@ export default function Admin() {
 
       {/* Recent Activity */}
       <div className="grid md:grid-cols-2 gap-6">
-        <Card className="bg-zinc-900 border-zinc-800">
+        <Card className="bg-white border-2 border-gray-200 realistic-shadow">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-blue-900">
               <span>Recent Subscriptions</span>
-              <ArrowUpRight className="w-4 h-4 text-purple-400" />
+              <ArrowUpRight className="w-4 h-4 text-purple-600" />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {subscriptions.slice(0, 5).map((sub) => (
-                <div key={sub.id} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                <div key={sub.id} className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-xl">
                   <div>
-                    <p className="font-medium text-sm">{sub.user_email}</p>
-                    <p className="text-xs text-zinc-500 uppercase">{sub.tier} tier</p>
+                    <p className="font-medium text-sm text-blue-900">{sub.user_email}</p>
+                    <p className="text-xs text-gray-600 uppercase">{sub.tier} tier</p>
                   </div>
-                  <p className="font-bold text-green-400">${sub.price}</p>
+                  <p className="font-bold text-green-600">${sub.price}</p>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-zinc-900 border-zinc-800">
+        <Card className="bg-white border-2 border-gray-200 realistic-shadow">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-blue-900">
               <span>Top Referrers</span>
-              <Target className="w-4 h-4 text-orange-400" />
+              <Target className="w-4 h-4 text-orange-600" />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {referrals.slice(0, 5).map((ref, i) => (
-                <div key={ref.id} className="flex items-center justify-between p-3 bg-zinc-800/50 rounded-lg">
+                <div key={ref.id} className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center font-bold">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center font-bold text-white shadow-md">
                       #{i + 1}
                     </div>
                     <div>
-                      <p className="font-medium text-sm">{ref.referrer_email}</p>
-                      <p className="text-xs text-zinc-500">{ref.status}</p>
+                      <p className="font-medium text-sm text-blue-900">{ref.referrer_email}</p>
+                      <p className="text-xs text-gray-600">{ref.status}</p>
                     </div>
                   </div>
-                  <p className="font-bold text-green-400">${ref.commission_earned}</p>
+                  <p className="font-bold text-green-600">${ref.commission_earned}</p>
                 </div>
               ))}
             </div>

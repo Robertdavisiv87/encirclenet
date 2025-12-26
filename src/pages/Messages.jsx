@@ -55,30 +55,30 @@ export default function Messages() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       {/* Conversations List */}
       <div className={cn(
-        "w-full md:w-96 bg-black border-r border-zinc-800 flex flex-col",
+        "w-full md:w-96 bg-white border-r border-gray-200 flex flex-col",
         selectedChat && "hidden md:flex"
       )}>
         {/* Header */}
-        <div className="p-4 border-b border-zinc-800">
+        <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold">FlowChat</h1>
+            <h1 className="text-xl font-bold gradient-text">FlowChat</h1>
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="text-zinc-400">
+              <Button variant="ghost" size="icon" className="text-gray-600">
                 <Settings className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-zinc-400">
+              <Button variant="ghost" size="icon" className="text-gray-600">
                 <Edit className="w-5 h-5" />
               </Button>
             </div>
           </div>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <Input
               placeholder="Search messages..."
-              className="pl-10 bg-zinc-900 border-zinc-800 h-10 rounded-xl"
+              className="pl-10 bg-gray-50 border-gray-300 h-10 rounded-xl text-blue-900"
             />
           </div>
         </div>
@@ -90,8 +90,8 @@ export default function Messages() {
               key={conv.id}
               onClick={() => setSelectedChat(conv)}
               className={cn(
-                "w-full flex items-center gap-3 p-4 hover:bg-zinc-900/50 transition-colors",
-                selectedChat?.id === conv.id && "bg-zinc-900"
+                "w-full flex items-center gap-3 p-4 hover:bg-purple-50 transition-colors",
+                selectedChat?.id === conv.id && "bg-purple-100"
               )}
             >
               <div className="relative">
@@ -107,10 +107,10 @@ export default function Messages() {
               </div>
               <div className="flex-1 text-left">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold">{conv.name}</span>
-                  <span className="text-xs text-zinc-500">{conv.time}</span>
+                  <span className="font-semibold text-blue-900">{conv.name}</span>
+                  <span className="text-xs text-gray-500">{conv.time}</span>
                 </div>
-                <p className="text-sm text-zinc-400 truncate">{conv.lastMessage}</p>
+                <p className="text-sm text-gray-600 truncate">{conv.lastMessage}</p>
               </div>
             </button>
           ))}
@@ -119,13 +119,13 @@ export default function Messages() {
 
       {/* Chat Window */}
       <div className={cn(
-        "flex-1 flex flex-col bg-black",
+        "flex-1 flex flex-col bg-white",
         !selectedChat && "hidden md:flex"
       )}>
         {selectedChat ? (
           <>
             {/* Chat Header */}
-            <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
+            <div className="p-4 border-b border-gray-200 flex items-center gap-3 bg-white">
               <Button
                 variant="ghost"
                 size="icon"
@@ -139,8 +139,8 @@ export default function Messages() {
                 <AvatarFallback>{selectedChat.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="font-semibold">{selectedChat.name}</p>
-                <p className="text-xs text-zinc-500">Active now</p>
+                <p className="font-semibold text-blue-900">{selectedChat.name}</p>
+                <p className="text-xs text-gray-600">Active now</p>
               </div>
             </div>
 

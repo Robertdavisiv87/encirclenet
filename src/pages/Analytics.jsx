@@ -79,18 +79,18 @@ export default function Analytics() {
   // Free users see limited analytics
   if (tier === 'free') {
     return (
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-4xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
         <div className="text-center py-20">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-glow">
             <TrendingUp className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-2xl font-bold mb-4">Unlock Advanced Analytics</h2>
-          <p className="text-zinc-400 mb-8 max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4">Unlock Advanced Analytics</h2>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
             Upgrade to Pro or Elite to access detailed insights, engagement metrics, revenue tracking, and more.
           </p>
           <button
             onClick={() => window.location.href = '/subscription'}
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-500 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-xl font-semibold shadow-glow hover:opacity-90 transition-opacity"
           >
             Upgrade Now
           </button>
@@ -107,10 +107,10 @@ export default function Analytics() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-zinc-500">Track your performance and growth</p>
+        <h1 className="text-3xl font-bold gradient-text mb-2">Analytics Dashboard</h1>
+        <p className="text-gray-600">Track your performance and growth</p>
       </div>
 
       {/* Stats Grid */}
@@ -124,13 +124,13 @@ export default function Analytics() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="bg-zinc-900 border-zinc-800">
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift">
                 <CardContent className="p-4">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3`}>
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3 shadow-md`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-zinc-500">{stat.label}</p>
+                  <p className="text-2xl font-bold text-blue-900">{stat.value}</p>
+                  <p className="text-sm text-gray-600">{stat.label}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -146,30 +146,30 @@ export default function Analytics() {
 
       {/* Performance Metrics (Elite Only) */}
       {tier === 'elite' && (
-        <Card className="bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-yellow-500/30">
+        <Card className="bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-yellow-400 realistic-shadow">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-yellow-400" />
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Award className="w-5 h-5 text-yellow-600" />
               Elite Performance Insights
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-black/30 rounded-lg p-4">
-                <p className="text-sm text-zinc-400 mb-2">Engagement Rate</p>
-                <p className="text-3xl font-bold text-yellow-400">
+              <div className="bg-white border-2 border-yellow-300 rounded-xl p-4 shadow-md">
+                <p className="text-sm text-gray-600 mb-2 font-medium">Engagement Rate</p>
+                <p className="text-3xl font-bold text-yellow-700">
                   {myPosts.length > 0 ? ((totalLikes / myPosts.length) * 100 / 10).toFixed(1) : 0}%
                 </p>
               </div>
-              <div className="bg-black/30 rounded-lg p-4">
-                <p className="text-sm text-zinc-400 mb-2">Avg Revenue/Post</p>
-                <p className="text-3xl font-bold text-green-400">
+              <div className="bg-white border-2 border-green-300 rounded-xl p-4 shadow-md">
+                <p className="text-sm text-gray-600 mb-2 font-medium">Avg Revenue/Post</p>
+                <p className="text-3xl font-bold text-green-700">
                   ${myPosts.length > 0 ? (totalRevenue / myPosts.length).toFixed(2) : '0.00'}
                 </p>
               </div>
-              <div className="bg-black/30 rounded-lg p-4">
-                <p className="text-sm text-zinc-400 mb-2">Growth Rate</p>
-                <p className="text-3xl font-bold text-purple-400">+{Math.floor(Math.random() * 30 + 10)}%</p>
+              <div className="bg-white border-2 border-purple-300 rounded-xl p-4 shadow-md">
+                <p className="text-sm text-gray-600 mb-2 font-medium">Growth Rate</p>
+                <p className="text-3xl font-bold text-purple-700">+{Math.floor(Math.random() * 30 + 10)}%</p>
               </div>
             </div>
           </CardContent>
