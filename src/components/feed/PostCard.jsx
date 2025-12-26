@@ -157,19 +157,13 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           <div className="relative w-full aspect-square bg-black">
             <video 
               src={post.media_url} 
-              className="w-full h-full object-contain cursor-pointer"
+              className="w-full h-full object-contain"
               controls
               playsInline
               preload="metadata"
-              onClick={(e) => {
-                if (e.target.paused) {
-                  e.target.play();
-                } else {
-                  e.target.pause();
-                }
-              }}
               onError={(e) => {
-                console.error('Video error:', e);
+                console.error('Video load error:', e);
+                console.error('Video URL:', post.media_url);
               }}
             >
               Your browser does not support video playback.
