@@ -7,7 +7,9 @@ import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
-import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
+import SmartSuggestions from '../components/ai/SmartSuggestions';
+import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell } from 'lucide-react';
+import NotificationBell from '../components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 
 const mockAds = [
@@ -51,10 +53,13 @@ export default function Home() {
     localStorage.setItem('lastGrowPromptDate', new Date().toDateString());
   };
 
-  const { data: posts, isLoading, refetch } = useQuery({
+  const { data: posts, isLoading, refetch, error } = useQuery({
     queryKey: ['posts'],
     queryFn: () => base44.entities.Post.list('-created_date', 50),
-    initialData: []
+    initialData: [],
+    retry: 3,
+    retryDelay: 1000,
+    staleTime: 30000
   });
 
   const { data: userSubscription } = useQuery({
@@ -77,8 +82,28 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-purple-500 mx-auto mb-4" />
+          <p className="text-blue-900 font-medium">Loading your feed...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
+        <div className="text-center p-6">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h3 className="text-xl font-bold mb-2 text-blue-900">Connection Issue</h3>
+          <p className="text-gray-600 mb-4">Unable to load your feed. Please check your connection.</p>
+          <Button onClick={() => refetch()} className="gradient-bg-primary text-white shadow-glow">
+            Try Again
+          </Button>
+        </div>
       </div>
     );
   }
@@ -156,6 +181,7 @@ export default function Home() {
             Encircle Net
           </h1>
           <div className="flex gap-2">
+            <NotificationBell user={user} />
             <Button 
               variant="ghost" 
               size="icon" 
@@ -182,8 +208,11 @@ export default function Home() {
         <StoryBar currentUser={user} />
       </div>
 
+      {/* AI Suggestions */}
+      <SmartSuggestions user={user} />
+
       {/* Feed */}
-      <div className="p-4">
+      <div className="px-4">
         {posts.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
