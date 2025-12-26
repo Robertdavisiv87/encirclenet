@@ -74,8 +74,12 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
 
   return (
     <div 
-      className={`${className} ${aspectClasses[aspectRatio]} relative bg-black cursor-pointer overflow-hidden`}
+      className={`${className} ${aspectClasses[aspectRatio]} relative bg-black cursor-pointer overflow-hidden touch-manipulation`}
       onClick={handleClick}
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        handleClick(e);
+      }}
     >
       <video
         ref={videoRef}
@@ -87,8 +91,8 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
       />
       
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
-          <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-2xl">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-2xl animate-pulse">
             <Play className="w-10 h-10 text-purple-600 ml-1" fill="currentColor" />
           </div>
         </div>
