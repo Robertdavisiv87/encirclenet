@@ -2,8 +2,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 export default function SEO({ 
-  title = 'EncircleNet - The Most Engaging Social Media Platform | Earn While You Share',
-  description = 'Join EncircleNet, the #1 high engagement social media platform where creators earn real money. Share content, build your circle, and monetize your influence with tips, subscriptions, and referrals. The future of social media is here.',
+  title = 'Encircle Net - The Most Engaging Social Media Platform | Earn While You Share',
+  description = 'Join Encircle Net, the #1 high engagement social media platform where creators earn real money. Share content, build your circle, and monetize your influence with tips, subscriptions, and referrals. The future of social media is here.',
   keywords = 'social media platform, high engagement social media, best social media app, earn money social media, content creator platform, monetize social media, influencer platform, social networking, CircleValue, premium social media, creator economy, social media earnings, engagement platform, viral content platform',
   image = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=630&fit=crop',
   url = 'https://encirclenet.com',
@@ -12,7 +12,7 @@ export default function SEO({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "EncircleNet",
+    "name": "Encircle Net",
     "applicationCategory": "SocialNetworkingApplication",
     "description": description,
     "url": url,
@@ -31,7 +31,7 @@ export default function SEO({
     "operatingSystem": "Web, iOS, Android",
     "author": {
       "@type": "Organization",
-      "name": "EncircleNet",
+      "name": "Encircle Net",
       "url": url
     },
     "featureList": [
@@ -60,7 +60,7 @@ export default function SEO({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="EncircleNet" />
+      <meta property="og:site_name" content="Encircle Net" />
       
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
@@ -73,7 +73,7 @@ export default function SEO({
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="1 days" />
-      <meta name="author" content="EncircleNet" />
+      <meta name="author" content="Encircle Net" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       

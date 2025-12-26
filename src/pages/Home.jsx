@@ -87,14 +87,14 @@ export default function Home() {
     return (
       <div className="relative">
         <SEO 
-          title="EncircleNet Feed - Viral Content & High Engagement Social Media"
-          description="Discover trending posts, viral content, and connect with top creators on EncircleNet. The most engaging social media platform with real-time interactions."
+          title="Encircle Net Feed - Viral Content & High Engagement Social Media"
+          description="Discover trending posts, viral content, and connect with top creators on Encircle Net. The most engaging social media platform with real-time interactions."
         />
         <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
         {/* Floating Header */}
         <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
           <div className="flex items-center justify-between max-w-lg mx-auto">
-            <h1 className="text-2xl font-bold gradient-text">EncircleNet</h1>
+            <h1 className="text-2xl font-bold gradient-text">Encircle Net</h1>
             <div className="flex gap-2">
               <Button 
                 variant="ghost" 
@@ -129,8 +129,8 @@ export default function Home() {
   return (
     <div className="max-w-lg mx-auto bg-gradient-to-b from-purple-50 via-white to-pink-50 min-h-screen">
       <SEO 
-        title="EncircleNet - #1 High Engagement Social Media Platform | Earn While You Share"
-        description="Join 1M+ creators on EncircleNet, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
+        title="Encircle Net - #1 High Engagement Social Media Platform | Earn While You Share"
+        description="Join 1M+ creators on Encircle Net, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
         keywords="high engagement social media, best social media platform 2025, earn money online, content creator platform, social media with highest engagement, monetize content, influencer platform, creator economy"
       />
       <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
@@ -172,7 +172,7 @@ export default function Home() {
             <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
               <span className="text-4xl">🌟</span>
             </div>
-            <h3 className="text-xl font-bold mb-2 text-blue-900">Welcome to EncircleNet!</h3>
+            <h3 className="text-xl font-bold mb-2 text-blue-900">Welcome to Encircle Net!</h3>
             <p className="text-gray-600 mb-6">
               Your feed is empty. Start creating content or follow others to see posts.
             </p>

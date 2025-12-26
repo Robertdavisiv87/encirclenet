@@ -59,7 +59,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Desktop Sidebar */}
       <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex-col p-6 z-50 shadow-lg">
         <Link to={createPageUrl('Home')} className="mb-10 group">
-          <h1 className="text-2xl font-bold gradient-text hover-scale">EncircleNet</h1>
+          <h1 className="text-2xl font-bold gradient-text hover-scale">Encircle Net</h1>
           <p className="text-xs text-gray-500 mt-1">Your World • Your Voice • Your Value</p>
         </Link>
 
