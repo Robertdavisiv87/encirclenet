@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import ViralIndicator from '../discovery/ViralIndicator';
+import ImageLightbox from '../ui/ImageLightbox';
 
 export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -15,6 +16,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [tipAmount, setTipAmount] = useState(5);
   const [showHeart, setShowHeart] = useState(false);
   const [userSubscription, setUserSubscription] = useState(null);
+  const [showImageLightbox, setShowImageLightbox] = useState(false);
 
   useEffect(() => {
     const checkLike = async () => {
@@ -144,7 +146,11 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           <img 
             src={post.media_url} 
             alt="Post" 
-            className="w-full aspect-square object-cover"
+            className="w-full aspect-square object-cover cursor-pointer hover:opacity-95 transition-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowImageLightbox(true);
+            }}
           />
         )}
         {post.content_type === 'video' && post.media_url && (
@@ -320,6 +326,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        isOpen={showImageLightbox}
+        imageUrl={post.media_url}
+        caption={post.caption}
+        onClose={() => setShowImageLightbox(false)}
+      />
     </div>
   );
 }
