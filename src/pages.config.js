@@ -12,9 +12,9 @@ import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
+import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import ViewProfile from './pages/ViewProfile';
-import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -33,9 +33,9 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Referrals": Referrals,
+    "Settings": Settings,
     "Subscription": Subscription,
     "ViewProfile": ViewProfile,
-    "Settings": Settings,
 }
 
 export const pagesConfig = {

@@ -15,6 +15,7 @@ import CreatorLeaderboard from '../components/leaderboard/CreatorLeaderboard';
 import TrendingTabs from '../components/explore/TrendingTabs';
 import InteractivePost from '../components/explore/InteractivePost';
 import RemoteJobsSection from '../components/jobs/RemoteJobsSection';
+import TechProductsSection from '../components/tech/TechProductsSection';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
 import { motion } from 'framer-motion';
@@ -180,6 +181,8 @@ export default function Explore() {
         <TabsContent value="feed">
           {activeTab === 'remote' ? (
             <RemoteJobsSection />
+          ) : activeTab === 'tech' ? (
+            <TechProductsSection />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {tabPosts.map((post) => (
