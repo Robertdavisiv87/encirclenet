@@ -27,12 +27,15 @@ import StreakModal from '../components/gamification/StreakModal';
 import FollowersModal from '../components/profile/FollowersModal';
 import { createPageUrl } from '../utils';
 import { Switch } from '@/components/ui/switch';
+import ImageLightbox from '../components/ui/ImageLightbox';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showStreakModal, setShowStreakModal] = useState(false);
   const [showFollowersModal, setShowFollowersModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showImageLightbox, setShowImageLightbox] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -336,12 +339,18 @@ export default function Profile() {
                 <div 
                   key={post.id}
                   className="aspect-square relative group cursor-pointer overflow-hidden"
+                  onClick={() => {
+                    if (post.content_type === 'photo' && post.media_url) {
+                      setSelectedImage({ url: post.media_url, caption: post.caption });
+                      setShowImageLightbox(true);
+                    }
+                  }}
                 >
                   {post.content_type === 'photo' && post.media_url ? (
                     <img 
                       src={post.media_url} 
                       alt="" 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover hover:opacity-95 transition-opacity"
                     />
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
@@ -451,6 +460,17 @@ export default function Profile() {
         followers={followers}
         following={following}
         currentUser={user}
+      />
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        isOpen={showImageLightbox}
+        imageUrl={selectedImage?.url}
+        caption={selectedImage?.caption}
+        onClose={() => {
+          setShowImageLightbox(false);
+          setSelectedImage(null);
+        }}
       />
     </div>
   );
