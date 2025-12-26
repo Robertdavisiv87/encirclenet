@@ -125,7 +125,7 @@
     box-shadow: 0 12px 40px rgba(167, 139, 250, 0.25), 0 4px 15px rgba(96, 165, 250, 0.2);
   }
   
-  /* Animations */
+  /* Ultra-Realistic Animations */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
@@ -135,9 +135,44 @@
   }
   
   .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.3), transparent);
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-coin-flip {
+    animation: coinFlip 0.8s ease-out;
+  }
+  
+  .animate-sparkle {
+    animation: sparkle 1s ease-out;
+  }
+  
+  .animate-grow {
+    animation: grow 0.3s ease-out;
+  }
+  
+  .realistic-shadow {
+    box-shadow: 
+      0 2px 4px rgba(167, 139, 250, 0.1),
+      0 8px 16px rgba(96, 165, 250, 0.15),
+      0 16px 32px rgba(52, 211, 153, 0.1);
+  }
+  
+  .realistic-shadow-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .realistic-shadow-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 4px 8px rgba(167, 139, 250, 0.15),
+      0 16px 32px rgba(96, 165, 250, 0.2),
+      0 32px 64px rgba(52, 211, 153, 0.15);
   }
   
   @keyframes float {
@@ -155,22 +190,60 @@
     100% { background-position: 200% 0; }
   }
   
-  /* Interactive States */
+  @keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes coinFlip {
+    0% { transform: rotateY(0deg) translateY(0); }
+    50% { transform: rotateY(180deg) translateY(-20px); }
+    100% { transform: rotateY(360deg) translateY(0); }
+  }
+  
+  @keyframes sparkle {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+  }
+  
+  @keyframes grow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  
+  /* Interactive States - Ultra Realistic */
   .hover-lift {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(96, 165, 250, 0.4);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(96, 165, 250, 0.4);
   }
   
   .hover-scale {
-    transition: transform 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
   .hover-scale:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+  }
+  
+  .hover-glow {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-glow:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+  }
+  
+  .tap-feedback:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
   }
   
   /* Typography */
