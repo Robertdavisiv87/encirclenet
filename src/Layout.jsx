@@ -9,6 +9,7 @@ import {
   PlusSquare, 
   Heart, 
   User, 
+  Users,
   MessageCircle,
   Compass,
   DollarSign,
