@@ -16,6 +16,7 @@ import TrendingTabs from '../components/explore/TrendingTabs';
 import InteractivePost from '../components/explore/InteractivePost';
 import RemoteJobsSection from '../components/jobs/RemoteJobsSection';
 import TechProductsSection from '../components/tech/TechProductsSection';
+import CreatorsMarketplace from '../components/creators/CreatorsMarketplace';
 import { mockPosts } from '../components/data/mockPosts';
 import { mockUsers } from '../components/data/mockUsers';
 import { motion } from 'framer-motion';
@@ -175,6 +176,10 @@ export default function Explore() {
           <TabsTrigger value="circles" className="flex-1">
             <Users className="w-4 h-4 mr-2" />
             Circles
+          </TabsTrigger>
+          <TabsTrigger value="creators" className="flex-1">
+            <Briefcase className="w-4 h-4 mr-2" />
+            Creators
           </TabsTrigger>
         </TabsList>
 
@@ -353,6 +358,10 @@ export default function Explore() {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="creators">
+          <CreatorsMarketplace />
         </TabsContent>
       </Tabs>
       </div>
