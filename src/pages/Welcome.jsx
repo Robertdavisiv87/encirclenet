@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, User, DollarSign, Users, Eye, Settings } from 'lucide-react';
+import { Sparkles, User, DollarSign, Users, Eye, Settings, Lightbulb, TrendingUp, ShoppingBag, Briefcase, Share2, Zap } from 'lucide-react';
 import SEO from '../components/SEO';
 
 export default function Welcome() {
@@ -125,11 +125,103 @@ export default function Welcome() {
           </p>
         </motion.section>
 
-        {/* Your Control */}
+        {/* Passive Income Tips */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
+          className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 mb-6 shadow-soft border-2 border-yellow-200"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-glow">
+              <Lightbulb className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-blue-900">💡 Fun Ways to Create Passive Income</h2>
+          </div>
+          <p className="text-gray-700 mb-6 font-medium">
+            Discover creative ways to earn while you sleep using Encircle Net's powerful sectors:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Creator Economy */}
+            <div className="bg-white rounded-xl p-4 border-2 border-purple-200 hover:border-purple-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp className="w-5 h-5 text-purple-600" />
+                <h3 className="font-bold text-blue-900">Creator Economy</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                💰 Post once, earn forever! Create viral content and receive tips, subscriptions, and recurring royalties from your top fans.
+              </p>
+            </div>
+
+            {/* Affiliate Marketing */}
+            <div className="bg-white rounded-xl p-4 border-2 border-blue-200 hover:border-blue-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <ShoppingBag className="w-5 h-5 text-blue-600" />
+                <h3 className="font-bold text-blue-900">Affiliate Links</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                🛍️ Share tech products, services & deals. Earn commissions on every sale — even while you're offline!
+              </p>
+            </div>
+
+            {/* Freelance Services */}
+            <div className="bg-white rounded-xl p-4 border-2 border-green-200 hover:border-green-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <Briefcase className="w-5 h-5 text-green-600" />
+                <h3 className="font-bold text-blue-900">Creator Services</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                💼 List your skills once, get hired repeatedly. Build a portfolio that attracts clients on autopilot.
+              </p>
+            </div>
+
+            {/* Referrals */}
+            <div className="bg-white rounded-xl p-4 border-2 border-pink-200 hover:border-pink-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <Share2 className="w-5 h-5 text-pink-600" />
+                <h3 className="font-bold text-blue-900">Referral Network</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                🚀 Share your unique link. Earn $5-$50 per referral who joins and stays active — passive income at its best!
+              </p>
+            </div>
+
+            {/* Brand Campaigns */}
+            <div className="bg-white rounded-xl p-4 border-2 border-orange-200 hover:border-orange-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-5 h-5 text-orange-600" />
+                <h3 className="font-bold text-blue-900">Brand Partnerships</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                ⚡ Join PPC campaigns. Get paid per click, lead, or sale — your content works for you 24/7!
+              </p>
+            </div>
+
+            {/* Premium Circles */}
+            <div className="bg-white rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-400 transition-all">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-bold text-blue-900">Premium Circles</h3>
+              </div>
+              <p className="text-sm text-gray-700">
+                👑 Create exclusive communities. Charge monthly subscriptions and earn recurring revenue from your loyal members!
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-white rounded-xl border-2 border-yellow-300">
+            <p className="text-center text-gray-700 font-semibold">
+              🌟 <span className="gradient-text">Pro Tip:</span> Combine multiple income streams for maximum passive earnings! 
+            </p>
+          </div>
+        </motion.section>
+
+        {/* Your Control */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
           className="bg-white rounded-2xl p-8 mb-6 shadow-soft border border-gray-200"
         >
           <div className="flex items-center gap-3 mb-4">
@@ -155,7 +247,7 @@ export default function Welcome() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.7 }}
           className="text-center mt-12 mb-8"
         >
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 border-2 border-purple-300">
