@@ -141,10 +141,18 @@ export default function RemoteJobsSection() {
               <Button
                 className="w-full gradient-bg-primary text-white shadow-glow hover-lift"
                 onClick={() => {
-                  if (job.apply_url) {
-                    window.open(job.apply_url, '_blank', 'noopener,noreferrer');
-                  } else {
-                    alert('Application URL not available. Please search for this job on ' + (job.platform || 'job boards'));
+                  try {
+                    if (job.apply_url && job.apply_url.startsWith('http')) {
+                      window.open(job.apply_url, '_blank', 'noopener,noreferrer');
+                    } else {
+                      // Fallback: Search for the job
+                      const searchQuery = encodeURIComponent(`${job.job_title} ${job.company} remote job`);
+                      window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank', 'noopener,noreferrer');
+                    }
+                  } catch (error) {
+                    alert('Opening job search for: ' + job.job_title);
+                    const searchQuery = encodeURIComponent(`${job.job_title} ${job.company} remote job`);
+                    window.open(`https://www.google.com/search?q=${searchQuery}`, '_blank', 'noopener,noreferrer');
                   }
                 }}
               >
