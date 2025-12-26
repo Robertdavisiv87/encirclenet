@@ -1,9 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, User, DollarSign, Users, Eye, Settings, Lightbulb, TrendingUp, ShoppingBag, Briefcase, Share2, Zap } from 'lucide-react';
+import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
 
 export default function Welcome() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <SEO 
@@ -144,7 +148,12 @@ export default function Welcome() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Creator Economy */}
-            <div className="bg-white rounded-xl p-4 border-2 border-purple-200 hover:border-purple-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('CreatorEconomy'))}
+              className="bg-white rounded-xl p-4 border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="w-5 h-5 text-purple-600" />
                 <h3 className="font-bold text-blue-900">Creator Economy</h3>
@@ -152,10 +161,15 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 💰 Post once, earn forever! Create viral content and receive tips, subscriptions, and recurring royalties from your top fans.
               </p>
-            </div>
+            </motion.div>
 
             {/* Affiliate Marketing */}
-            <div className="bg-white rounded-xl p-4 border-2 border-blue-200 hover:border-blue-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('Explore'))}
+              className="bg-white rounded-xl p-4 border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <ShoppingBag className="w-5 h-5 text-blue-600" />
                 <h3 className="font-bold text-blue-900">Affiliate Links</h3>
@@ -163,10 +177,15 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 🛍️ Share tech products, services & deals. Earn commissions on every sale — even while you're offline!
               </p>
-            </div>
+            </motion.div>
 
             {/* Freelance Services */}
-            <div className="bg-white rounded-xl p-4 border-2 border-green-200 hover:border-green-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('Explore'))}
+              className="bg-white rounded-xl p-4 border-2 border-green-200 hover:border-green-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Briefcase className="w-5 h-5 text-green-600" />
                 <h3 className="font-bold text-blue-900">Creator Services</h3>
@@ -174,10 +193,15 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 💼 List your skills once, get hired repeatedly. Build a portfolio that attracts clients on autopilot.
               </p>
-            </div>
+            </motion.div>
 
             {/* Referrals */}
-            <div className="bg-white rounded-xl p-4 border-2 border-pink-200 hover:border-pink-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('Referrals'))}
+              className="bg-white rounded-xl p-4 border-2 border-pink-200 hover:border-pink-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Share2 className="w-5 h-5 text-pink-600" />
                 <h3 className="font-bold text-blue-900">Referral Network</h3>
@@ -185,10 +209,15 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 🚀 Share your unique link. Earn $5-$50 per referral who joins and stays active — passive income at its best!
               </p>
-            </div>
+            </motion.div>
 
             {/* Brand Campaigns */}
-            <div className="bg-white rounded-xl p-4 border-2 border-orange-200 hover:border-orange-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('CreatorEconomy'))}
+              className="bg-white rounded-xl p-4 border-2 border-orange-200 hover:border-orange-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-5 h-5 text-orange-600" />
                 <h3 className="font-bold text-blue-900">Brand Partnerships</h3>
@@ -196,10 +225,15 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 ⚡ Join PPC campaigns. Get paid per click, lead, or sale — your content works for you 24/7!
               </p>
-            </div>
+            </motion.div>
 
             {/* Premium Circles */}
-            <div className="bg-white rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-400 transition-all">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate(createPageUrl('MyCircle'))}
+              className="bg-white rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-400 transition-all cursor-pointer hover:shadow-lg"
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Users className="w-5 h-5 text-indigo-600" />
                 <h3 className="font-bold text-blue-900">Premium Circles</h3>
@@ -207,7 +241,7 @@ export default function Welcome() {
               <p className="text-sm text-gray-700">
                 👑 Create exclusive communities. Charge monthly subscriptions and earn recurring revenue from your loyal members!
               </p>
-            </div>
+            </motion.div>
           </div>
 
           <div className="mt-6 p-4 bg-white rounded-xl border-2 border-yellow-300">
