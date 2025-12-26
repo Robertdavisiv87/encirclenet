@@ -418,13 +418,7 @@ export default function Explore() {
                         className="w-full h-full object-cover"
                         controls
                         playsInline
-                        preload="metadata"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <source src={post.media_url} type="video/mp4" />
-                        <source src={post.media_url} type="video/quicktime" />
-                        <source src={post.media_url} type="video/webm" />
-                      </video>
+                      />
                     ) : post.content_type === 'text' ? (
                       <div className="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center p-4">
                         <p className="text-sm text-center line-clamp-3 text-blue-900">{post.caption}</p>

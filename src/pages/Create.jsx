@@ -329,12 +329,7 @@ export default function Create() {
                   className="w-full aspect-square object-cover" 
                   controls
                   playsInline
-                  preload="metadata"
-                >
-                  <source src={mediaPreview} type="video/mp4" />
-                  <source src={mediaPreview} type="video/quicktime" />
-                  <source src={mediaPreview} type="video/webm" />
-                </video>
+                />
               )}
               {contentType === 'voice' && (
                 <div className="w-full aspect-video bg-zinc-900 flex items-center justify-center">
