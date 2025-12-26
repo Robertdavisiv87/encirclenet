@@ -159,7 +159,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           />
         )}
         {post.content_type === 'video' && post.media_url && (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div className="w-full" style={{ pointerEvents: 'auto' }}>
             <VideoPlayer src={post.media_url} className="w-full" aspectRatio="square" />
           </div>
         )}
