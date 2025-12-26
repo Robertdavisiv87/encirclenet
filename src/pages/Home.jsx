@@ -6,6 +6,7 @@ import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
 import TrendingRibbon from '../components/feed/TrendingRibbon';
+import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ const mockAds = [
 export default function Home() {
   const [user, setUser] = useState(null);
   const [feedMode, setFeedMode] = useState('classic'); // classic or tiktok
+  const [showGrowPrompt, setShowGrowPrompt] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -29,11 +31,26 @@ export default function Home() {
         // Check if onboarding is complete
         if (!currentUser.onboarding_completed && currentUser.email) {
           window.location.href = '/onboarding';
+          return;
+        }
+
+        // Show grow prompt on first login or every 3 days
+        const lastPromptDate = localStorage.getItem('lastGrowPromptDate');
+        const today = new Date().toDateString();
+        
+        if (!lastPromptDate || 
+            (new Date(today) - new Date(lastPromptDate)) / (1000 * 60 * 60 * 24) >= 3) {
+          setTimeout(() => setShowGrowPrompt(true), 2000);
         }
       } catch (e) {}
     };
     loadUser();
   }, []);
+
+  const handleCloseGrowPrompt = () => {
+    setShowGrowPrompt(false);
+    localStorage.setItem('lastGrowPromptDate', new Date().toDateString());
+  };
 
   const { data: posts, isLoading, refetch } = useQuery({
     queryKey: ['posts'],
@@ -74,6 +91,7 @@ export default function Home() {
           title="EncircleNet Feed - Viral Content & High Engagement Social Media"
           description="Discover trending posts, viral content, and connect with top creators on EncircleNet. The most engaging social media platform with real-time interactions."
         />
+        <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
         {/* Floating Header */}
         <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent p-4">
           <div className="flex items-center justify-between max-w-lg mx-auto">
@@ -116,6 +134,7 @@ export default function Home() {
         description="Join 1M+ creators on EncircleNet, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
         keywords="high engagement social media, best social media platform 2025, earn money online, content creator platform, social media with highest engagement, monetize content, influencer platform, creator economy"
       />
+      <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
       {/* Header */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
