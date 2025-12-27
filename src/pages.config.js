@@ -19,6 +19,7 @@ import Welcome from './pages/Welcome';
 import SystemStatus from './pages/SystemStatus';
 import BusinessDashboard from './pages/BusinessDashboard';
 import MasterSpec from './pages/MasterSpec';
+import Marketplace from './pages/Marketplace';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +45,7 @@ export const PAGES = {
     "SystemStatus": SystemStatus,
     "BusinessDashboard": BusinessDashboard,
     "MasterSpec": MasterSpec,
+    "Marketplace": Marketplace,
 }
 
 export const pagesConfig = {
