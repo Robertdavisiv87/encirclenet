@@ -44,6 +44,287 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* Master System Prompt - Fully Integrated */}
+          <Card className="bg-gradient-to-br from-slate-900 to-blue-900 border-4 border-purple-500 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Zap className="w-7 h-7 text-yellow-400" />
+                🚀 MASTER SYSTEM PROMPT (FULLY INTEGRATED)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3 text-lg">ROLE</h3>
+                <p className="text-sm text-gray-700 mb-3">
+                  Act as a principal engineer, platform architect, product strategist, UX systems designer, 
+                  marketplace architect, and creator-economy expert responsible for building and evolving a 
+                  real, production-ready platform called <strong>Encircle Net</strong>.
+                </p>
+                <p className="text-sm font-bold text-red-900">
+                  This is not a concept. This is a live, deployable, scalable, monetized application.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3 text-lg">PRIMARY OBJECTIVE</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  Advance Encircle Net into a state-of-the-art, category-defining social + creative commerce platform that:
+                </p>
+                <ul className="space-y-1 text-sm text-gray-700 mb-3">
+                  <li>✅ Maintains <strong>100% backward compatibility</strong></li>
+                  <li>✅ Preserves all existing features and data</li>
+                  <li>✅ Surpasses TikTok, Instagram, Facebook, Fiverr, Freelancer.com, and Upwork in:
+                    <ul className="ml-6 mt-1 space-y-1">
+                      <li>• Creator value</li>
+                      <li>• Ethical monetization</li>
+                      <li>• Creative freedom</li>
+                      <li>• Performance & reliability</li>
+                      <li>• Long-term maintainability</li>
+                    </ul>
+                  </li>
+                </ul>
+                <p className="text-sm font-bold text-red-900">
+                  No existing functionality may be removed or degraded.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-red-100 to-orange-100 rounded-lg p-4 border-4 border-red-500">
+                <h3 className="font-bold text-red-900 mb-3 text-lg flex items-center gap-2">
+                  <AlertCircle className="w-6 h-6" />
+                  🔴 PRODUCTION DEPLOYMENT FOUNDATION (ZERO TOLERANCE)
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg p-3 border-2 border-red-300">
+                    <h4 className="font-bold text-red-900 mb-2">1. JavaScript Guardian & Self-Healing Bootstrapper</h4>
+                    <p className="text-xs text-gray-700 mb-2">
+                      <strong>ROLE ADD-ON:</strong> Act as the Encircle Net JS Guardian and Self-Healing Bootstrapper, 
+                      ensuring all JavaScript executes, fully hydrates the UI, and prevents the "Enable JavaScript" placeholder.
+                    </p>
+                    
+                    <div className="bg-slate-900 rounded-lg p-3 mt-2 overflow-x-auto">
+                      <p className="text-xs text-green-400 font-semibold mb-2">Embedded Self-Healing JS Loader:</p>
+                      <pre className="text-xs text-green-300 font-mono whitespace-pre-wrap">
+{`(function selfHealingJSLoader() {
+  const app = document.getElementById('root') || 
+               document.getElementById('app');
+  if (!app) return console.error("App missing.");
+
+  const placeholder = 
+    document.querySelector('#js-placeholder');
+  if (placeholder) placeholder.remove();
+
+  const bundles = [
+    '/static/js/runtime.js',
+    '/static/js/vendor.js',
+    '/static/js/main.js'
+  ];
+  const loaded = {};
+
+  function loadBundle(src, retry = 0) {
+    return new Promise((resolve, reject) => {
+      if (loaded[src]) return resolve(src);
+      const script = document.createElement('script');
+      script.src = src;
+      script.defer = true;
+      script.onload = () => { 
+        loaded[src] = true; 
+        resolve(src); 
+      };
+      script.onerror = () => {
+        if (retry < 3) {
+          setTimeout(() => 
+            loadBundle(src, retry+1)
+              .then(resolve).catch(reject), 
+            1000
+          );
+        } else { 
+          reject(\`Bundle failed: \${src}\`); 
+          if(window.adminLogger) 
+            window.adminLogger.logJSFailure(src); 
+        }
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  async function bootstrapApp() {
+    try {
+      for (const bundle of bundles) 
+        await loadBundle(bundle);
+      if(window.__EncircleNetBootstrap) 
+        window.__EncircleNetBootstrap();
+      else app.innerHTML = "<p>Loading...</p>";
+    } catch(err) { 
+      app.innerHTML = 
+        "<p>App failed to load. Admin notified.</p>"; 
+      console.error(err); 
+    }
+  }
+
+  window.addEventListener('popstate', () => { 
+    if(!window.location.pathname.startsWith('/login')
+      && !window.location.pathname.startsWith('/signup')) 
+      window.history.replaceState({}, '', '/login'); 
+  });
+
+  bootstrapApp();
+})();`}
+                      </pre>
+                    </div>
+
+                    <div className="mt-3 space-y-1 text-xs text-gray-700">
+                      <p className="font-semibold text-blue-900">Success Criteria:</p>
+                      <ul className="space-y-1 ml-3">
+                        <li>✅ /login displays fully rendered, interactive UI</li>
+                        <li>✅ No "Enable JavaScript" messages</li>
+                        <li>✅ All interactive features functional</li>
+                        <li>✅ SPA routing works without refresh</li>
+                        <li>✅ Zero console errors allowed</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-3 border-2 border-red-300">
+                    <h4 className="font-bold text-red-900 mb-2">2. Deployment & Environment</h4>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Proper DNS configuration & HTTPS/SSL</li>
+                      <li>• CI/CD pipelines with zero-downtime updates</li>
+                      <li>• Rollback capability</li>
+                      <li>• CDN serves all static assets</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-3 border-2 border-red-300">
+                    <h4 className="font-bold text-red-900 mb-2">3. Core Functional Requirements</h4>
+                    <div className="grid md:grid-cols-2 gap-2 text-xs text-gray-700">
+                      <div>
+                        <p className="font-semibold mb-1">User Interface:</p>
+                        <ul className="space-y-1">
+                          <li>• Fully interactive & polished</li>
+                          <li>• Clean color scheme</li>
+                          <li>• Smooth animations</li>
+                          <li>• Mobile-responsive</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Video Playback:</p>
+                        <ul className="space-y-1">
+                          <li>• Instant playback on all feeds</li>
+                          <li>• Uploads propagate immediately</li>
+                          <li>• No broken thumbnails</li>
+                          <li>• No stalled loading</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Referral Program:</p>
+                        <ul className="space-y-1">
+                          <li>• Links generate correctly</li>
+                          <li>• SMS/Email send reliably</li>
+                          <li>• 100% accurate attribution</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">App Features:</p>
+                        <ul className="space-y-1">
+                          <li>• All income streams active</li>
+                          <li>• Real-time updates</li>
+                          <li>• No dead links or buttons</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                <h3 className="font-bold text-blue-900 mb-3">4. Authentication & Onboarding</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Signup/Login/Logout with email/phone verification</li>
+                  <li>• Role-based access: user/creator/business/admin</li>
+                  <li>• Guided onboarding with niche & interest selection</li>
+                  <li>• Password reset & session persistence</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3">5. Marketplace, Commerce & Creator Economy</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Full-featured service marketplace (Fiverr/Upwork parity)</li>
+                  <li>• Multi-format content: photo, video, voice, text, Raw Mode</li>
+                  <li>• Monetization: tips, subscriptions, referrals, commission tracking</li>
+                  <li>• Business & brand identity, verified profiles, storefronts</li>
+                  <li>• Ethical promotion & transparent ranking</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-4 border-2 border-yellow-300">
+                <h3 className="font-bold text-orange-900 mb-3">6. Performance, Security & Monitoring</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Sub-100ms feed rendering</li>
+                  <li>• Background job processing & graceful degradation</li>
+                  <li>• Hardened authentication & encrypted data</li>
+                  <li>• AI + human moderation, GDPR/CCPA compliance</li>
+                  <li>• Admin dashboards for real-time monitoring</li>
+                  <li>• Self-healing routines</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3">7. AI & Longevity</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Ethical AI assistance for feed, monetization, and creator optimization</li>
+                  <li>• Explainable recommendations & fair A/B testing</li>
+                  <li>• Modular architecture, versioned APIs</li>
+                  <li>• Automated testing</li>
+                  <li>• 12–24 month roadmap readiness</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg p-4 border-4 border-green-500">
+                <h3 className="font-bold text-green-900 mb-3 text-lg flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6" />
+                  ✅ Success Criteria (Non-Negotiable)
+                </h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    App loads without JS errors
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Users can sign up, post, and browse
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Media plays reliably
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Marketplace supports full creator/business operations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Admins can monitor, maintain, and recover the system
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    SPA routing and all interactive features fully functional in production
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-lg p-4 border-4 border-yellow-400">
+                <p className="text-center text-white font-bold text-lg mb-2">
+                  🚀 This version is production-ready, AI/system actionable, with self-healing JS embedded as mandatory.
+                </p>
+                <p className="text-center text-yellow-300 text-sm">
+                  Zero tolerance. Zero compromise. Execution mandatory.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Admin Access */}
           <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-300 realistic-shadow">
             <CardHeader>
