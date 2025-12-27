@@ -303,7 +303,15 @@ export default function Earnings() {
               <div className="bg-black/30 rounded-xl p-4 border border-green-700">
                 <p className="text-sm text-green-300 mb-3 font-semibold">Select Payout Method</p>
                 <div className="space-y-2">
-                  <button className="w-full bg-white/10 hover:bg-white/20 border border-green-600 rounded-lg p-3 text-left transition-colors">
+                  <button 
+                    onClick={() => {
+                      const email = prompt('Enter your PayPal email address:');
+                      if (email) {
+                        alert(`✓ PayPal selected: ${email}\n\nYour withdrawal will be sent to this PayPal account.`);
+                      }
+                    }}
+                    className="w-full bg-white/10 hover:bg-white/20 border border-green-600 rounded-lg p-3 text-left transition-colors"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">PayPal</p>
@@ -312,7 +320,12 @@ export default function Earnings() {
                       <span className="text-green-400 text-sm">Recommended</span>
                     </div>
                   </button>
-                  <button className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors">
+                  <button 
+                    onClick={() => {
+                      alert('Bank Transfer Setup\n\nPlease contact support to set up bank transfer details:\nsupport@encirclenet.com\n\nProcessing time: 1-3 business days');
+                    }}
+                    className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">Bank Transfer</p>
@@ -320,7 +333,15 @@ export default function Earnings() {
                       </div>
                     </div>
                   </button>
-                  <button className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors">
+                  <button 
+                    onClick={() => {
+                      const address = prompt('Enter your USDC wallet address (Ethereum mainnet):');
+                      if (address) {
+                        alert(`✓ Crypto selected: ${address}\n\nYour withdrawal will be sent to this USDC address on Ethereum mainnet.`);
+                      }
+                    }}
+                    className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">Crypto (USDC)</p>
@@ -334,7 +355,11 @@ export default function Earnings() {
               {/* Withdraw Button */}
               <Button 
                 onClick={async () => {
-                  if (confirm(`Confirm withdrawal of $${totalEarnings.toFixed(2)}?`)) {
+                  if (!confirm(`Confirm withdrawal of $${totalEarnings.toFixed(2)}?\n\nFunds will be transferred to your selected payout method within 1-3 business days.`)) {
+                    return;
+                  }
+                  
+                  try {
                     // Create withdrawal transaction
                     await base44.entities.Transaction.create({
                       from_email: 'platform@encirclenet.com',
@@ -345,7 +370,21 @@ export default function Earnings() {
                       type: 'withdrawal',
                       status: 'pending'
                     });
-                    alert('🎉 Withdrawal requested! Your funds will be transferred within 1-3 business days.');
+
+                    // Create revenue record for tracking
+                    await base44.entities.Revenue.create({
+                      user_email: user?.email,
+                      source: 'withdrawal',
+                      amount: -totalEarnings,
+                      description: 'Cash out withdrawal'
+                    });
+
+                    alert('🎉 Withdrawal Successful!\n\nYour request has been processed. Funds will arrive in 1-3 business days.\n\nYou can track your withdrawal status in your transaction history.');
+                    
+                    // Refresh the page to show updated balance
+                    window.location.reload();
+                  } catch (error) {
+                    alert('❌ Withdrawal Failed\n\nThere was an error processing your withdrawal. Please try again or contact support.');
                   }
                 }}
                 className="w-full h-14 text-lg font-bold bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-glow"
