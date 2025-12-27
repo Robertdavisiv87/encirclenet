@@ -16,7 +16,9 @@ import {
   TrendingUp,
   Trophy,
   Shield,
-  Sparkles
+  Sparkles,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +27,7 @@ const ADMIN_EMAIL = 'robertdavisiv87@gmail.com';
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [activePage, setActivePage] = useState(currentPageName);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     console.log("JavaScript is active!");
@@ -40,7 +43,6 @@ export default function Layout({ children, currentPageName }) {
     loadUser();
   }, []);
 
-  // Update active page when currentPageName changes
   useEffect(() => {
     setActivePage(currentPageName);
   }, [currentPageName]);
@@ -122,32 +124,46 @@ export default function Layout({ children, currentPageName }) {
           )}
         </nav>
 
-        {/* Main Content */}
-        <main className="md:ml-64 min-h-screen pb-20 md:pb-0 transition-all duration-300">
-          {children}
-        </main>
+        {/* Mobile Sidebar Toggle Button */}
+        <button
+          className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-all duration-300"
+          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+        >
+          {mobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
 
-        {/* Mobile Bottom Nav */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg transition-all duration-300">
-          <div className="flex justify-around items-center h-16">
-            {[navItems[0], navItems[1], navItems[3], navItems[6], navItems[8]].map((item) => (
+        {/* Mobile Sidebar */}
+        <nav className={cn(
+          "md:hidden fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-40 shadow-lg transform transition-transform duration-300",
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}>
+          <div className="flex flex-col p-6 pt-20 space-y-2">
+            {[...navItems, ...adminItems].map((item) => (
               <Link
                 key={item.name}
                 to={createPageUrl(item.page)}
-                onClick={() => setActivePage(item.page)}
+                onClick={() => { setActivePage(item.page); setMobileSidebarOpen(false); }}
                 className={cn(
-                  "flex flex-col items-center justify-center p-2 transition-transform duration-300 hover:scale-110",
-                  activePage === item.page ? "text-blue-900" : "text-gray-400"
+                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 hover-lift cursor-pointer",
+                  activePage === item.page 
+                    ? "gradient-bg-primary text-white shadow-glow" 
+                    : "text-blue-700 hover:bg-gray-100 hover:text-blue-900"
                 )}
               >
                 <item.icon className={cn(
-                  "w-6 h-6",
-                  activePage === item.page && "text-purple-600"
+                  "w-6 h-6 transition-transform",
+                  activePage === item.page && "text-purple-600 scale-110"
                 )} />
+                <span className="font-medium">{item.name}</span>
               </Link>
             ))}
           </div>
         </nav>
+
+        {/* Main Content */}
+        <main className="md:ml-64 min-h-screen pb-20 md:pb-0 transition-all duration-300">
+          {children}
+        </main>
       </div>
     </HelmetProvider>
   );
