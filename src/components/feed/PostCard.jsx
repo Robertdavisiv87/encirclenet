@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ViralIndicator from '../discovery/ViralIndicator';
 import ImageLightbox from '../ui/ImageLightbox';
 import VideoPlayer from '../video/VideoPlayer';
+import ShoppablePostTag from '../commerce/ShoppablePostTag';
 
 export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -229,6 +230,12 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             />
           </div>
         )}
+
+        {/* Shoppable Post Tag */}
+        {post.linked_products && post.linked_products.length > 0 && (
+          <ShoppablePostTag postId={post.id} products={post.linked_products} />
+        )}
+
         {post.content_type === 'photo' && post.media_url && (
           <img 
             src={post.media_url} 
