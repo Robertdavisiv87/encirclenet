@@ -53,7 +53,8 @@ export default function Layout({ children, currentPageName }) {
   const adminItems = user?.email === ADMIN_EMAIL ? [
     { name: 'Admin', icon: Shield, page: 'Admin' },
     { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' },
-    { name: 'System', icon: TrendingUp, page: 'SystemStatus' }
+    { name: 'System', icon: TrendingUp, page: 'SystemStatus' },
+    { name: 'Master Spec', icon: Sparkles, page: 'MasterSpec' }
   ] : [];
 
   return (

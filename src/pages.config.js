@@ -18,6 +18,7 @@ import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
 import SystemStatus from './pages/SystemStatus';
 import BusinessDashboard from './pages/BusinessDashboard';
+import MasterSpec from './pages/MasterSpec';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +43,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "SystemStatus": SystemStatus,
     "BusinessDashboard": BusinessDashboard,
+    "MasterSpec": MasterSpec,
 }
 
 export const pagesConfig = {
