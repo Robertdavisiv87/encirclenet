@@ -83,20 +83,41 @@ export default function CreatorEconomy() {
   const { data: tipTransactions = [] } = useQuery({
     queryKey: ['tip-transactions', user?.email],
     queryFn: () => base44.entities.Transaction.filter({ 
-      receiver_email: user?.email,
-      transaction_type: 'tip'
+      to_email: user?.email,
+      type: 'tip'
     }),
     enabled: !!user?.email
   });
 
-  // Fetch subscriptions
+  // Fetch subscriptions (platform tier subscriptions)
   const { data: subscriptions = [] } = useQuery({
     queryKey: ['user-subscriptions', user?.email],
     queryFn: () => base44.entities.Subscription.filter({ 
-      creator_email: user?.email,
+      user_email: user?.email,
       status: 'active'
     }),
     enabled: !!user?.email
+  });
+
+  // Fetch affiliate links
+  const { data: affiliateLinks = [] } = useQuery({
+    queryKey: ['affiliate-links', user?.email],
+    queryFn: () => base44.entities.AffiliateLink.filter({ user_email: user?.email }),
+    enabled: !!user?.email
+  });
+
+  // Fetch products from shop
+  const { data: shopProducts = [] } = useQuery({
+    queryKey: ['shop-products', user?.email],
+    queryFn: () => base44.entities.Product.filter({ creator_email: user?.email }),
+    enabled: !!user?.email
+  });
+
+  // Fetch campaigns
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['campaigns', brandAccount?.id],
+    queryFn: () => base44.entities.Campaign.filter({ brand_account_id: brandAccount?.id }),
+    enabled: !!brandAccount?.id
   });
 
   const handleCopyReferralLink = () => {
@@ -157,13 +178,14 @@ export default function CreatorEconomy() {
 
   // Calculate accurate earnings from all sources
   const tipsTotal = tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0);
+  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57; // 57% revenue share
   const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const affiliateTotal = affiliateLinks.reduce((sum, a) => sum + (a.earnings || 0), 0);
   
   const earnings = {
     tips: tipsTotal,
     subscriptions: subscriptionsTotal,
-    affiliate: 0, // Will be calculated from AffiliateLink entity
+    affiliate: affiliateTotal,
     referrals: referralsTotal,
     shop: creatorShop?.total_revenue || 0,
     brands: brandAccount?.total_spent || 0
@@ -362,7 +384,20 @@ export default function CreatorEconomy() {
               <div className="space-y-3">
                 <h4 className="text-lg font-bold text-blue-900">Recent Referrals</h4>
                 {referrals.slice(0, 5).map((referral) => (
-                  <ReferralCard key={referral.id} referral={referral} />
+                  <div key={referral.id} className="bg-white rounded-xl p-4 border-2 border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-blue-900">{referral.referred_name || 'New User'}</p>
+                        <p className="text-xs text-gray-600">
+                          Joined {new Date(referral.created_date).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-green-900">${(referral.commission_earned || 0).toFixed(2)}</p>
+                        <p className="text-xs text-gray-600">{referral.status}</p>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -393,17 +428,33 @@ export default function CreatorEconomy() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
                       <p className="text-sm text-gray-600 mb-1">Products</p>
-                      <p className="text-3xl font-bold text-blue-900">{creatorShop.product_count || 0}</p>
+                      <p className="text-3xl font-bold text-blue-900">{shopProducts.length}</p>
                     </div>
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
                       <p className="text-sm text-gray-600 mb-1">Sales</p>
-                      <p className="text-3xl font-bold text-green-900">{creatorShop.total_sales || 0}</p>
+                      <p className="text-3xl font-bold text-green-900">{shopProducts.reduce((sum, p) => sum + (p.sales_count || 0), 0)}</p>
                     </div>
                     <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
                       <p className="text-sm text-gray-600 mb-1">Revenue</p>
                       <p className="text-3xl font-bold text-purple-900">${(creatorShop.total_revenue || 0).toFixed(2)}</p>
                     </div>
                   </div>
+
+                  {/* Product List */}
+                  {shopProducts.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold text-gray-700">Your Products</h4>
+                      {shopProducts.slice(0, 3).map((product) => (
+                        <div key={product.id} className="bg-white rounded-lg p-3 border border-gray-200 flex items-center justify-between">
+                          <div>
+                            <p className="font-semibold text-sm text-blue-900">{product.product_name}</p>
+                            <p className="text-xs text-gray-600">{product.sales_count || 0} sales</p>
+                          </div>
+                          <p className="font-bold text-green-900">${product.price}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Shop Info */}
                   <div className="bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-300 rounded-xl p-6">
@@ -517,6 +568,24 @@ export default function CreatorEconomy() {
                   </p>
                 </div>
               </div>
+
+              {/* Recent Tips */}
+              {tipTransactions.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Recent Tips</h4>
+                  <div className="space-y-2">
+                    {tipTransactions.slice(0, 5).map((tip) => (
+                      <div key={tip.id} className="bg-white rounded-lg p-3 border border-gray-200 flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-sm text-blue-900">{tip.from_name || 'Anonymous'}</p>
+                          <p className="text-xs text-gray-600">{new Date(tip.created_date).toLocaleDateString()}</p>
+                        </div>
+                        <p className="font-bold text-green-900">${tip.amount}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6">
                 <h4 className="font-bold text-blue-900 mb-3">How to Maximize Tips</h4>
@@ -633,20 +702,42 @@ export default function CreatorEconomy() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
                       <p className="text-sm text-gray-600 mb-1">Active Campaigns</p>
-                      <p className="text-3xl font-bold text-blue-900">{brandAccount.active_campaigns || 0}</p>
+                      <p className="text-3xl font-bold text-blue-900">{campaigns.filter(c => c.status === 'active').length}</p>
                     </div>
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
                       <p className="text-sm text-gray-600 mb-1">Total Earned</p>
-                      <p className="text-3xl font-bold text-green-900">${(brandAccount.total_spent || 0).toFixed(2)}</p>
+                      <p className="text-3xl font-bold text-green-900">${campaigns.reduce((sum, c) => sum + (c.spent || 0), 0).toFixed(2)}</p>
                     </div>
                     <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-4 border-2 border-orange-200">
-                      <p className="text-sm text-gray-600 mb-1">Budget</p>
-                      <p className="text-3xl font-bold text-orange-900">${(brandAccount.campaign_budget || 0).toFixed(2)}</p>
+                      <p className="text-sm text-gray-600 mb-1">Total Clicks</p>
+                      <p className="text-3xl font-bold text-orange-900">{campaigns.reduce((sum, c) => sum + (c.clicks || 0), 0)}</p>
                     </div>
                   </div>
 
+                  {/* Campaign List */}
+                  {campaigns.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold text-gray-700">Active Campaigns</h4>
+                      {campaigns.filter(c => c.status === 'active').slice(0, 3).map((campaign) => (
+                        <div key={campaign.id} className="bg-white rounded-lg p-3 border border-gray-200">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="font-semibold text-sm text-blue-900">{campaign.campaign_name}</p>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">
+                              {campaign.campaign_type.toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-gray-600">
+                            <span>{campaign.clicks || 0} clicks</span>
+                            <span>{campaign.conversions || 0} conversions</span>
+                            <span className="font-bold text-green-900">${(campaign.spent || 0).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <Button className="w-full gradient-bg-primary text-white shadow-glow">
-                    View Active Campaigns
+                    View All Campaigns
                   </Button>
                 </div>
               ) : (
