@@ -269,7 +269,7 @@ export default function Subscription() {
               </li>
               <li className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                <span>Referrals earn you 10% of their earnings, forever</span>
+                <span>Keep 57% of subscription revenue from your referrals</span>
               </li>
               <li className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
