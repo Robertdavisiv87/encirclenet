@@ -13,7 +13,7 @@ export default function ContactInvite({ userEmail, referralCode }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [sending, setSending] = useState(false);
-  const inviteUrl = `https://encirclenet.com/join?ref=${referralCode}`;
+  const inviteUrl = `http://encirclenet.net/login?ref=${referralCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteUrl);
@@ -37,15 +37,21 @@ export default function ContactInvite({ userEmail, referralCode }) {
         status: 'pending'
       });
 
-      // Send SMS (integrate with Twilio or similar)
+      // Send SMS message
       const smsMessage = `Hey! Join me on EncircleNet - a creator platform where you earn while you share! 🚀\n\nUse my code: ${referralCode}\n${inviteUrl}`;
       
-      // For now, open default SMS app with pre-filled message
-      const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(smsMessage)}`;
-      window.open(smsLink, '_blank');
-
-      alert('✅ SMS invite opened! Send it to complete the invitation.\n\nYou\'ll earn rewards when they sign up.');
-      setPhoneNumber('');
+      // Open default SMS app with pre-filled message
+      const smsLink = `sms:${phoneNumber}${/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?'}body=${encodeURIComponent(smsMessage)}`;
+      
+      const smsWindow = window.open(smsLink, '_blank');
+      
+      if (smsWindow) {
+        console.log('SMS opened successfully');
+        alert(`✅ SMS invite prepared for ${phoneNumber}!\n\nSend the message from your SMS app.\nYou'll earn rewards when they sign up.`);
+        setPhoneNumber('');
+      } else {
+        alert(`📱 SMS invite ready!\n\nMessage: ${smsMessage}\n\nCopy and send to: ${phoneNumber}`);
+      }
     } catch (error) {
       console.error('SMS invite error:', error);
       alert('❌ Failed to send SMS invite. Please try again.');
@@ -71,11 +77,10 @@ export default function ContactInvite({ userEmail, referralCode }) {
       });
 
       // Send email via Core integration
-      await base44.integrations.Core.SendEmail({
+      const emailResult = await base44.integrations.Core.SendEmail({
         to: emailAddress,
         subject: `Join me on EncircleNet - Earn while you create! 🎨`,
-        body: `
-Hi there!
+        body: `Hi there!
 
 I'm inviting you to join EncircleNet - a revolutionary social platform where creators actually get paid for their content and engagement!
 
@@ -90,11 +95,11 @@ Sign up here: ${inviteUrl}
 
 See you inside!
 
-P.S. You'll get bonuses for joining, and I'll earn rewards too. It's a win-win! 🚀
-        `
+P.S. You'll get bonuses for joining, and I'll earn rewards too. It's a win-win! 🚀`
       });
 
-      alert('✅ Email invite sent successfully!\n\nYou\'ll earn rewards when they sign up and start creating.');
+      console.log('Email sent:', emailResult);
+      alert(`✅ Email invite sent to ${emailAddress}!\n\nYou'll earn rewards when they sign up and start creating.`);
       setEmailAddress('');
     } catch (error) {
       console.error('Email invite error:', error);
