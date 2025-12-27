@@ -62,8 +62,10 @@ export default function Admin() {
   const subscriptionRevenue = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0);
   const adRevenue = adClicks.reduce((sum, a) => sum + (a.click_value || 0), 0);
   const referralRevenue = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const tipsRevenue = allRevenue.filter(r => r.source === 'tips').reduce((sum, r) => sum + (r.amount || 0), 0);
+  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + (r.amount || 0), 0);
   
-  const verifiedTotal = subscriptionRevenue + adRevenue + referralRevenue;
+  const accurateTotal = subscriptionRevenue + tipsRevenue + adRevenue + affiliateRevenue + referralRevenue;
 
   const stats = [
     { label: 'Total Revenue', value: `$${accurateTotal.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
@@ -71,10 +73,6 @@ export default function Admin() {
     { label: 'Ad Clicks', value: adClicks.length, icon: MousePointerClick, color: 'from-blue-500 to-cyan-500' },
     { label: 'Referrals', value: referrals.length, icon: Target, color: 'from-orange-500 to-red-500' }
   ];
-
-  const tipsRevenue = allRevenue.filter(r => r.source === 'tips').reduce((sum, r) => sum + (r.amount || 0), 0);
-  const affiliateRevenue = allRevenue.filter(r => r.source === 'affiliate').reduce((sum, r) => sum + (r.amount || 0), 0);
-  const accurateTotal = subscriptionRevenue + tipsRevenue + adRevenue + affiliateRevenue + referralRevenue;
   
   const revenueBreakdown = [
     { label: 'Subscriptions', amount: subscriptionRevenue, percentage: accurateTotal > 0 ? (subscriptionRevenue / accurateTotal * 100) : 0 },
