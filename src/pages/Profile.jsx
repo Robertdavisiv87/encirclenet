@@ -37,6 +37,8 @@ export default function Profile() {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showVideoModal, setShowVideoModal] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -344,6 +346,9 @@ export default function Profile() {
                     if (post.content_type === 'photo' && post.media_url) {
                       setSelectedImage({ url: post.media_url, caption: post.caption });
                       setShowImageLightbox(true);
+                    } else if (post.content_type === 'video' && post.media_url) {
+                      setSelectedVideo({ url: post.media_url, caption: post.caption });
+                      setShowVideoModal(true);
                     }
                   }}
                 >
@@ -354,7 +359,18 @@ export default function Profile() {
                       className="w-full h-full object-cover hover:opacity-95 transition-opacity"
                     />
                   ) : post.content_type === 'video' && post.media_url ? (
-                    <VideoPlayer src={post.media_url} className="w-full h-full" aspectRatio="auto" />
+                    <div className="w-full h-full bg-black relative">
+                      <video 
+                        src={post.media_url}
+                        className="w-full h-full object-cover"
+                        muted
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                          <div className="w-0 h-0 border-l-8 border-l-purple-600 border-t-6 border-t-transparent border-b-6 border-b-transparent ml-1"></div>
+                        </div>
+                      </div>
+                    </div>
                   ) : post.content_type === 'text' ? (
                     <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center p-4">
                       <p className="text-sm text-center line-clamp-3">{post.caption}</p>
@@ -475,6 +491,46 @@ export default function Profile() {
           setSelectedImage(null);
         }}
       />
+
+      {/* Video Modal */}
+      {showVideoModal && selectedVideo && (
+        <div 
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+          onClick={() => {
+            setShowVideoModal(false);
+            setSelectedVideo(null);
+          }}
+        >
+          <div 
+            className="relative w-full max-w-4xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => {
+                setShowVideoModal(false);
+                setSelectedVideo(null);
+              }}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="bg-black rounded-xl overflow-hidden">
+              <VideoPlayer 
+                src={selectedVideo.url} 
+                className="w-full"
+                aspectRatio="video"
+              />
+              {selectedVideo.caption && (
+                <div className="p-4 bg-zinc-900">
+                  <p className="text-white">{selectedVideo.caption}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
