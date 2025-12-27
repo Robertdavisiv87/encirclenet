@@ -1570,6 +1570,128 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* Deployment Guide */}
+          <Card className="bg-gradient-to-br from-green-50 to-teal-50 border-2 border-green-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="w-6 h-6 text-green-600" />
+                Production Deployment Guide
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-green-200">
+                <h3 className="font-bold text-green-900 mb-3">Step-by-Step Base44 Deployment</h3>
+                <p className="text-sm text-gray-700 mb-4">
+                  Follow these steps to replace the placeholder and make your React app fully live at /login.
+                </p>
+
+                <div className="space-y-4">
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 1: Build Your React App</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• Open your project folder</li>
+                      <li>• Run: <code className="bg-gray-200 px-2 py-1 rounded">npm install</code></li>
+                      <li>• Run: <code className="bg-gray-200 px-2 py-1 rounded">npm run build</code></li>
+                      <li>• Confirm the build/ folder contains:</li>
+                      <li className="ml-4">- index.html</li>
+                      <li className="ml-4">- /static/js/runtime.js</li>
+                      <li className="ml-4">- /static/js/vendor.js</li>
+                      <li className="ml-4">- /static/js/main.js</li>
+                      <li className="ml-4">- /static/css/*.css</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 2: Log in to Base44 Dashboard</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• Go to Base44 Dashboard</li>
+                      <li>• Select your domain: encirclenet.net</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 3: Upload React Build Folder</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• Navigate to Hosting / Files / Code Settings</li>
+                      <li>• Delete the existing placeholder files (the old HTML that shows "Enable JavaScript")</li>
+                      <li>• Upload all contents of your build/ folder:</li>
+                      <li className="ml-4">- index.html → must be uploaded at the root</li>
+                      <li className="ml-4">- /static/js/* → upload the entire folder</li>
+                      <li className="ml-4">- /static/css/* → upload the entire folder</li>
+                      <li>• ⚠️ Important: Make sure the folder structure on Base44 exactly matches your local build folder</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 4: Set the SPA Entry Point</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• In Base44 dashboard, go to Hosting / Entry Point Settings</li>
+                      <li>• Set /login (or root / if desired) to point to the uploaded index.html</li>
+                      <li>• Save the configuration</li>
+                      <li>• This ensures that visiting http://encirclenet.net/login serves your React app instead of the placeholder page</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 5: Enable JavaScript</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• Go to Domain Settings → JavaScript</li>
+                      <li>• Make sure JavaScript is enabled</li>
+                      <li>• Save changes</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 6: Optional – Add Self-Healing JS Loader</h4>
+                    <p className="text-xs text-gray-700 mb-2">Add this snippet at the bottom of your index.html before {'</body>'}:</p>
+                    <div className="bg-slate-900 rounded-lg p-2 overflow-x-auto">
+                      <pre className="text-xs text-green-300 font-mono">
+          {`<script>
+          (function selfHealingJSLoader() {
+          const appContainer = document.getElementById('root');
+          if(!appContainer) return;
+
+          const bundles = [
+          '/static/js/runtime.js',
+          '/static/js/vendor.js',
+          '/static/js/main.js'
+          ];
+          bundles.forEach(src => {
+          const s = document.createElement('script'); 
+          s.src = src; 
+          s.defer = true; 
+          document.head.appendChild(s);
+          });
+          })();
+          </script>`}
+                      </pre>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="font-semibold text-sm text-gray-900 mb-2">Step 7: Verify Deployment</h4>
+                    <ul className="space-y-1 text-xs text-gray-700 ml-3">
+                      <li>• Clear browser cache (or use an incognito window)</li>
+                      <li>• Visit: http://encirclenet.net/login</li>
+                      <li>• Confirm:</li>
+                      <li className="ml-4">- React app loads correctly</li>
+                      <li className="ml-4">- Sidebar, SPA navigation, buttons work</li>
+                      <li className="ml-4">- Console shows: "JavaScript is active!" (from Layout useEffect)</li>
+                      <li className="ml-4">- No "Enable JavaScript" placeholder</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-green-100 rounded-lg p-3 border-2 border-green-300 mt-4">
+                  <p className="text-sm font-bold text-green-900">
+                    ✅ After completing these steps, the React app will fully replace the placeholder, 
+                    and all your JavaScript will execute properly.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Footer */}
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border-2 border-purple-300 text-center">
             <p className="text-lg font-bold gradient-text mb-2">
@@ -1585,8 +1707,8 @@ export default function MasterSpec() {
               platform creator (robertdavisiv87@gmail.com).
             </p>
           </div>
-        </div>
-      </div>
-    </AdminProtection>
-  );
-}
+          </div>
+          </div>
+          </AdminProtection>
+          );
+          }
