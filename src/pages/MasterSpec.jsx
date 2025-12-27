@@ -636,6 +636,123 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* Production Deployment Foundation */}
+          <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-400 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+                🔴 Production Deployment Foundation (ZERO TOLERANCE)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-red-100 rounded-lg p-4 border-2 border-red-300">
+                <p className="text-sm font-bold text-red-900 mb-2">
+                  ⚠️ CRITICAL: Encircle Net must function as a fully deployed, production-ready, JavaScript-powered, 
+                  client-rendered and server-supported application, not a placeholder or incomplete shell.
+                </p>
+                <p className="text-sm font-bold text-red-900">
+                  All advanced features are invalid unless the core app reliably loads, renders, and functions for real users.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-red-200">
+                <h3 className="font-bold text-red-900 mb-2">JavaScript & App Loading (NON-OPTIONAL)</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>🔴 The app must load fully without showing "You need to enable JavaScript to run this app."</li>
+                  <li>🔴 All JS bundles must be present, correctly referenced in index.html, and served by the server</li>
+                  <li>🔴 Single-page routing (SPA) must fall back to index.html</li>
+                  <li>🔴 Console must be free of JS errors; all interactive features must work</li>
+                  <li>🔴 Local testing with npm start (or equivalent) must succeed before deployment</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-red-200">
+                <h3 className="font-bold text-red-900 mb-2">Server & Deployment</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• The app must be served via a proper web server (Node.js/Express, Nginx, Apache, or similar)</li>
+                  <li>• All static assets (JS, CSS, images) must be correctly linked and accessible</li>
+                  <li>• Production deployment must be verified to work on the live URL</li>
+                  <li>• CDN must serve media without 404 errors or timeouts</li>
+                  <li>• SSL/TLS certificates must be valid and enforced</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-red-200">
+                <h3 className="font-bold text-red-900 mb-2">Core Functional Requirements</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">User Interface:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Fully interactive, visually polished, professional, and user-friendly</li>
+                      <li>• Bright but clean color scheme, dark text on light backgrounds for readability</li>
+                      <li>• Smooth animations and transitions without breaking performance</li>
+                      <li>• Mobile-responsive across all screen sizes</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">Video Playback:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>✅ Videos must play correctly on all feeds and user profiles</li>
+                      <li>✅ Uploading a video must immediately reflect in home feed, recommended pages, and user profile</li>
+                      <li>✅ Clicking videos should start playback seamlessly without glitches</li>
+                      <li>✅ No broken thumbnails, stalled loading, or playback errors</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">Referral Program:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>✅ Referral links must generate correctly (http://encirclenet.net/login?ref=CODE)</li>
+                      <li>✅ Email and SMS notifications must send reliably to the intended recipients</li>
+                      <li>✅ Broken URLs or undelivered messages are unacceptable</li>
+                      <li>✅ Referral perks and revenue streams must function fully</li>
+                      <li>✅ Attribution tracking must be 100% accurate</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">App Features:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• All primary and passive income features must be fully operational</li>
+                      <li>• Every page, button, toggle, and form must work exactly as intended</li>
+                      <li>• Notifications, interactions, and feeds must update in real-time where applicable</li>
+                      <li>• No dead links, blank pages, or non-functional buttons</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-red-200">
+                <h3 className="font-bold text-red-900 mb-2">Quality Assurance & Verification</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>🔍 Test locally and on live deployment to confirm full functionality</li>
+                  <li>🔍 Ensure cross-browser compatibility (Chrome, Firefox, Edge, Safari)</li>
+                  <li>🔍 Console errors or warnings must be resolved before declaring the app production-ready</li>
+                  <li>🔍 All user flows (login, posting, referrals, video playback, navigation) must be smooth, responsive, and error-free</li>
+                  <li>🔍 Load testing to ensure performance under traffic spikes</li>
+                  <li>🔍 Mobile testing on iOS and Android devices</li>
+                </ul>
+              </div>
+
+              <div className="bg-red-100 rounded-lg p-4 border-2 border-red-300">
+                <h3 className="font-bold text-red-900 mb-2">❌ NON-NEGOTIABLE ❌</h3>
+                <ul className="space-y-1 text-sm text-red-900 font-semibold">
+                  <li>• Nothing is optional. The app must be fully functional end-to-end.</li>
+                  <li>• Deployment issues, missing JS files, or broken interactions are unacceptable.</li>
+                  <li>• All features, UI elements, and back-end integrations must be verified before release.</li>
+                  <li>• "Works on my machine" is not acceptable. Must work in production.</li>
+                  <li>• Zero tolerance for broken features, dead links, or silent failures.</li>
+                </ul>
+              </div>
+
+              <div className="bg-green-100 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-2">✅ Expected Outcome</h3>
+                <p className="text-sm text-green-900">
+                  A fully deployed, production-ready, visually polished, and feature-complete app that works flawlessly 
+                  on EncircleNet.net, with no broken links, missing functionality, or JavaScript errors.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Foundational Execution Layer */}
           <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 realistic-shadow">
             <CardHeader>
