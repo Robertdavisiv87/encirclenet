@@ -249,44 +249,143 @@ export default function Earnings() {
 
 
 
-      {/* Payout Info */}
-      <Card className="bg-zinc-900 border-zinc-800 mt-6">
-        <CardContent className="p-6">
-          {totalEarnings > 0 ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-green-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Available for Payout</p>
-                  <p className="text-2xl font-bold text-green-400">${totalEarnings.toFixed(2)}</p>
-                  <p className="text-xs text-gray-500 mt-1">Minimum payout: $10.00</p>
+      {/* Cash Out Section */}
+      <Card className="bg-gradient-to-br from-green-900 to-emerald-900 border-green-700 mt-6 shadow-glow">
+        <CardContent className="p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                <DollarSign className="w-8 h-8" />
+                Cash Out
+              </h3>
+              <p className="text-green-200">Withdraw your earnings instantly</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-green-300 mb-1">Available Balance</p>
+              <p className="text-4xl font-bold text-white">${totalEarnings.toFixed(2)}</p>
+            </div>
+          </div>
+
+          {totalEarnings >= 10 ? (
+            <div className="space-y-6">
+              {/* Earnings Breakdown */}
+              <div className="bg-black/30 rounded-xl p-4 border border-green-700">
+                <p className="text-sm text-green-300 mb-3 font-semibold">Earnings Breakdown</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Tips & Boosts</span>
+                    <span className="text-white font-semibold">${tipsEarnings.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Referrals (90% share)</span>
+                    <span className="text-white font-semibold">${referralEarnings.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Affiliates</span>
+                    <span className="text-white font-semibold">${affiliateRevenue.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Subscriptions</span>
+                    <span className="text-white font-semibold">${subscriptionRevenue.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-300">Ad Revenue</span>
+                    <span className="text-white font-semibold">${adRevenue.toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-green-700 pt-2 mt-2 flex justify-between font-bold">
+                    <span className="text-green-300">Total Earnings</span>
+                    <span className="text-white">${totalEarnings.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Payout Methods */}
+              <div className="bg-black/30 rounded-xl p-4 border border-green-700">
+                <p className="text-sm text-green-300 mb-3 font-semibold">Select Payout Method</p>
+                <div className="space-y-2">
+                  <button className="w-full bg-white/10 hover:bg-white/20 border border-green-600 rounded-lg p-3 text-left transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-white">PayPal</p>
+                        <p className="text-xs text-gray-400">Instant transfer</p>
+                      </div>
+                      <span className="text-green-400 text-sm">Recommended</span>
+                    </div>
+                  </button>
+                  <button className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-white">Bank Transfer</p>
+                        <p className="text-xs text-gray-400">1-3 business days</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-white">Crypto (USDC)</p>
+                        <p className="text-xs text-gray-400">Blockchain transfer</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Withdraw Button */}
               <Button 
-                className="bg-gradient-to-r from-green-600 to-emerald-500"
-                disabled={totalEarnings < 10}
+                onClick={async () => {
+                  if (confirm(`Confirm withdrawal of $${totalEarnings.toFixed(2)}?`)) {
+                    // Create withdrawal transaction
+                    await base44.entities.Transaction.create({
+                      from_email: 'platform@encirclenet.com',
+                      from_name: 'Encircle Net',
+                      to_email: user?.email,
+                      to_name: user?.full_name,
+                      amount: totalEarnings,
+                      type: 'withdrawal',
+                      status: 'pending'
+                    });
+                    alert('🎉 Withdrawal requested! Your funds will be transferred within 1-3 business days.');
+                  }
+                }}
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-glow"
               >
-                {totalEarnings >= 10 ? 'Withdraw' : 'Not Available'}
+                <DollarSign className="w-6 h-6 mr-2" />
+                Withdraw ${totalEarnings.toFixed(2)}
               </Button>
+
+              <p className="text-xs text-center text-green-300">
+                Minimum withdrawal: $10.00 • No fees • Instant processing
+              </p>
             </div>
           ) : (
             <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-gray-600" />
+              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="w-8 h-8 text-green-400" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Start Earning Today</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                Your earnings will appear here. Start creating content, inviting friends, and engaging to earn!
+              <h3 className="text-xl font-bold text-white mb-2">Almost There!</h3>
+              <p className="text-green-200 mb-4">
+                Earn ${(10 - totalEarnings).toFixed(2)} more to unlock withdrawals
               </p>
-              <div className="bg-zinc-800/50 rounded-xl p-4 text-left max-w-md mx-auto">
-                <p className="text-sm font-semibold mb-2">Quick earning tips:</p>
-                <ul className="space-y-1 text-xs text-gray-400">
-                  <li>• Post quality content to receive tips</li>
-                  <li>• Share your referral code to earn $5-$50 per signup</li>
-                  <li>• Join affiliate programs for commission</li>
-                  <li>• Engage with ads to earn PPC revenue</li>
+              <div className="bg-black/30 rounded-xl p-4 border border-green-700 max-w-md mx-auto">
+                <p className="text-sm font-semibold text-green-300 mb-2">Quick earning tips:</p>
+                <ul className="space-y-2 text-sm text-gray-300 text-left">
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Post quality content to receive tips
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Share your referral code (90% revenue share!)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Join affiliate programs for commission
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    Create premium circles for subscriptions
+                  </li>
                 </ul>
               </div>
             </div>

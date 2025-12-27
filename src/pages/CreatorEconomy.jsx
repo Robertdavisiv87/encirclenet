@@ -178,7 +178,7 @@ export default function CreatorEconomy() {
 
   // Calculate accurate earnings from all sources
   const tipsTotal = tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57; // 57% revenue share
+  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90; // 90% revenue share
   const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
   const affiliateTotal = affiliateLinks.reduce((sum, a) => sum + (a.earnings || 0), 0);
   
@@ -637,15 +637,15 @@ export default function CreatorEconomy() {
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
-                  <p className="text-sm text-gray-600 mb-1">Your Share (57%)</p>
+                  <p className="text-sm text-gray-600 mb-1">Your Share (90%)</p>
                   <p className="text-3xl font-bold text-blue-900">
-                    ${(subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57).toFixed(2)}
+                    ${(subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90).toFixed(2)}
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
                   <p className="text-sm text-gray-600 mb-1">Referral Earnings</p>
                   <p className="text-3xl font-bold text-green-900">
-                    ${(referrals.filter(r => r.status === 'active').length * subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57).toFixed(2)}
+                    ${(referrals.filter(r => r.status === 'active').length * subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -676,7 +676,7 @@ export default function CreatorEconomy() {
                 <ul className="space-y-2 text-sm text-gray-700">
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    You keep 57% of subscription revenue from your referrals
+                    You keep 90% of subscription revenue from your referrals
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
