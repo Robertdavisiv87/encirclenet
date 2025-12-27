@@ -636,6 +636,343 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* Foundational Execution Layer */}
+          <Card className="bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="w-6 h-6 text-slate-600" />
+                Foundational Execution Layer (Non-Negotiable Hard Gate)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-red-50 rounded-lg p-4 border-2 border-red-200">
+                <p className="text-sm font-bold text-red-900 mb-2">⚠️ CRITICAL: All advanced features are invalid unless this layer works perfectly.</p>
+              </div>
+              
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">1. JavaScript, Rendering & App Bootstrapping</h3>
+                <p className="text-sm text-gray-700 mb-2">The app must:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>✅ Reliably execute JavaScript on all supported platforms</li>
+                  <li>✅ NEVER display a static "Enable JavaScript" placeholder</li>
+                  <li>✅ Fully hydrate the UI on page load</li>
+                  <li>✅ Support client-side routing without broken navigation</li>
+                  <li>✅ Gracefully recover from JS, asset, or network failures</li>
+                  <li>✅ Serve versioned production JS/CSS bundles</li>
+                </ul>
+                <p className="text-xs text-green-700 mt-2 font-semibold">
+                  Success Condition: Visiting /login shows a fully rendered login interface, not a placeholder.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">2. Deployment, Hosting & Environment Integrity</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Proper DNS configuration</li>
+                  <li>• HTTPS / SSL</li>
+                  <li>• Frontend & backend deployments</li>
+                  <li>• CI/CD pipelines</li>
+                  <li>• Zero-downtime updates</li>
+                  <li>• Rollback capability</li>
+                </ul>
+                <p className="text-xs text-red-700 mt-2 font-semibold">
+                  No feature is "done" unless it is deployed and accessible to users.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">3. MVP Execution Gates</h3>
+                <div className="space-y-2">
+                  <div>
+                    <p className="font-semibold text-xs text-slate-900 mb-1">Authentication & Identity:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Signup / Login / Logout</li>
+                      <li>• Email and/or phone verification</li>
+                      <li>• Password reset</li>
+                      <li>• Session persistence</li>
+                      <li>• Bot & abuse protection</li>
+                      <li>• Role-based access (user / creator / business / admin)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-slate-900 mb-1">Onboarding:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Personal / Creator / Business selection</li>
+                      <li>• Niche & interest selection</li>
+                      <li>• Ethical promotion guidelines acknowledgment</li>
+                      <li>• Guided first-post flow</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">4. Core App Pages (Must Fully Render)</h3>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-700">
+                  <ul className="space-y-1">
+                    <li>✅ Login / Signup</li>
+                    <li>✅ Home Feed</li>
+                    <li>✅ Explore / Discovery</li>
+                    <li>✅ Create / Upload</li>
+                  </ul>
+                  <ul className="space-y-1">
+                    <li>✅ Profile</li>
+                    <li>✅ Messages</li>
+                    <li>✅ Creator / Business Dashboard</li>
+                    <li>✅ Admin System Health</li>
+                  </ul>
+                </div>
+                <p className="text-xs text-red-700 mt-2 font-semibold">
+                  No blank screens. No dead ends. No manual refreshes.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">5. Backend Connectivity & API Reliability</h3>
+                <p className="text-xs text-gray-700 mb-2">Required APIs:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Authentication</li>
+                  <li>• Feed</li>
+                  <li>• Content Upload</li>
+                  <li>• Monetization & Commission</li>
+                  <li>• Marketplace</li>
+                  <li>• Analytics & Logging</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">6. Media, CDN & Performance Foundations</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Serve media via CDN</li>
+                  <li>• Support adaptive video streaming</li>
+                  <li>• Prevent broken or stalled playback</li>
+                  <li>• Maintain feed performance under viral load</li>
+                </ul>
+                <p className="text-xs text-purple-700 mt-2 font-semibold">
+                  Performance is a feature, not an optimization.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Professional Marketplace */}
+          <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-6 h-6 text-cyan-600" />
+                Professional Marketplace (Fiverr / Upwork Parity)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Full-Scale Services Marketplace</h3>
+                <p className="text-sm text-gray-700 mb-3">
+                  Encircle Net must support a complete services marketplace, fully native to the app.
+                </p>
+                <p className="font-semibold text-sm text-cyan-900 mb-2">Paid users can:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Build multi-page online shops</li>
+                  <li>• Create service listings (fixed-price, hourly, milestone, subscription)</li>
+                  <li>• Add service tiers & upsells</li>
+                  <li>• Upload portfolios & testimonials</li>
+                  <li>• Message clients directly</li>
+                  <li>• Track orders, disputes, ratings, and earnings</li>
+                  <li>• Fully brand their storefronts</li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Marketplace Ethics</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Transparent ranking logic
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Honest reviews (verified buyers only)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Clear dispute resolution
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    No forced bidding wars
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    No pay-to-win shadow boosts
+                  </li>
+                </ul>
+                <p className="text-xs text-cyan-700 mt-3 font-semibold">
+                  Marketplace rewards quality and professionalism, not exploitation.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Subscription Tiers */}
+          <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="w-6 h-6 text-emerald-600" />
+                Subscription Packages (4 Tiers)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg p-4 border-2 border-gray-300">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-gray-900">A. Free (No Ads)</h3>
+                  <span className="text-xl font-bold text-gray-900">$0</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="font-semibold text-xs text-green-900 mb-1">✅ Includes:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Full social access</li>
+                      <li>• Basic profile & branding</li>
+                      <li>• Limited selling</li>
+                      <li>• Tips & referrals</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">❌ Does NOT include:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Advanced shop customization</li>
+                      <li>• Priority discovery</li>
+                      <li>• Advanced analytics</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-blue-900">B. Creator Pro</h3>
+                  <span className="text-xl font-bold text-blue-900">$9.99/mo</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="font-semibold text-xs text-green-900 mb-1">✅ Includes:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Full shop builder</li>
+                      <li>• Service packages</li>
+                      <li>• Enhanced branding</li>
+                      <li>• 3x earnings multiplier</li>
+                      <li>• Creator analytics</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">❌ Does NOT include:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Automated lead matching</li>
+                      <li>• Team collaboration</li>
+                      <li>• Advanced AI forecasting</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-purple-900">C. Business Elite</h3>
+                  <span className="text-xl font-bold text-purple-900">$29.99/mo</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="font-semibold text-xs text-green-900 mb-1">✅ Includes:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Advanced storefronts</li>
+                      <li>• Automated lead matching</li>
+                      <li>• Priority visibility</li>
+                      <li>• 10x earnings multiplier</li>
+                      <li>• Conversion analytics</li>
+                      <li>• Brand verification</li>
+                      <li>• AI pricing tools</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">❌ Does NOT include:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• White-label storefronts</li>
+                      <li>• Multi-admin agencies</li>
+                      <li>• Custom APIs</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-4 border-2 border-amber-300">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-amber-900">D. Enterprise / Agency</h3>
+                  <span className="text-xl font-bold text-amber-900">Custom</span>
+                </div>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="font-semibold text-xs text-green-900 mb-1">✅ Includes:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Multi-creator shops</li>
+                      <li>• Team permissions</li>
+                      <li>• White-label storefronts</li>
+                      <li>• API access</li>
+                      <li>• Priority support</li>
+                      <li>• Advanced reporting</li>
+                      <li>• Custom integrations</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-red-900 mb-1">❌ Does NOT include:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Unlimited commission-free sales</li>
+                      <li>• Platform governance control</li>
+                      <li>• Removal of ethical standards</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Assistance */}
+          <Card className="bg-gradient-to-br from-violet-50 to-purple-50 border-2 border-violet-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-6 h-6 text-violet-600" />
+                AI Assistance (Ethical & Explainable)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-white rounded-lg p-4 border-2 border-violet-200">
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-violet-600" />
+                    Fair feed intelligence (no shadow manipulation)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-violet-600" />
+                    Creator optimization assistants
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-violet-600" />
+                    Monetization suggestions
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-violet-600" />
+                    Explainable recommendations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-violet-600" />
+                    Ethical A/B testing
+                  </li>
+                </ul>
+                <p className="text-xs text-violet-700 mt-3 font-semibold">
+                  Creators remain in control. AI assists, never manipulates.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Final Acceptance Criteria */}
           <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 realistic-shadow">
             <CardHeader>
@@ -650,6 +987,26 @@ export default function MasterSpec() {
                   Encircle Net is considered release-ready only if:
                 </p>
                 <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    App loads without JS errors
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Users can sign up, post, and browse
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Media plays reliably
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Businesses can promote and earn
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Marketplace can replace Fiverr/Upwork
+                  </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-green-600" />
                     Every system works end-to-end
@@ -683,6 +1040,46 @@ export default function MasterSpec() {
                     AI actions are transparent and safe
                   </li>
                 </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Platform Intent */}
+          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-2 border-pink-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-6 h-6 text-pink-600" />
+                Final Intent
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-white rounded-lg p-4 border-2 border-pink-200">
+                <p className="text-lg font-bold gradient-text mb-3 text-center">
+                  Encircle Net is:
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-3 border border-blue-200">
+                    <p className="font-semibold text-sm text-blue-900">🌐 A social platform</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-3 border border-purple-200">
+                    <p className="font-semibold text-sm text-purple-900">🎨 A creative engine</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+                    <p className="font-semibold text-sm text-green-900">💼 A professional marketplace</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg p-3 border border-orange-200">
+                    <p className="font-semibold text-sm text-orange-900">🏢 A business operating system</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-lg p-3 border border-indigo-200">
+                    <p className="font-semibold text-sm text-indigo-900">🗣️ A freedom-of-expression platform</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-200">
+                    <p className="font-semibold text-sm text-teal-900">🌟 A long-term ethical alternative</p>
+                  </div>
+                </div>
+                <p className="text-center text-xl font-bold gradient-text mt-4">
+                  Execution is mandatory.
+                </p>
               </div>
             </CardContent>
           </Card>
