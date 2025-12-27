@@ -1,142 +1,277 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link as LinkIcon, Copy, Check, ExternalLink, TrendingUp } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { 
+  Link as LinkIcon, 
+  TrendingUp, 
+  MousePointerClick, 
+  DollarSign,
+  ExternalLink,
+  Copy,
+  Plus,
+  Eye,
+  ShoppingCart
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
 
 export default function AffiliateTracker({ userEmail }) {
-  const [productUrl, setProductUrl] = useState('');
-  const [productName, setProductName] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [newProductName, setNewProductName] = useState('');
+  const [newProductUrl, setNewProductUrl] = useState('');
+  const [newCommission, setNewCommission] = useState(5);
 
-  // Mock affiliate links
-  const affiliateLinks = [
-    {
-      id: 1,
-      product: 'Premium Fitness Program',
-      url: 'https://example.com/fitness',
-      clicks: 847,
-      conversions: 23,
-      earnings: 345.50,
-      rate: 15
-    },
-    {
-      id: 2,
-      product: 'Tech Course Bundle',
-      url: 'https://example.com/tech',
-      clicks: 1203,
-      conversions: 41,
-      earnings: 615.30,
-      rate: 20
+  const { data: affiliateLinks = [], refetch } = useQuery({
+    queryKey: ['affiliate-links', userEmail],
+    queryFn: () => base44.entities.AffiliateLink.filter({ user_email: userEmail }),
+    enabled: !!userEmail
+  });
+
+  const { data: userPromotions = [] } = useQuery({
+    queryKey: ['user-promotions', userEmail],
+    queryFn: () => base44.entities.UserAffiliatePromotion.filter({ user_email: userEmail }),
+    enabled: !!userEmail
+  });
+
+  const handleAddAffiliateLink = async () => {
+    if (!newProductName || !newProductUrl) {
+      alert('Please enter product name and URL');
+      return;
     }
-  ];
 
-  const handleCopy = (url) => {
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      const affiliateUrl = `${newProductUrl}?ref=${userEmail.slice(0, 6)}`;
+      await base44.entities.AffiliateLink.create({
+        user_email: userEmail,
+        product_name: newProductName,
+        product_url: newProductUrl,
+        affiliate_url: affiliateUrl,
+        commission_rate: newCommission,
+        clicks: 0,
+        conversions: 0,
+        earnings: 0
+      });
+      
+      setNewProductName('');
+      setNewProductUrl('');
+      setNewCommission(5);
+      refetch();
+    } catch (e) {
+      alert('Failed to add affiliate link');
+    }
   };
 
+  const handleCopyLink = (link) => {
+    navigator.clipboard.writeText(link);
+    alert('Link copied to clipboard!');
+  };
+
+  const totalClicks = affiliateLinks.reduce((sum, link) => sum + (link.clicks || 0), 0);
+  const totalConversions = affiliateLinks.reduce((sum, link) => sum + (link.conversions || 0), 0);
+  const totalEarnings = affiliateLinks.reduce((sum, link) => sum + (link.earnings || 0), 0);
+  const conversionRate = totalClicks > 0 ? ((totalConversions / totalClicks) * 100).toFixed(2) : 0;
+
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-6"
+    >
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <MousePointerClick className="w-8 h-8 text-blue-600" />
+            </div>
+            <p className="text-2xl font-bold text-blue-900">{totalClicks}</p>
+            <p className="text-xs text-gray-600">Total Clicks</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <ShoppingCart className="w-8 h-8 text-green-600" />
+            </div>
+            <p className="text-2xl font-bold text-green-900">{totalConversions}</p>
+            <p className="text-xs text-gray-600">Conversions</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <TrendingUp className="w-8 h-8 text-purple-600" />
+            </div>
+            <p className="text-2xl font-bold text-purple-900">{conversionRate}%</p>
+            <p className="text-xs text-gray-600">Conversion Rate</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <DollarSign className="w-8 h-8 text-yellow-600" />
+            </div>
+            <p className="text-2xl font-bold text-yellow-900">${totalEarnings.toFixed(2)}</p>
+            <p className="text-xs text-gray-600">Total Earnings</p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Add New Affiliate Link */}
-      <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 realistic-shadow">
-        <CardHeader>
-          <CardTitle className="text-blue-900 flex items-center gap-2">
-            <LinkIcon className="w-5 h-5" />
-            Add Affiliate Link
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-blue-900">Product Name</Label>
+      <Card className="bg-white border-2 border-gray-200">
+        <CardContent className="p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <Plus className="w-5 h-5" />
+            Add Affiliate Product
+          </h3>
+          <div className="space-y-3">
             <Input
-              placeholder="Enter product name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="bg-white border-blue-300"
+              placeholder="Product Name"
+              value={newProductName}
+              onChange={(e) => setNewProductName(e.target.value)}
+              className="bg-white border-gray-300"
             />
-          </div>
-          <div>
-            <Label className="text-blue-900">Affiliate URL</Label>
             <Input
-              placeholder="https://affiliate-link.com/..."
-              value={productUrl}
-              onChange={(e) => setProductUrl(e.target.value)}
-              className="bg-white border-blue-300"
+              placeholder="Product URL"
+              value={newProductUrl}
+              onChange={(e) => setNewProductUrl(e.target.value)}
+              className="bg-white border-gray-300"
             />
+            <div>
+              <label className="text-sm text-gray-600 mb-1 block">Commission Rate (%)</label>
+              <Input
+                type="number"
+                value={newCommission}
+                onChange={(e) => setNewCommission(Number(e.target.value))}
+                className="bg-white border-gray-300"
+                min="0"
+                max="100"
+              />
+            </div>
+            <Button 
+              onClick={handleAddAffiliateLink}
+              className="w-full gradient-bg-primary text-white shadow-glow"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Affiliate Link
+            </Button>
           </div>
-          <Button className="w-full gradient-bg-primary text-white shadow-glow">
-            Generate Tracking Link
-          </Button>
         </CardContent>
       </Card>
 
-      {/* Active Affiliate Links */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-green-600" />
-          Active Affiliate Links
-        </h3>
-        {affiliateLinks.map((link) => (
-          <motion.div
-            key={link.id}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white border-2 border-gray-200 rounded-2xl p-6 realistic-shadow"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h4 className="font-bold text-blue-900 mb-1">{link.product}</h4>
-                <p className="text-sm text-gray-600 flex items-center gap-2">
-                  {link.url}
+      {/* Affiliate Links List */}
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold text-blue-900">Your Affiliate Links</h3>
+        
+        {affiliateLinks.length === 0 ? (
+          <Card className="bg-white border-2 border-gray-200">
+            <CardContent className="p-8 text-center">
+              <LinkIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-600 mb-2">No affiliate links yet</p>
+              <p className="text-sm text-gray-500">Add your first affiliate product to start earning commissions</p>
+            </CardContent>
+          </Card>
+        ) : (
+          affiliateLinks.map((link) => (
+            <Card key={link.id} className="bg-white border-2 border-gray-200 hover:border-purple-300 transition-colors">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h4 className="font-bold text-blue-900 mb-1">{link.product_name}</h4>
+                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                      <span className="flex items-center gap-1">
+                        <MousePointerClick className="w-4 h-4" />
+                        {link.clicks || 0} clicks
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <ShoppingCart className="w-4 h-4" />
+                        {link.conversions || 0} sales
+                      </span>
+                      <span className="flex items-center gap-1 text-green-600 font-semibold">
+                        <DollarSign className="w-4 h-4" />
+                        ${(link.earnings || 0).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
+                      {link.commission_rate}% commission
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                  <p className="text-xs text-gray-600 mb-1">Your Affiliate Link:</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-sm bg-white px-3 py-2 rounded border border-gray-200 truncate">
+                      {link.affiliate_url}
+                    </code>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleCopyLink(link.affiliate_url)}
+                      className="border-gray-300"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
                   <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={() => handleCopy(link.url)}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => window.open(link.product_url, '_blank')}
+                    className="flex-1 border-gray-300"
                   >
-                    {copied ? (
-                      <Check className="w-3 h-3 text-green-600" />
-                    ) : (
-                      <Copy className="w-3 h-3" />
-                    )}
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    View Product
                   </Button>
-                </p>
-              </div>
-              <Badge className="bg-green-100 text-green-700 border-green-300">
-                {link.rate}% commission
-              </Badge>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center p-3 bg-blue-50 rounded-xl border border-blue-200">
-                <p className="text-2xl font-bold text-blue-900">{link.clicks}</p>
-                <p className="text-xs text-gray-600">Clicks</p>
-              </div>
-              <div className="text-center p-3 bg-green-50 rounded-xl border border-green-200">
-                <p className="text-2xl font-bold text-green-900">{link.conversions}</p>
-                <p className="text-xs text-gray-600">Sales</p>
-              </div>
-              <div className="text-center p-3 bg-purple-50 rounded-xl border border-purple-200">
-                <p className="text-2xl font-bold text-purple-900">${link.earnings}</p>
-                <p className="text-xs text-gray-600">Earned</p>
-              </div>
-            </div>
-
-            {/* Conversion Rate */}
-            <div className="mt-4 flex items-center justify-between text-sm">
-              <span className="text-gray-600">Conversion Rate</span>
-              <span className="font-bold text-green-600">
-                {((link.conversions / link.clicks) * 100).toFixed(2)}%
-              </span>
-            </div>
-          </motion.div>
-        ))}
+                  <Button
+                    size="sm"
+                    onClick={() => handleCopyLink(link.affiliate_url)}
+                    className="flex-1 gradient-bg-primary text-white"
+                  >
+                    Share Link
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
-    </div>
+
+      {/* Tips Section */}
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300">
+        <CardContent className="p-6">
+          <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Maximize Your Affiliate Earnings
+          </h4>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              Share products you genuinely use and love
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              Create valuable content around the products
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              Use affiliate links in posts, stories, and bio
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+              Track performance and optimize your strategy
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
