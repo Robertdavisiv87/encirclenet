@@ -27,6 +27,8 @@ import PassiveIncomeCard from '../components/monetization/PassiveIncomeCard';
 export default function Earnings() {
   const [user, setUser] = useState(null);
   const [timeframe, setTimeframe] = useState('all'); // all, month, week
+  const [selectedPayoutMethod, setSelectedPayoutMethod] = useState(null);
+  const [payoutDetails, setPayoutDetails] = useState('');
 
   useEffect(() => {
     const loadUser = async () => {
@@ -306,47 +308,83 @@ export default function Earnings() {
                   <button 
                     onClick={() => {
                       const email = prompt('Enter your PayPal email address:');
-                      if (email) {
-                        alert(`✓ PayPal selected: ${email}\n\nYour withdrawal will be sent to this PayPal account.`);
+                      if (email && email.includes('@')) {
+                        setSelectedPayoutMethod('paypal');
+                        setPayoutDetails(email);
+                        alert(`✓ PayPal selected: ${email}\n\nClick "Withdraw" to complete your cash out.`);
                       }
                     }}
-                    className="w-full bg-white/10 hover:bg-white/20 border border-green-600 rounded-lg p-3 text-left transition-colors"
+                    className={cn(
+                      "w-full hover:bg-white/20 border rounded-lg p-3 text-left transition-colors",
+                      selectedPayoutMethod === 'paypal' ? "bg-green-600 border-green-400" : "bg-white/10 border-green-600"
+                    )}
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">PayPal</p>
-                        <p className="text-xs text-gray-400">Instant transfer</p>
+                        <p className="text-xs text-gray-400">
+                          {selectedPayoutMethod === 'paypal' ? payoutDetails : 'Instant transfer'}
+                        </p>
                       </div>
-                      <span className="text-green-400 text-sm">Recommended</span>
+                      {selectedPayoutMethod === 'paypal' ? (
+                        <span className="text-white text-sm">✓ Selected</span>
+                      ) : (
+                        <span className="text-green-400 text-sm">Recommended</span>
+                      )}
                     </div>
                   </button>
                   <button 
                     onClick={() => {
-                      alert('Bank Transfer Setup\n\nPlease contact support to set up bank transfer details:\nsupport@encirclenet.com\n\nProcessing time: 1-3 business days');
+                      const details = prompt('Enter your bank account details:\n\nFormat: Bank Name | Account Number | Routing Number');
+                      if (details) {
+                        setSelectedPayoutMethod('bank');
+                        setPayoutDetails(details);
+                        alert(`✓ Bank Transfer selected\n\nClick "Withdraw" to complete your cash out.\n\nProcessing time: 1-3 business days`);
+                      }
                     }}
-                    className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors"
+                    className={cn(
+                      "w-full hover:bg-white/20 border rounded-lg p-3 text-left transition-colors",
+                      selectedPayoutMethod === 'bank' ? "bg-green-600 border-green-400" : "bg-white/10 border-gray-600"
+                    )}
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">Bank Transfer</p>
-                        <p className="text-xs text-gray-400">1-3 business days</p>
+                        <p className="text-xs text-gray-400">
+                          {selectedPayoutMethod === 'bank' ? 'Bank details saved' : '1-3 business days'}
+                        </p>
                       </div>
+                      {selectedPayoutMethod === 'bank' && (
+                        <span className="text-white text-sm">✓ Selected</span>
+                      )}
                     </div>
                   </button>
                   <button 
                     onClick={() => {
                       const address = prompt('Enter your USDC wallet address (Ethereum mainnet):');
-                      if (address) {
-                        alert(`✓ Crypto selected: ${address}\n\nYour withdrawal will be sent to this USDC address on Ethereum mainnet.`);
+                      if (address && address.startsWith('0x')) {
+                        setSelectedPayoutMethod('crypto');
+                        setPayoutDetails(address);
+                        alert(`✓ Crypto selected: ${address}\n\nClick "Withdraw" to complete your cash out.`);
+                      } else if (address) {
+                        alert('❌ Invalid wallet address. Must start with 0x');
                       }
                     }}
-                    className="w-full bg-white/10 hover:bg-white/20 border border-gray-600 rounded-lg p-3 text-left transition-colors"
+                    className={cn(
+                      "w-full hover:bg-white/20 border rounded-lg p-3 text-left transition-colors",
+                      selectedPayoutMethod === 'crypto' ? "bg-green-600 border-green-400" : "bg-white/10 border-gray-600"
+                    )}
                   >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-white">Crypto (USDC)</p>
-                        <p className="text-xs text-gray-400">Blockchain transfer</p>
+                        <p className="text-xs text-gray-400">
+                          {selectedPayoutMethod === 'crypto' ? `${payoutDetails.slice(0, 6)}...${payoutDetails.slice(-4)}` : 'Blockchain transfer'}
+                        </p>
                       </div>
+                      {selectedPayoutMethod === 'crypto' && (
+                        <span className="text-white text-sm">✓ Selected</span>
+                      )}
                     </div>
                   </button>
                 </div>
@@ -354,8 +392,20 @@ export default function Earnings() {
 
               {/* Withdraw Button */}
               <Button 
+                disabled={!selectedPayoutMethod}
                 onClick={async () => {
-                  if (!confirm(`Confirm withdrawal of $${totalEarnings.toFixed(2)}?\n\nFunds will be transferred to your selected payout method within 1-3 business days.`)) {
+                  if (!selectedPayoutMethod) {
+                    alert('⚠️ Please select a payout method first');
+                    return;
+                  }
+
+                  const methodNames = {
+                    paypal: 'PayPal',
+                    bank: 'Bank Transfer',
+                    crypto: 'Crypto (USDC)'
+                  };
+                  
+                  if (!confirm(`Confirm withdrawal of $${totalEarnings.toFixed(2)}?\n\nMethod: ${methodNames[selectedPayoutMethod]}\nDestination: ${payoutDetails}\n\nFunds will be transferred within 1-3 business days.`)) {
                     return;
                   }
                   
@@ -368,7 +418,11 @@ export default function Earnings() {
                       to_name: user?.full_name,
                       amount: totalEarnings,
                       type: 'withdrawal',
-                      status: 'pending'
+                      status: 'processing',
+                      metadata: {
+                        payout_method: selectedPayoutMethod,
+                        payout_details: payoutDetails
+                      }
                     });
 
                     // Create revenue record for tracking
@@ -376,21 +430,27 @@ export default function Earnings() {
                       user_email: user?.email,
                       source: 'withdrawal',
                       amount: -totalEarnings,
-                      description: 'Cash out withdrawal'
+                      description: `Cash out via ${methodNames[selectedPayoutMethod]}: ${payoutDetails}`
                     });
 
-                    alert('🎉 Withdrawal Successful!\n\nYour request has been processed. Funds will arrive in 1-3 business days.\n\nYou can track your withdrawal status in your transaction history.');
+                    alert(`🎉 Withdrawal Successful!\n\nAmount: $${totalEarnings.toFixed(2)}\nMethod: ${methodNames[selectedPayoutMethod]}\n\nYour funds are being processed and will arrive within 1-3 business days.\n\nTrack status in your transaction history.`);
                     
                     // Refresh the page to show updated balance
                     window.location.reload();
                   } catch (error) {
+                    console.error('Withdrawal error:', error);
                     alert('❌ Withdrawal Failed\n\nThere was an error processing your withdrawal. Please try again or contact support.');
                   }
                 }}
-                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-glow"
+                className={cn(
+                  "w-full h-14 text-lg font-bold text-white shadow-glow transition-all",
+                  selectedPayoutMethod 
+                    ? "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600" 
+                    : "bg-gray-600 cursor-not-allowed"
+                )}
               >
                 <DollarSign className="w-6 h-6 mr-2" />
-                Withdraw ${totalEarnings.toFixed(2)}
+                {selectedPayoutMethod ? `Withdraw $${totalEarnings.toFixed(2)}` : 'Select Payout Method First'}
               </Button>
 
               <p className="text-xs text-center text-green-300">
