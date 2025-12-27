@@ -11,7 +11,8 @@ import {
   Award,
   AlertCircle,
   CheckCircle,
-  Activity
+  Activity,
+  Sparkles
 } from 'lucide-react';
 import AdminProtection from '../components/auth/AdminProtection';
 
