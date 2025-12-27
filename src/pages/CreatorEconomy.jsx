@@ -621,8 +621,8 @@ export default function CreatorEconomy() {
             <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Subscriptions</h3>
-                  <p className="text-gray-600">Recurring revenue from loyal fans</p>
+                  <h3 className="text-2xl font-bold text-blue-900 mb-2">Platform Subscriptions</h3>
+                  <p className="text-gray-600">Your tier & subscription revenue share</p>
                 </div>
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-glow">
                   <Crown className="w-10 h-10 text-white" />
@@ -631,51 +631,83 @@ export default function CreatorEconomy() {
 
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
-                  <p className="text-sm text-gray-600 mb-1">Active Subscribers</p>
-                  <p className="text-3xl font-bold text-purple-900">{subscriptions.length}</p>
+                  <p className="text-sm text-gray-600 mb-1">Your Tier</p>
+                  <p className="text-3xl font-bold text-purple-900 uppercase">
+                    {subscriptions[0]?.tier || 'Free'}
+                  </p>
                 </div>
                 <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
-                  <p className="text-sm text-gray-600 mb-1">Monthly Revenue</p>
+                  <p className="text-sm text-gray-600 mb-1">Your Share (57%)</p>
                   <p className="text-3xl font-bold text-blue-900">
-                    ${subscriptions.reduce((sum, s) => sum + (s.price || 0), 0).toFixed(2)}
+                    ${(subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57).toFixed(2)}
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
-                  <p className="text-sm text-gray-600 mb-1">Annual Projection</p>
+                  <p className="text-sm text-gray-600 mb-1">Referral Earnings</p>
                   <p className="text-3xl font-bold text-green-900">
-                    ${(subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 12).toFixed(2)}
+                    ${(referrals.filter(r => r.status === 'active').length * subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.57).toFixed(2)}
                   </p>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6">
-                <h4 className="font-bold text-blue-900 mb-3">Grow Your Subscriber Base</h4>
+              {subscriptions.length > 0 && (
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-xl p-6 mb-6">
+                  <h4 className="font-bold text-blue-900 mb-3">Your Active Subscription</h4>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-purple-900">{subscriptions[0]?.tier.toUpperCase()} Plan</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        ${subscriptions[0]?.price}/month • Next billing: {new Date(subscriptions[0]?.next_billing_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={() => navigate(createPageUrl('Subscription'))}
+                      variant="outline"
+                      className="border-2 border-purple-400"
+                    >
+                      Upgrade Tier
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl p-6">
+                <h4 className="font-bold text-blue-900 mb-3">Subscription Revenue Model</h4>
                 <ul className="space-y-2 text-sm text-gray-700">
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    Offer exclusive content to subscribers only
+                    You keep 57% of subscription revenue from your referrals
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    Create tiered subscription levels
+                    Earn passive income when referrals upgrade tiers
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    Host subscriber-only live sessions
+                    Higher tiers unlock more earning potential
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500"></span>
-                    Provide early access to new content
+                    Revenue compounds with your referral network
                   </li>
                 </ul>
               </div>
 
-              <Button 
-                onClick={() => navigate(createPageUrl('Profile'))}
-                className="w-full mt-4 gradient-bg-primary text-white shadow-glow"
-              >
-                Manage Subscription Settings
-              </Button>
+              <div className="flex gap-3 mt-6">
+                <Button 
+                  onClick={() => navigate(createPageUrl('Subscription'))}
+                  className="flex-1 gradient-bg-primary text-white shadow-glow"
+                >
+                  View Subscription Plans
+                </Button>
+                <Button 
+                  onClick={() => navigate(createPageUrl('Referrals'))}
+                  variant="outline"
+                  className="flex-1 border-2 border-purple-400"
+                >
+                  Invite More Users
+                </Button>
+              </div>
             </div>
           </motion.div>
         </TabsContent>
