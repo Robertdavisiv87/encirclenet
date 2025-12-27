@@ -23,7 +23,7 @@ export default function ContactInvite({ userEmail, referralCode }) {
 
   const handleSendSMS = async () => {
     if (!phoneNumber || phoneNumber.length < 10) {
-      alert('⚠️ Please enter a valid phone number');
+      alert('⚠️ Please enter a valid phone number (at least 10 digits)');
       return;
     }
 
@@ -41,27 +41,26 @@ export default function ContactInvite({ userEmail, referralCode }) {
       const smsMessage = `Hey! Join me on EncircleNet - a creator platform where you earn while you share! 🚀\n\nUse my code: ${referralCode}\n${inviteUrl}`;
       
       // Open default SMS app with pre-filled message
-      const smsLink = `sms:${phoneNumber}${/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?'}body=${encodeURIComponent(smsMessage)}`;
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const smsLink = `sms:${phoneNumber}${isIOS ? '&' : '?'}body=${encodeURIComponent(smsMessage)}`;
       
-      const smsWindow = window.open(smsLink, '_blank');
+      window.location.href = smsLink;
       
-      if (smsWindow) {
-        console.log('SMS opened successfully');
+      // Show success after attempting to open SMS app
+      setTimeout(() => {
         alert(`✅ SMS invite prepared for ${phoneNumber}!\n\nSend the message from your SMS app.\nYou'll earn rewards when they sign up.`);
         setPhoneNumber('');
-      } else {
-        alert(`📱 SMS invite ready!\n\nMessage: ${smsMessage}\n\nCopy and send to: ${phoneNumber}`);
-      }
+      }, 500);
     } catch (error) {
       console.error('SMS invite error:', error);
-      alert('❌ Failed to send SMS invite. Please try again.');
+      alert('❌ Failed to prepare SMS invite. Please try again or copy the link manually.');
     } finally {
       setSending(false);
     }
   };
 
   const handleSendEmail = async () => {
-    if (!emailAddress || !emailAddress.includes('@')) {
+    if (!emailAddress || !emailAddress.includes('@') || !emailAddress.includes('.')) {
       alert('⚠️ Please enter a valid email address');
       return;
     }
@@ -98,12 +97,12 @@ See you inside!
 P.S. You'll get bonuses for joining, and I'll earn rewards too. It's a win-win! 🚀`
       });
 
-      console.log('Email sent:', emailResult);
+      console.log('✅ Email sent successfully:', emailResult);
       alert(`✅ Email invite sent to ${emailAddress}!\n\nYou'll earn rewards when they sign up and start creating.`);
       setEmailAddress('');
     } catch (error) {
-      console.error('Email invite error:', error);
-      alert('❌ Failed to send email invite. Please try again.');
+      console.error('❌ Email invite error:', error);
+      alert(`❌ Failed to send email invite. Error: ${error.message || 'Unknown error'}\n\nPlease try again or share the link directly.`);
     } finally {
       setSending(false);
     }

@@ -20,6 +20,7 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     // Initialize muted for mobile autoplay policy
     video.muted = true;
     video.playsInline = true;
+    video.preload = 'metadata'; // Better performance
     
     console.log('🎥 Video initialized:', {
       src,
@@ -81,6 +82,15 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
       if (video.paused) {
         console.log('▶️ ATTEMPTING PLAY...');
         
+        // Check if video is loaded enough
+        if (video.readyState < 2) {
+          console.log('⏳ Waiting for video to load...');
+          await new Promise((resolve) => {
+            video.addEventListener('loadeddata', resolve, { once: true });
+            setTimeout(resolve, 5000); // Timeout after 5s
+          });
+        }
+        
         // Unmute on first interaction
         if (isMuted) {
           video.muted = false;
@@ -103,7 +113,6 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
       try {
         console.log('🔄 Retrying with muted...');
         video.muted = true;
-        video.load();
         await video.play();
         console.log('✅ Playing muted');
         setIsPlaying(true);

@@ -24,11 +24,20 @@ export default function Referrals() {
     loadUser();
   }, []);
 
-  const { data: referrals } = useQuery({
+  const { data: referrals, isLoading: referralsLoading } = useQuery({
     queryKey: ['referrals', user?.email],
-    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    queryFn: async () => {
+      try {
+        return await base44.entities.Referral.filter({ referrer_email: user?.email });
+      } catch (err) {
+        console.error('Failed to fetch referrals:', err);
+        return [];
+      }
+    },
     enabled: !!user?.email,
-    initialData: []
+    initialData: [],
+    retry: 2,
+    staleTime: 60000 // Cache for 1 minute
   });
 
   const totalEarned = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);

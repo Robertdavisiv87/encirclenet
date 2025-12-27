@@ -43,34 +43,48 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           user_email: currentUser.email,
           status: 'active'
         });
-        setUserSubscription(subs[0]);
-      } catch (e) {}
+        setUserSubscription(subs[0] || null);
+      } catch (e) {
+        console.error('Error checking like status:', e);
+      }
     };
     checkLike();
   }, [post.id, currentUser]);
 
   const handleLike = async () => {
-    if (!currentUser) return;
-    
-    if (isLiked) {
-      const likes = await base44.entities.Like.filter({
-        post_id: post.id,
-        user_email: currentUser.email
-      });
-      if (likes.length > 0) {
-        await base44.entities.Like.delete(likes[0].id);
-      }
-      setIsLiked(false);
-      setLikesCount(prev => Math.max(0, prev - 1));
-    } else {
-      await base44.entities.Like.create({
-        post_id: post.id,
-        user_email: currentUser.email
-      });
-      setIsLiked(true);
-      setLikesCount(prev => prev + 1);
+    if (!currentUser) {
+      alert('Please login to like posts');
+      return;
     }
-    onLike && onLike(post.id, !isLiked);
+    
+    // Optimistic update
+    const wasLiked = isLiked;
+    setIsLiked(!isLiked);
+    setLikesCount(prev => wasLiked ? Math.max(0, prev - 1) : prev + 1);
+    
+    try {
+      if (wasLiked) {
+        const likes = await base44.entities.Like.filter({
+          post_id: post.id,
+          user_email: currentUser.email
+        });
+        if (likes.length > 0) {
+          await base44.entities.Like.delete(likes[0].id);
+        }
+      } else {
+        await base44.entities.Like.create({
+          post_id: post.id,
+          user_email: currentUser.email
+        });
+      }
+      onLike && onLike(post.id, !wasLiked);
+    } catch (error) {
+      console.error('Failed to update like:', error);
+      // Revert optimistic update on failure
+      setIsLiked(wasLiked);
+      setLikesCount(prev => wasLiked ? prev + 1 : Math.max(0, prev - 1));
+      alert('Failed to update like. Please try again.');
+    }
   };
 
   const handleDoubleClick = () => {
@@ -87,24 +101,34 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const isHot = likesCount > 20 && likesCount <= 50;
 
   const handleTip = async () => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      alert('Please login to send tips');
+      return;
+    }
 
     const userTier = userSubscription?.tier || 'free';
     if (userTier === 'free') {
-      return; // Blocked by MonetizationEligibility component
+      alert('Upgrade to Pro or Elite to send tips');
+      return;
     }
 
-    await base44.entities.Transaction.create({
-      from_email: currentUser.email,
-      from_name: currentUser.full_name,
-      to_email: post.created_by,
-      to_name: post.author_name,
-      amount: tipAmount,
-      type: 'tip',
-      post_id: post.id
-    });
-    setShowTipModal(false);
-    onTip && onTip(post.id, tipAmount);
+    try {
+      await base44.entities.Transaction.create({
+        from_email: currentUser.email,
+        from_name: currentUser.full_name,
+        to_email: post.created_by,
+        to_name: post.author_name,
+        amount: tipAmount,
+        type: 'tip',
+        post_id: post.id
+      });
+      setShowTipModal(false);
+      alert(`✅ Sent $${tipAmount} tip to ${post.author_name}!`);
+      onTip && onTip(post.id, tipAmount);
+    } catch (error) {
+      console.error('Failed to send tip:', error);
+      alert('Failed to send tip. Please try again.');
+    }
   };
 
   const userTier = userSubscription?.tier || 'free';
@@ -119,8 +143,15 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     setIsDeleting(true);
     try {
       await base44.entities.Post.delete(post.id);
-      window.location.reload(); // Refresh to show updated feed
+      alert('✅ Post deleted successfully!');
+      // Use callback for better performance than reload
+      if (onLike) {
+        onLike(); // Trigger parent refresh
+      } else {
+        window.location.reload();
+      }
     } catch (error) {
+      console.error('Failed to delete post:', error);
       alert('Failed to delete post. Please try again.');
       setIsDeleting(false);
     }

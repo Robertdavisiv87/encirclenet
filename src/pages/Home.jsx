@@ -55,25 +55,41 @@ export default function Home() {
 
   const { data: posts, isLoading, refetch, error } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 100),
+    queryFn: async () => {
+      try {
+        return await base44.entities.Post.list('-created_date', 100);
+      } catch (err) {
+        console.error('Failed to fetch posts:', err);
+        throw err;
+      }
+    },
     initialData: [],
     retry: 3,
-    retryDelay: 1000,
-    staleTime: 0, // Always fetch fresh to show new videos immediately
-    refetchOnMount: 'always',
-    refetchOnWindowFocus: true
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 30000, // 30 seconds cache to reduce server load
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    refetchInterval: 60000, // Auto-refresh every 60 seconds
+    networkMode: 'offlineFirst'
   });
 
   const { data: userSubscription } = useQuery({
     queryKey: ['user-subscription', user?.email],
     queryFn: async () => {
-      const subs = await base44.entities.Subscription.filter({ 
-        user_email: user?.email,
-        status: 'active'
-      });
-      return subs[0];
+      try {
+        const subs = await base44.entities.Subscription.filter({ 
+          user_email: user?.email,
+          status: 'active'
+        });
+        return subs[0] || null;
+      } catch (err) {
+        console.error('Failed to fetch subscription:', err);
+        return null;
+      }
     },
-    enabled: !!user?.email
+    enabled: !!user?.email,
+    staleTime: 300000, // Cache for 5 minutes
+    retry: 2
   });
 
   const userTier = userSubscription?.tier || 'free';
