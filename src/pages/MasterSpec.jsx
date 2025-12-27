@@ -780,6 +780,93 @@ export default function MasterSpec() {
                 <p className="text-xs text-green-700 mt-2 font-semibold">
                   Success Condition: Visiting /login shows a fully rendered login interface, not a placeholder.
                 </p>
+                
+                <div className="mt-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                  <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    JavaScript Execution Enforcement (Guardian Mode)
+                  </h4>
+                  <p className="text-xs text-gray-700 mb-3">
+                    The JS Guardian ensures all JavaScript loads and executes correctly, fully hydrating the app UI and preventing the "Enable JavaScript" message.
+                  </p>
+                  
+                  <div className="bg-slate-900 rounded-lg p-3 overflow-x-auto">
+                    <pre className="text-xs text-green-400 font-mono">
+{`// 🔹 JavaScript Execution Enforcement
+(function activateEncircleNetJS() {
+  // Detect if JS is running
+  if (!document.body) {
+    console.error("JS not detected: DOM not ready.");
+    return;
+  }
+
+  // Remove placeholder message
+  const placeholder = 
+    document.querySelector('#js-placeholder');
+  if (placeholder) placeholder.remove();
+
+  // Hydrate main SPA container
+  const appContainer = 
+    document.getElementById('root') || 
+    document.getElementById('app');
+  if (!appContainer) {
+    console.error("App container not found.");
+    return;
+  }
+
+  // Load core JS bundles if missing
+  const bundles = [
+    '/static/js/main.js',
+    '/static/js/vendor.js',
+    '/static/js/runtime.js'
+  ];
+  bundles.forEach(src => {
+    if (![...document.scripts]
+      .some(s => s.src.includes(src))) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.defer = true;
+      script.onload = () => 
+        console.log(\`\${src} loaded\`);
+      script.onerror = () => 
+        console.error(\`Failed: \${src}\`);
+      document.head.appendChild(script);
+    }
+  });
+
+  // Force SPA routing fallback
+  window.addEventListener('popstate', () => {
+    if (!window.location.pathname
+      .startsWith('/login') && 
+      !window.location.pathname
+      .startsWith('/signup')) {
+      window.history.replaceState({}, '', '/login');
+      console.warn("Fallback to /login");
+    }
+  });
+
+  console.log("✅ JS active, app bootstrapped.");
+})();`}
+                    </pre>
+                  </div>
+                  
+                  <div className="mt-3 space-y-1 text-xs text-gray-700">
+                    <p className="font-semibold text-blue-900">Integration Requirements:</p>
+                    <ul className="space-y-1 ml-3">
+                      <li>• Insert in index.html before closing {'</head>'} tag</li>
+                      <li>• Ensure all core bundles are versioned and served via CDN</li>
+                      <li>• Confirm SPA fallback, hydration, and placeholder removal</li>
+                      <li>• Log any missing bundle errors</li>
+                      <li>• Prevent "Enable JavaScript" message from showing</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="mt-3 bg-green-100 rounded-lg p-2 border border-green-300">
+                    <p className="text-xs font-semibold text-green-900">
+                      ✅ Success: Visiting /login triggers fully rendered, interactive UI without placeholders, JS errors, or broken SPA routing.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-white rounded-lg p-4 border-2 border-slate-200">
