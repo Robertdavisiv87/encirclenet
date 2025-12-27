@@ -239,7 +239,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <p className="text-sm text-zinc-300 mb-2">{user.bio || 'No bio yet'}</p>
+            <p className="text-sm text-black mb-2">{user.bio || 'No bio yet'}</p>
             {user.website && (
               <a href={user.website} className="text-sm text-purple-400 flex items-center gap-1">
                 <LinkIcon className="w-3 h-3" />
