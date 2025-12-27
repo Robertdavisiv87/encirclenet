@@ -9,10 +9,17 @@ import {
   Crown,
   Gift,
   Target,
-  ArrowUpRight
+  ArrowUpRight,
+  Activity,
+  Eye,
+  Heart,
+  MessageCircle,
+  Share2,
+  Bell
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { motion } from 'framer-motion';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { motion, AnimatePresence } from 'framer-motion';
 import AdminProtection from '../components/auth/AdminProtection';
 
 export default function Admin() {
@@ -55,6 +62,42 @@ export default function Admin() {
   const { data: referrals } = useQuery({
     queryKey: ['admin-referrals'],
     queryFn: () => base44.entities.Referral.list('-created_date', 100),
+    initialData: []
+  });
+
+  // Live tracking data
+  const { data: allPosts } = useQuery({
+    queryKey: ['admin-posts'],
+    queryFn: () => base44.entities.Post.list('-created_date', 50),
+    refetchInterval: 5000, // Refresh every 5 seconds
+    initialData: []
+  });
+
+  const { data: allLikes } = useQuery({
+    queryKey: ['admin-likes'],
+    queryFn: () => base44.entities.Like.list('-created_date', 100),
+    refetchInterval: 5000,
+    initialData: []
+  });
+
+  const { data: allTransactions } = useQuery({
+    queryKey: ['admin-transactions'],
+    queryFn: () => base44.entities.Transaction.list('-created_date', 50),
+    refetchInterval: 5000,
+    initialData: []
+  });
+
+  const { data: allUsers } = useQuery({
+    queryKey: ['admin-users'],
+    queryFn: () => base44.asServiceRole.entities.User.list('-created_date', 100),
+    refetchInterval: 10000,
+    initialData: []
+  });
+
+  const { data: contactReferrals } = useQuery({
+    queryKey: ['admin-contact-referrals'],
+    queryFn: () => base44.entities.ContactReferral.list('-created_date', 50),
+    refetchInterval: 5000,
     initialData: []
   });
 
@@ -150,57 +193,258 @@ export default function Admin() {
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card className="bg-white border-2 border-gray-200 realistic-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between text-blue-900">
-              <span>Recent Subscriptions</span>
-              <ArrowUpRight className="w-4 h-4 text-purple-600" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {subscriptions.slice(0, 5).map((sub) => (
-                <div key={sub.id} className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-xl">
-                  <div>
-                    <p className="font-medium text-sm text-blue-900">{sub.user_email}</p>
-                    <p className="text-xs text-gray-600 uppercase">{sub.tier} tier</p>
-                  </div>
-                  <p className="font-bold text-green-600">${sub.price}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Tabs for Recent Activity and Live Tracking */}
+      <Tabs defaultValue="recent" className="mb-8">
+        <TabsList className="w-full bg-white border-2 border-gray-200 p-1">
+          <TabsTrigger value="recent" className="flex-1 data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+            Recent Activity
+          </TabsTrigger>
+          <TabsTrigger value="live" className="flex-1 data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+            <Activity className="w-4 h-4 mr-2 inline" />
+            Live Tracking
+          </TabsTrigger>
+        </TabsList>
 
-        <Card className="bg-white border-2 border-gray-200 realistic-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between text-blue-900">
-              <span>Top Referrers</span>
-              <Target className="w-4 h-4 text-orange-600" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {referrals.slice(0, 5).map((ref, i) => (
-                <div key={ref.id} className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center font-bold text-white shadow-md">
-                      #{i + 1}
+        {/* Recent Activity Tab */}
+        <TabsContent value="recent">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-blue-900">
+                  <span>Recent Subscriptions</span>
+                  <ArrowUpRight className="w-4 h-4 text-purple-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {subscriptions.slice(0, 5).map((sub) => (
+                    <div key={sub.id} className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-xl">
+                      <div>
+                        <p className="font-medium text-sm text-blue-900">{sub.user_email}</p>
+                        <p className="text-xs text-gray-600 uppercase">{sub.tier} tier</p>
+                      </div>
+                      <p className="font-bold text-green-600">${sub.price}</p>
                     </div>
-                    <div>
-                      <p className="font-medium text-sm text-blue-900">{ref.referrer_email}</p>
-                      <p className="text-xs text-gray-600">{ref.status}</p>
-                    </div>
-                  </div>
-                  <p className="font-bold text-green-600">${ref.commission_earned}</p>
+                  ))}
                 </div>
-              ))}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between text-blue-900">
+                  <span>Top Referrers</span>
+                  <Target className="w-4 h-4 text-orange-600" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {referrals.slice(0, 5).map((ref, i) => (
+                    <div key={ref.id} className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center font-bold text-white shadow-md">
+                          #{i + 1}
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm text-blue-900">{ref.referrer_email}</p>
+                          <p className="text-xs text-gray-600">{ref.status}</p>
+                        </div>
+                      </div>
+                      <p className="font-bold text-green-600">${ref.commission_earned}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Live Tracking Tab */}
+        <TabsContent value="live">
+          <div className="space-y-6">
+            {/* Live Activity Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300">
+                <CardContent className="p-4">
+                  <Eye className="w-8 h-8 text-blue-600 mb-2" />
+                  <p className="text-2xl font-bold text-blue-900">{allPosts.length}</p>
+                  <p className="text-xs text-gray-600">Recent Posts</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-2 border-pink-300">
+                <CardContent className="p-4">
+                  <Heart className="w-8 h-8 text-pink-600 mb-2" />
+                  <p className="text-2xl font-bold text-blue-900">{allLikes.length}</p>
+                  <p className="text-xs text-gray-600">Recent Likes</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
+                <CardContent className="p-4">
+                  <DollarSign className="w-8 h-8 text-green-600 mb-2" />
+                  <p className="text-2xl font-bold text-blue-900">{allTransactions.length}</p>
+                  <p className="text-xs text-gray-600">Transactions</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-300">
+                <CardContent className="p-4">
+                  <Users className="w-8 h-8 text-purple-600 mb-2" />
+                  <p className="text-2xl font-bold text-blue-900">{allUsers.length}</p>
+                  <p className="text-xs text-gray-600">Total Users</p>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+
+            {/* Live Activity Feed */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Recent Posts */}
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-blue-900">
+                    <Activity className="w-5 h-5 text-blue-600 animate-pulse" />
+                    Live Posts Feed
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    <AnimatePresence>
+                      {allPosts.slice(0, 10).map((post) => (
+                        <motion.div
+                          key={post.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-xl"
+                        >
+                          <div className="flex-1">
+                            <p className="font-medium text-sm text-blue-900">{post.author_name}</p>
+                            <p className="text-xs text-gray-600">{post.content_type} • {new Date(post.created_date).toLocaleTimeString()}</p>
+                          </div>
+                          <div className="flex items-center gap-3 text-xs text-gray-600">
+                            <span className="flex items-center gap-1">
+                              <Heart className="w-3 h-3" />
+                              {post.likes_count}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MessageCircle className="w-3 h-3" />
+                              {post.comments_count}
+                            </span>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Transactions */}
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-blue-900">
+                    <DollarSign className="w-5 h-5 text-green-600 animate-pulse" />
+                    Live Transactions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    <AnimatePresence>
+                      {allTransactions.slice(0, 10).map((tx) => (
+                        <motion.div
+                          key={tx.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-xl"
+                        >
+                          <div>
+                            <p className="font-medium text-sm text-blue-900">{tx.type}</p>
+                            <p className="text-xs text-gray-600">
+                              {tx.from_name} → {tx.to_name}
+                            </p>
+                            <p className="text-xs text-gray-500">{new Date(tx.created_date).toLocaleTimeString()}</p>
+                          </div>
+                          <p className="font-bold text-green-600">${tx.amount}</p>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent User Signups */}
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-blue-900">
+                    <Users className="w-5 h-5 text-purple-600 animate-pulse" />
+                    New Users
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    <AnimatePresence>
+                      {allUsers.slice(0, 10).map((user) => (
+                        <motion.div
+                          key={user.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-xl"
+                        >
+                          <div>
+                            <p className="font-medium text-sm text-blue-900">{user.full_name || 'New User'}</p>
+                            <p className="text-xs text-gray-600">{user.email}</p>
+                            <p className="text-xs text-gray-500">{new Date(user.created_date).toLocaleDateString()}</p>
+                          </div>
+                          <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-semibold">
+                            {user.role}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Referral Activity */}
+              <Card className="bg-white border-2 border-gray-200 realistic-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-blue-900">
+                    <Share2 className="w-5 h-5 text-orange-600 animate-pulse" />
+                    Referral Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    <AnimatePresence>
+                      {contactReferrals.slice(0, 10).map((ref) => (
+                        <motion.div
+                          key={ref.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="flex items-center justify-between p-3 bg-orange-50 border border-orange-200 rounded-xl"
+                        >
+                          <div>
+                            <p className="font-medium text-sm text-blue-900">{ref.referrer_email}</p>
+                            <p className="text-xs text-gray-600">via {ref.invite_method}</p>
+                            <p className="text-xs text-gray-500">{new Date(ref.created_date).toLocaleTimeString()}</p>
+                          </div>
+                          <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                            ref.status === 'signed_up' ? 'bg-green-100 text-green-800' :
+                            ref.status === 'active_creator' ? 'bg-blue-100 text-blue-800' :
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {ref.status}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
       </div>
     </AdminProtection>
   );
