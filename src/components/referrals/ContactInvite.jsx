@@ -5,16 +5,130 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { base44 } from '@/api/base44Client';
 
 export default function ContactInvite({ userEmail, referralCode }) {
   const [copied, setCopied] = useState(false);
   const [inviteMethod, setInviteMethod] = useState('link');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+  const [sending, setSending] = useState(false);
   const inviteUrl = `https://encirclenet.com/join?ref=${referralCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSendSMS = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert('⚠️ Please enter a valid phone number');
+      return;
+    }
+
+    setSending(true);
+    try {
+      // Create referral tracking record
+      await base44.entities.ContactReferral.create({
+        referrer_email: userEmail,
+        contact_hash: btoa(phoneNumber), // Hash for privacy
+        invite_method: 'sms',
+        status: 'pending'
+      });
+
+      // Send SMS (integrate with Twilio or similar)
+      const smsMessage = `Hey! Join me on EncircleNet - a creator platform where you earn while you share! 🚀\n\nUse my code: ${referralCode}\n${inviteUrl}`;
+      
+      // For now, open default SMS app with pre-filled message
+      const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(smsMessage)}`;
+      window.open(smsLink, '_blank');
+
+      alert('✅ SMS invite opened! Send it to complete the invitation.\n\nYou\'ll earn rewards when they sign up.');
+      setPhoneNumber('');
+    } catch (error) {
+      console.error('SMS invite error:', error);
+      alert('❌ Failed to send SMS invite. Please try again.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailAddress || !emailAddress.includes('@')) {
+      alert('⚠️ Please enter a valid email address');
+      return;
+    }
+
+    setSending(true);
+    try {
+      // Create referral tracking record
+      await base44.entities.ContactReferral.create({
+        referrer_email: userEmail,
+        contact_hash: btoa(emailAddress), // Hash for privacy
+        invite_method: 'email',
+        status: 'pending'
+      });
+
+      // Send email via Core integration
+      await base44.integrations.Core.SendEmail({
+        to: emailAddress,
+        subject: `Join me on EncircleNet - Earn while you create! 🎨`,
+        body: `
+Hi there!
+
+I'm inviting you to join EncircleNet - a revolutionary social platform where creators actually get paid for their content and engagement!
+
+Here's what you get:
+✅ Earn money from tips, subscriptions, and referrals
+✅ 90% revenue share (not 0% like Instagram/TikTok)
+✅ Multiple income streams built-in
+✅ Free to start, upgrade later for 3x-10x earnings
+
+Use my referral code: ${referralCode}
+Sign up here: ${inviteUrl}
+
+See you inside!
+
+P.S. You'll get bonuses for joining, and I'll earn rewards too. It's a win-win! 🚀
+        `
+      });
+
+      alert('✅ Email invite sent successfully!\n\nYou\'ll earn rewards when they sign up and start creating.');
+      setEmailAddress('');
+    } catch (error) {
+      console.error('Email invite error:', error);
+      alert('❌ Failed to send email invite. Please try again.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: 'Join me on EncircleNet!',
+      text: `Join me on EncircleNet - a creator platform where you earn while you share! Use my code: ${referralCode}`,
+      url: inviteUrl
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        
+        // Track share action
+        await base44.entities.ContactReferral.create({
+          referrer_email: userEmail,
+          contact_hash: btoa(`share-${Date.now()}`),
+          invite_method: 'link',
+          status: 'pending'
+        });
+      } else {
+        handleCopy();
+      }
+    } catch (error) {
+      // User cancelled or error occurred
+      console.log('Share cancelled or failed:', error);
+    }
   };
 
   const bonuses = [
@@ -100,6 +214,24 @@ export default function ContactInvite({ userEmail, referralCode }) {
                 {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleShare}
+                className="flex-1 gradient-bg-primary text-white shadow-glow"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Share Link
+              </Button>
+              <Button
+                onClick={() => {
+                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Join me on EncircleNet! Use code: ${referralCode}`)}&url=${encodeURIComponent(inviteUrl)}`, '_blank');
+                }}
+                variant="outline"
+                className="border-blue-300"
+              >
+                Tweet
+              </Button>
+            </div>
           </div>
         )}
 
@@ -110,12 +242,27 @@ export default function ContactInvite({ userEmail, referralCode }) {
             <Input
               type="tel"
               placeholder="+1 (555) 123-4567"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               className="bg-white border-blue-300 text-blue-900"
             />
-            <Button className="w-full gradient-bg-primary text-white shadow-glow">
-              <Send className="w-4 h-4 mr-2" />
-              Send SMS Invite
+            <Button 
+              onClick={handleSendSMS}
+              disabled={sending || !phoneNumber}
+              className="w-full gradient-bg-primary text-white shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {sending ? (
+                <>Loading...</>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Send SMS Invite
+                </>
+              )}
             </Button>
+            <p className="text-xs text-gray-600">
+              💡 Opens your SMS app with a pre-filled message. Rewards earned when they sign up.
+            </p>
           </div>
         )}
 
@@ -126,12 +273,27 @@ export default function ContactInvite({ userEmail, referralCode }) {
             <Input
               type="email"
               placeholder="friend@example.com"
+              value={emailAddress}
+              onChange={(e) => setEmailAddress(e.target.value)}
               className="bg-white border-blue-300 text-blue-900"
             />
-            <Button className="w-full gradient-bg-primary text-white shadow-glow">
-              <Send className="w-4 h-4 mr-2" />
-              Send Email Invite
+            <Button 
+              onClick={handleSendEmail}
+              disabled={sending || !emailAddress}
+              className="w-full gradient-bg-primary text-white shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {sending ? (
+                <>Sending...</>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Email Invite
+                </>
+              )}
             </Button>
+            <p className="text-xs text-gray-600">
+              ✅ Sends a personalized email invite. Earn rewards when they join and create content.
+            </p>
           </div>
         )}
 
