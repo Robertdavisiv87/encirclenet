@@ -22,6 +22,8 @@ import HireMeButton from '../components/profile/HireMeButton';
 import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
 import PortfolioSection from '../components/profile/PortfolioSection';
 import NewMessageButton from '../components/messaging/NewMessageButton';
+import SubscribeToCreatorButton from '../components/monetization/SubscribeToCreatorButton';
+import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
 import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
 
 export default function ViewProfile() {
@@ -226,6 +228,11 @@ export default function ViewProfile() {
                   >
                     {isFollowing ? 'Following' : '+ Follow'}
                   </Button>
+                  <SubscribeToCreatorButton
+                    creatorEmail={profileEmail}
+                    creatorName={profileUser.full_name}
+                    currentUser={currentUser}
+                  />
                   <NewMessageButton 
                     currentUser={currentUser} 
                     recipientEmail={profileEmail}
@@ -347,6 +354,13 @@ export default function ViewProfile() {
             )}
           </div>
         </div>
+
+        {/* Creator Earnings (visible to others) */}
+        {!isOwner && !isPrivate && (
+          <div className="mb-6">
+            <CreatorEarningsCard creatorEmail={profileEmail} />
+          </div>
+        )}
 
         {/* Hire Me Button */}
         {!isOwner && profileUser.services_offered?.length > 0 && (
