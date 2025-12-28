@@ -138,6 +138,18 @@ export default function ViewProfile() {
         following_email: profileEmail,
         following_name: profileUser?.full_name || 'User'
       });
+      
+      // Create notification
+      base44.functions.invoke('createNotification', {
+        user_email: profileEmail,
+        type: 'new_follower',
+        title: 'New Follower',
+        message: `${currentUser.full_name || currentUser.email} started following you`,
+        from_user: currentUser.email,
+        from_user_name: currentUser.full_name,
+        link: `/viewprofile?email=${currentUser.email}`
+      }).catch(err => console.log('Notification failed:', err));
+      
       setIsFollowing(true);
     }
   };

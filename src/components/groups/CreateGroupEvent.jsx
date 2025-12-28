@@ -24,7 +24,7 @@ export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel })
 
     setIsSubmitting(true);
     try {
-      await base44.entities.GroupEvent.create({
+      const event = await base44.entities.GroupEvent.create({
         group_id: groupId,
         creator_email: user.email,
         title: formData.title,
@@ -34,6 +34,25 @@ export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel })
         max_attendees: formData.max_attendees ? parseInt(formData.max_attendees) : null,
         attendees: []
       });
+
+      // Notify group members
+      const members = await base44.entities.GroupMembership.filter({ group_id: groupId });
+      members.forEach(member => {
+        if (member.user_email !== user.email) {
+          base44.functions.invoke('createNotification', {
+            user_email: member.user_email,
+            type: 'group_event',
+            title: 'New Group Event',
+            message: `${user.full_name || user.email} created an event: ${formData.title}`,
+            from_user: user.email,
+            from_user_name: user.full_name,
+            related_id: event.id,
+            related_type: 'group_event',
+            link: `/viewgroup?id=${groupId}`
+          }).catch(err => console.log('Notification failed:', err));
+        }
+      });
+
       onSuccess();
     } catch (error) {
       alert('Failed to create event');

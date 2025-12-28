@@ -72,11 +72,26 @@ export default function ViewGroup() {
   });
 
   const joinMutation = useMutation({
-    mutationFn: () => base44.entities.GroupMembership.create({
-      group_id: groupId,
-      user_email: user.email,
-      role: 'member'
-    }),
+    mutationFn: async () => {
+      await base44.entities.GroupMembership.create({
+        group_id: groupId,
+        user_email: user.email,
+        role: 'member'
+      });
+      
+      // Notify group owner
+      base44.functions.invoke('createNotification', {
+        user_email: group.creator_email,
+        type: 'new_follower',
+        title: 'New Group Member',
+        message: `${user.full_name || user.email} joined ${group.group_name}`,
+        from_user: user.email,
+        from_user_name: user.full_name,
+        related_id: groupId,
+        related_type: 'group',
+        link: `${createPageUrl('ViewGroup')}?id=${groupId}`
+      }).catch(err => console.log('Notification failed:', err));
+    },
     onSuccess: async () => {
       queryClient.invalidateQueries(['group-membership']);
       queryClient.invalidateQueries(['group-members']);

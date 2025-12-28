@@ -19,13 +19,32 @@ export default function CreateGroupPost({ groupId, user, onSuccess, onCancel }) 
 
     setIsSubmitting(true);
     try {
-      await base44.entities.GroupPost.create({
+      const post = await base44.entities.GroupPost.create({
         group_id: groupId,
         author_email: user.email,
         author_name: user.full_name || 'User',
         title,
         content
       });
+
+      // Notify group members
+      const members = await base44.entities.GroupMembership.filter({ group_id: groupId });
+      members.forEach(member => {
+        if (member.user_email !== user.email) {
+          base44.functions.invoke('createNotification', {
+            user_email: member.user_email,
+            type: 'group_post',
+            title: 'New Group Post',
+            message: `${user.full_name || user.email} posted in a group you're in`,
+            from_user: user.email,
+            from_user_name: user.full_name,
+            related_id: post.id,
+            related_type: 'group_post',
+            link: `/viewgroup?id=${groupId}`
+          }).catch(err => console.log('Notification failed:', err));
+        }
+      });
+
       onSuccess();
     } catch (error) {
       alert('Failed to create post');

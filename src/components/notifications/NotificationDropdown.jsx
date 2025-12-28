@@ -1,77 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { Bell, Heart, DollarSign, Users, MessageCircle, X } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Bell, Heart, DollarSign, Users, MessageCircle, X, Calendar, MessageSquare, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import moment from 'moment';
+import { createPageUrl } from '../../utils';
+
+const notificationIcons = {
+  new_follower: Users,
+  new_message: MessageCircle,
+  group_post: MessageSquare,
+  group_event: Calendar,
+  mention: MessageCircle,
+  reply: MessageCircle,
+  like: Heart,
+  tip: DollarSign,
+  subscription: Crown
+};
+
+const notificationColors = {
+  new_follower: 'text-blue-500',
+  new_message: 'text-purple-500',
+  group_post: 'text-green-500',
+  group_event: 'text-orange-500',
+  mention: 'text-pink-500',
+  reply: 'text-indigo-500',
+  like: 'text-red-500',
+  tip: 'text-yellow-500',
+  subscription: 'text-purple-600'
+};
 
 export default function NotificationDropdown({ user }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasNew, setHasNew] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { data: likes = [] } = useQuery({
-    queryKey: ['notification-likes', user?.email],
-    queryFn: async () => {
-      const myPosts = await base44.entities.Post.filter({ created_by: user?.email });
-      const postIds = myPosts.map(p => p.id);
-      if (postIds.length === 0) return [];
-      const allLikes = await base44.entities.Like.list('-created_date', 50);
-      return allLikes.filter(l => postIds.includes(l.post_id));
-    },
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['notifications', user?.email],
+    queryFn: () => base44.entities.Notification.filter({
+      user_email: user?.email
+    }, '-created_date', 50),
     enabled: !!user?.email,
-    refetchInterval: 30000
+    refetchInterval: 15000
   });
 
-  const { data: transactions = [] } = useQuery({
-    queryKey: ['notification-transactions', user?.email],
-    queryFn: () => base44.entities.Transaction.filter({
-      to_email: user?.email
-    }, '-created_date', 20),
-    enabled: !!user?.email,
-    refetchInterval: 30000
+  const markAsReadMutation = useMutation({
+    mutationFn: (notificationId) => base44.entities.Notification.update(notificationId, {
+      is_read: true
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['notifications']);
+    }
   });
 
-  const { data: followers = [] } = useQuery({
-    queryKey: ['notification-followers', user?.email],
-    queryFn: () => base44.entities.Follow.filter({
-      following_email: user?.email
-    }, '-created_date', 20),
-    enabled: !!user?.email,
-    refetchInterval: 30000
-  });
+  const handleNotificationClick = (notif) => {
+    markAsReadMutation.mutate(notif.id);
+    if (notif.link) {
+      window.location.href = notif.link;
+    }
+  };
 
-  const notifications = [
-    ...likes.slice(0, 10).map(l => ({
-      id: `like-${l.id}`,
-      type: 'like',
-      icon: Heart,
-      color: 'text-red-500',
-      message: `${l.user_email} liked your post`,
-      time: l.created_date
-    })),
-    ...transactions.slice(0, 10).map(t => ({
-      id: `transaction-${t.id}`,
-      type: 'transaction',
-      icon: DollarSign,
-      color: 'text-green-500',
-      message: `You received $${t.amount} from ${t.from_email}`,
-      time: t.created_date
-    })),
-    ...followers.slice(0, 10).map(f => ({
-      id: `follow-${f.id}`,
-      type: 'follow',
-      icon: Users,
-      color: 'text-blue-500',
-      message: `${f.follower_email} started following you`,
-      time: f.created_date
-    }))
-  ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 15);
-
-  useEffect(() => {
-    setHasNew(notifications.length > 0);
-  }, [notifications.length]);
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const hasUnread = unreadCount > 0;
 
   return (
     <div className="relative">
@@ -83,16 +74,18 @@ export default function NotificationDropdown({ user }) {
       >
         <Bell className={cn(
           "w-5 h-5",
-          hasNew ? "text-purple-600" : "text-gray-600"
+          hasUnread ? "text-purple-600" : "text-gray-600"
         )} />
         <AnimatePresence>
-          {hasNew && (
+          {hasUnread && (
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"
-            />
+              className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-red-500 rounded-full border-2 border-white flex items-center justify-center"
+            >
+              <span className="text-[10px] font-bold text-white">{unreadCount}</span>
+            </motion.span>
           )}
         </AnimatePresence>
       </Button>
@@ -136,35 +129,49 @@ export default function NotificationDropdown({ user }) {
                     <Bell className="w-12 h-12 mx-auto mb-3 text-gray-400" />
                     <p className="text-gray-600 font-medium">No notifications yet</p>
                     <p className="text-sm text-gray-500 mt-1">
-                      You'll see likes, tips, and followers here
+                      You'll be notified of followers, messages, group activity & more
                     </p>
                   </div>
                 ) : (
                   <div className="divide-y divide-gray-100">
                     {notifications.map((notif) => {
-                      const Icon = notif.icon;
+                      const Icon = notificationIcons[notif.type] || Bell;
+                      const color = notificationColors[notif.type] || 'text-gray-500';
                       return (
                         <motion.div
                           key={notif.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={() => handleNotificationClick(notif)}
+                          className={cn(
+                            "p-4 hover:bg-gray-50 transition-colors cursor-pointer",
+                            !notif.is_read && "bg-purple-50"
+                          )}
                         >
                           <div className="flex items-start gap-3">
                             <div className={cn(
-                              "w-10 h-10 rounded-full flex items-center justify-center",
-                              "bg-gradient-to-br from-gray-100 to-gray-200"
+                              "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
+                              notif.is_read ? "bg-gradient-to-br from-gray-100 to-gray-200" : "bg-gradient-to-br from-purple-100 to-pink-100"
                             )}>
-                              <Icon className={cn("w-5 h-5", notif.color)} />
+                              <Icon className={cn("w-5 h-5", color)} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm text-blue-900 font-medium mb-1">
+                              <p className={cn(
+                                "text-sm mb-1",
+                                notif.is_read ? "text-gray-700" : "text-blue-900 font-semibold"
+                              )}>
+                                {notif.title}
+                              </p>
+                              <p className="text-xs text-gray-600 mb-1">
                                 {notif.message}
                               </p>
                               <p className="text-xs text-gray-500">
-                                {moment(notif.time).fromNow()}
+                                {moment(notif.created_date).fromNow()}
                               </p>
                             </div>
+                            {!notif.is_read && (
+                              <div className="w-2 h-2 rounded-full bg-purple-600 flex-shrink-0 mt-1" />
+                            )}
                           </div>
                         </motion.div>
                       );
