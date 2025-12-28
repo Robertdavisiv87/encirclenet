@@ -25,6 +25,9 @@ import VideoPlayer from '../components/video/VideoPlayer';
 import NewMessageButton from '../components/messaging/NewMessageButton';
 import SubscribeToCreatorButton from '../components/monetization/SubscribeToCreatorButton';
 import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
+import TipProfileButton from '../components/monetization/TipProfileButton';
+import CreatorTiersList from '../components/monetization/CreatorTiersList';
+import DigitalProductsSection from '../components/marketplace/DigitalProductsSection';
 import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
 
 export default function ViewProfile() {
@@ -241,7 +244,7 @@ export default function ViewProfile() {
                   >
                     {isFollowing ? 'Following' : '+ Follow'}
                   </Button>
-                  <SubscribeToCreatorButton
+                  <TipProfileButton
                     creatorEmail={profileEmail}
                     creatorName={profileUser.full_name}
                     currentUser={currentUser}
@@ -382,10 +385,32 @@ export default function ViewProfile() {
           </div>
         )}
 
+        {/* Creator Tiers */}
+        {!isPrivate && (
+          <div className="mb-6">
+            <CreatorTiersList
+              creatorEmail={profileEmail}
+              creatorName={profileUser.full_name}
+              currentUser={currentUser}
+            />
+          </div>
+        )}
+
+        {/* Digital Products */}
+        {!isPrivate && (
+          <div className="mb-6">
+            <DigitalProductsSection
+              creatorEmail={profileEmail}
+              isOwner={isOwner}
+              currentUser={currentUser}
+            />
+          </div>
+        )}
+
         {/* Portfolio & Collaborations */}
         {!isPrivate && (
           <div className="space-y-4 mb-6">
-            <PortfolioSection userEmail={profileEmail} isOwner={isOwner} />
+            <PortfolioSection userEmail={profileEmail} isOwner={isOwner} currentUser={currentUser} />
             <CollaborationsShowcase user={profileUser} isOwner={isOwner} />
           </div>
         )}
