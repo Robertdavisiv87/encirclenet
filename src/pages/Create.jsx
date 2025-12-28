@@ -210,6 +210,17 @@ export default function Create() {
       const newPost = await base44.entities.Post.create(postData);
       console.log('✅ Post created successfully with ID:', newPost.id, 'Media URL:', newPost.media_url);
 
+      // Award points for creating post
+      try {
+        await base44.functions.invoke('awardPoints', {
+          activity_type: 'post_created',
+          related_id: newPost.id,
+          description: 'Created a new post'
+        });
+      } catch (err) {
+        console.log('Points award failed:', err);
+      }
+
       // Force immediate feed refresh - ensure video appears in all feeds
       await Promise.all([
         base44.entities.Post.list('-created_date', 100), // Home feed

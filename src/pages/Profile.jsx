@@ -33,6 +33,7 @@ import ProfileCustomization from '../components/profile/ProfileCustomization';
 import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
 import PortfolioSection from '../components/profile/PortfolioSection';
 import ContentPreferences from '../components/profile/ContentPreferences';
+import PointsDisplay from '../components/gamification/PointsDisplay';
 import { Briefcase, Palette } from 'lucide-react';
 
 export default function Profile() {
