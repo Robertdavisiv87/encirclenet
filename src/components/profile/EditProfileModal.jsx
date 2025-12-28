@@ -13,7 +13,12 @@ export default function EditProfileModal({ show, onClose, currentUser, onSave })
     bio: '',
     website: '',
     social_links: '',
-    profile_photo: ''
+    profile_photo: '',
+    skills: '',
+    location: '',
+    video_intro_url: '',
+    custom_section_title: '',
+    custom_section_content: ''
   });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -25,7 +30,12 @@ export default function EditProfileModal({ show, onClose, currentUser, onSave })
         bio: currentUser.bio || '',
         website: currentUser.website || '',
         social_links: currentUser.social_links || '',
-        profile_photo: currentUser.profile_photo || ''
+        profile_photo: currentUser.profile_photo || '',
+        skills: currentUser.skills || '',
+        location: currentUser.location || '',
+        video_intro_url: currentUser.video_intro_url || '',
+        custom_section_title: currentUser.custom_section_title || '',
+        custom_section_content: currentUser.custom_section_content || ''
       });
     }
   }, [currentUser]);
@@ -182,6 +192,68 @@ export default function EditProfileModal({ show, onClose, currentUser, onSave })
                   className="border-2 border-gray-300 focus:border-purple-400"
                 />
                 <p className="text-xs text-gray-600">Instagram, TikTok, YouTube, etc.</p>
+              </div>
+
+              {/* Skills */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-blue-900">Skills & Expertise</label>
+                <Input
+                  type="text"
+                  placeholder="e.g., Photography, Video Editing, Graphic Design"
+                  value={formData.skills}
+                  onChange={(e) => setFormData(prev => ({ ...prev, skills: e.target.value }))}
+                  className="border-2 border-gray-300 focus:border-purple-400"
+                />
+                <p className="text-xs text-gray-600">Comma-separated skills</p>
+              </div>
+
+              {/* Location */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-blue-900">Location</label>
+                <Input
+                  type="text"
+                  placeholder="e.g., Los Angeles, CA"
+                  value={formData.location}
+                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                  className="border-2 border-gray-300 focus:border-purple-400"
+                />
+              </div>
+
+              {/* Video Intro */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-blue-900">Video Introduction URL</label>
+                <Input
+                  type="url"
+                  placeholder="https://youtube.com/watch?v=... or video file URL"
+                  value={formData.video_intro_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, video_intro_url: e.target.value }))}
+                  className="border-2 border-gray-300 focus:border-purple-400"
+                />
+                <p className="text-xs text-gray-600">YouTube, Vimeo, or direct video URL</p>
+              </div>
+
+              {/* Custom Section */}
+              <div className="space-y-4 p-4 bg-purple-50 rounded-xl border-2 border-purple-200">
+                <h3 className="font-bold text-blue-900">Custom Section (Optional)</h3>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-blue-900">Section Title</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g., My Services, Achievements, etc."
+                    value={formData.custom_section_title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, custom_section_title: e.target.value }))}
+                    className="border-2 border-gray-300 focus:border-purple-400"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-blue-900">Section Content</label>
+                  <Textarea
+                    placeholder="Add custom content to showcase on your profile..."
+                    value={formData.custom_section_content}
+                    onChange={(e) => setFormData(prev => ({ ...prev, custom_section_content: e.target.value }))}
+                    className="border-2 border-gray-300 focus:border-purple-400 min-h-[100px]"
+                  />
+                </div>
               </div>
 
               {/* Submit Button */}

@@ -5,14 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Briefcase, ExternalLink, Eye, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import AddPortfolioModal from './AddPortfolioModal';
 
-export default function PortfolioSection({ userEmail, isOwner }) {
-  const { data: portfolioItems = [] } = useQuery({
+export default function PortfolioSection({ userEmail, isOwner, currentUser }) {
+  const [showAddModal, setShowAddModal] = React.useState(false);
+  const { data: portfolioItems = [], refetch } = useQuery({
     queryKey: ['portfolio', userEmail],
     queryFn: () => base44.entities.Portfolio.filter({ freelancer_email: userEmail }),
     enabled: !!userEmail,
     refetchInterval: 60000
   });
+
+  const handleSave = () => {
+    refetch();
+  };
 
   if (portfolioItems.length === 0 && !isOwner) return null;
 
@@ -25,7 +31,11 @@ export default function PortfolioSection({ userEmail, isOwner }) {
             Portfolio
           </CardTitle>
           {isOwner && (
-            <Button size="sm" className="gradient-bg-primary text-white">
+            <Button 
+              size="sm" 
+              onClick={() => setShowAddModal(true)}
+              className="gradient-bg-primary text-white"
+            >
               Add Project
             </Button>
           )}
@@ -79,6 +89,15 @@ export default function PortfolioSection({ userEmail, isOwner }) {
           </div>
         )}
       </CardContent>
+      
+      {isOwner && (
+        <AddPortfolioModal
+          show={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSave={handleSave}
+          currentUser={currentUser}
+        />
+      )}
     </Card>
   );
 }
