@@ -147,7 +147,14 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         muted
         onClick={handleVideoClick}
         onTouchStart={handleVideoClick}
-      />
+        crossOrigin="anonymous"
+        controlsList="nodownload"
+        disablePictureInPicture={false}
+      >
+        <source src={src} type="video/mp4" />
+        <source src={src} type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
       
       {/* PLAY BUTTON OVERLAY - NON-INTERACTIVE */}
       {!isPlaying && (
