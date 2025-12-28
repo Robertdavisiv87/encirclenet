@@ -28,6 +28,7 @@ import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard'
 import TipProfileButton from '../components/monetization/TipProfileButton';
 import CreatorTiersList from '../components/monetization/CreatorTiersList';
 import DigitalProductsSection from '../components/marketplace/DigitalProductsSection';
+import CreatorServicesSection from '../components/marketplace/CreatorServicesSection';
 import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
 
 export default function ViewProfile() {
@@ -400,6 +401,17 @@ export default function ViewProfile() {
         {!isPrivate && (
           <div className="mb-6">
             <DigitalProductsSection
+              creatorEmail={profileEmail}
+              isOwner={isOwner}
+              currentUser={currentUser}
+            />
+          </div>
+        )}
+
+        {/* Services */}
+        {!isPrivate && (
+          <div className="mb-6">
+            <CreatorServicesSection
               creatorEmail={profileEmail}
               isOwner={isOwner}
               currentUser={currentUser}
