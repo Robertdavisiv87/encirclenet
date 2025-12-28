@@ -55,6 +55,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'AI Tools', icon: Sparkles, page: 'CreatorTools' },
     { name: 'Community', icon: Users, page: 'Community' },
+    { name: 'Groups', icon: Users, page: 'Groups' },
     { name: 'Forums', icon: MessageCircle, page: 'Forums' },
     { name: 'Events', icon: Users, page: 'Events' },
     { name: 'Analytics', icon: TrendingUp, page: 'CreatorAnalytics' },
