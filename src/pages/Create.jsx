@@ -213,6 +213,17 @@ export default function Create() {
       const newPost = await base44.entities.Post.create(postData);
       console.log('✅ Post created successfully with ID:', newPost.id, 'Media URL:', newPost.media_url);
 
+      // AI Moderation check
+      try {
+        await base44.functions.invoke('aiModerateContent', {
+          content: caption,
+          content_type: 'post',
+          content_id: newPost.id
+        });
+      } catch (modErr) {
+        console.log('Moderation check failed:', modErr);
+      }
+
       // Award points for creating post
       try {
         await base44.functions.invoke('awardPoints', {
