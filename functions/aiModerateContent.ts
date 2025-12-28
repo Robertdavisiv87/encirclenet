@@ -54,7 +54,7 @@ Respond with a strict JSON object (no markdown):`,
 
     const result = moderationResult;
 
-    // If violation detected with high confidence, create a flag
+    // If violation detected with high confidence, create a flag and hide post
     if (result.is_violation && result.confidence >= 0.7) {
       await base44.asServiceRole.entities.ModerationFlag.create({
         content_type: content_type,
@@ -66,12 +66,20 @@ Respond with a strict JSON object (no markdown):`,
         status: result.severity === 'critical' ? 'removed' : 'pending'
       });
 
-      // If critical, auto-remove content
-      if (result.severity === 'critical') {
-        if (content_type === 'post') {
-          const post = await base44.asServiceRole.entities.Post.filter({ id: content_id });
-          if (post[0]) {
-            await base44.asServiceRole.entities.Post.delete(content_id);
+      // Update post moderation status based on severity
+      if (content_type === 'post') {
+        const posts = await base44.asServiceRole.entities.Post.filter({ id: content_id });
+        if (posts[0]) {
+          if (result.severity === 'critical') {
+            // Auto-reject critical violations
+            await base44.asServiceRole.entities.Post.update(content_id, {
+              moderation_status: 'rejected'
+            });
+          } else {
+            // Queue for manual review
+            await base44.asServiceRole.entities.Post.update(content_id, {
+              moderation_status: 'pending_review'
+            });
           }
         }
       }

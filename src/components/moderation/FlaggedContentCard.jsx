@@ -62,7 +62,12 @@ export default function FlaggedContentCard({ flag, post, onApprove, onRemove }) 
         {/* Content Preview */}
         {post && (
           <div className="bg-gray-50 rounded-lg p-3 mb-3 border border-gray-200">
-            <p className="text-xs font-medium text-gray-500 mb-1">Content:</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-medium text-gray-500">Content:</p>
+              <Badge variant="outline" className="text-xs">
+                Status: {post.moderation_status || 'unknown'}
+              </Badge>
+            </div>
             <p className="text-sm text-gray-800 line-clamp-3">
               {post.caption || 'No caption'}
             </p>

@@ -71,10 +71,19 @@ export default function ModerationPanel({ user }) {
         status: 'approved',
         reviewed_by: user.email
       });
+      
+      // Update post moderation status to approved
+      if (flag.content_type === 'post') {
+        await base44.entities.Post.update(flag.content_id, {
+          moderation_status: 'approved'
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['moderation-flags']);
-      alert('✅ Content approved');
+      queryClient.invalidateQueries(['posts']);
+      queryClient.invalidateQueries(['posts-moderation']);
+      alert('✅ Content approved and published');
     }
   });
 
@@ -86,13 +95,17 @@ export default function ModerationPanel({ user }) {
       });
       
       if (flag.content_type === 'post') {
-        await base44.entities.Post.delete(flag.content_id);
+        // Mark as rejected instead of deleting
+        await base44.entities.Post.update(flag.content_id, {
+          moderation_status: 'rejected'
+        });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['moderation-flags']);
+      queryClient.invalidateQueries(['posts']);
       queryClient.invalidateQueries(['posts-moderation']);
-      alert('✅ Content removed');
+      alert('✅ Content rejected and removed from feeds');
     }
   });
 

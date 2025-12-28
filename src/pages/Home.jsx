@@ -64,7 +64,7 @@ export default function Home() {
     localStorage.setItem('lastGrowPromptDate', new Date().toDateString());
   };
 
-  const { data: posts, isLoading, refetch, error } = useQuery({
+  const { data: allPosts, isLoading, refetch, error } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
       try {
@@ -77,12 +77,18 @@ export default function Home() {
     initialData: [],
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    staleTime: 30000, // 30 seconds cache to reduce server load
+    staleTime: 30000,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    refetchInterval: 60000, // Auto-refresh every 60 seconds
+    refetchInterval: 60000,
     networkMode: 'offlineFirst'
   });
+
+  // Filter out posts pending review or rejected
+  const posts = allPosts.filter(post => 
+    post.moderation_status !== 'pending_review' && 
+    post.moderation_status !== 'rejected'
+  );
 
   const { data: userSubscription } = useQuery({
     queryKey: ['user-subscription', user?.email],
