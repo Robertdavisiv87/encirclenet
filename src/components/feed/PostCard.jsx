@@ -276,6 +276,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               e.stopPropagation();
               setShowImageLightbox(true);
             }}
+            loading="lazy"
+            decoding="async"
+            fetchpriority="high"
+            style={{
+              imageRendering: 'high-quality',
+              maxWidth: '3840px',
+              maxHeight: '2160px'
+            }}
           />
         )}
         {post.content_type === 'video' && post.media_url && (
