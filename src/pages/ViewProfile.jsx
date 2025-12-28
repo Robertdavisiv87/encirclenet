@@ -29,7 +29,10 @@ import TipProfileButton from '../components/monetization/TipProfileButton';
 import CreatorTiersList from '../components/monetization/CreatorTiersList';
 import DigitalProductsSection from '../components/marketplace/DigitalProductsSection';
 import CreatorServicesSection from '../components/marketplace/CreatorServicesSection';
-import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
+import LiveQASession from '../components/community/LiveQASession';
+import PollCard from '../components/polls/PollCard';
+import CreatePollModal from '../components/polls/CreatePollModal';
+import { ExternalLink, Briefcase, CheckCircle, MessageCircle, BarChart3 } from 'lucide-react';
 
 export default function ViewProfile() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -417,6 +420,55 @@ export default function ViewProfile() {
               currentUser={currentUser}
             />
           </div>
+        )}
+
+        {/* Live Q&A */}
+        {!isPrivate && liveQA && (
+          <div className="mb-6">
+            <LiveQASession
+              sessionId={liveQA.id}
+              currentUser={currentUser}
+              isHost={isOwner}
+            />
+          </div>
+        )}
+
+        {/* Polls */}
+        {!isPrivate && polls.length > 0 && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-blue-900 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-blue-600" />
+                Active Polls
+              </h3>
+              {isOwner && (
+                <Button
+                  size="sm"
+                  onClick={() => setShowPollModal(true)}
+                  className="gradient-bg-primary"
+                >
+                  Create Poll
+                </Button>
+              )}
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {polls.slice(0, 4).map((poll) => (
+                <PollCard
+                  key={poll.id}
+                  poll={poll}
+                  currentUser={currentUser}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {isOwner && (
+          <CreatePollModal
+            show={showPollModal}
+            onClose={() => setShowPollModal(false)}
+            creatorEmail={profileEmail}
+          />
         )}
 
         {/* Portfolio & Collaborations */}

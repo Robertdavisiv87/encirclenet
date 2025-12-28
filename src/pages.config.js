@@ -35,6 +35,7 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import CreatorMessaging from './pages/CreatorMessaging';
 import __Layout from './Layout.jsx';
 
 
@@ -76,6 +77,7 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "CreatorMessaging": CreatorMessaging,
 }
 
 export const pagesConfig = {
