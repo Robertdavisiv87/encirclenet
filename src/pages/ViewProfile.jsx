@@ -21,6 +21,7 @@ import { createPageUrl } from '../utils';
 import HireMeButton from '../components/profile/HireMeButton';
 import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
 import PortfolioSection from '../components/profile/PortfolioSection';
+import NewMessageButton from '../components/messaging/NewMessageButton';
 import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
 
 export default function ViewProfile() {
@@ -218,12 +219,19 @@ export default function ViewProfile() {
               <h2 className="text-xl font-bold text-blue-900">{profileUser.full_name || 'User'}</h2>
               <TierBadge tier={subscription?.tier || 'free'} size="md" />
               {currentUser?.email !== profileEmail && (
-                <Button 
-                  onClick={handleFollow}
-                  className={isFollowing ? "bg-gray-200 text-gray-700" : "gradient-bg-primary text-white shadow-glow"}
-                >
-                  {isFollowing ? 'Following' : '+ Follow'}
-                </Button>
+                <>
+                  <Button 
+                    onClick={handleFollow}
+                    className={isFollowing ? "bg-gray-200 text-gray-700" : "gradient-bg-primary text-white shadow-glow"}
+                  >
+                    {isFollowing ? 'Following' : '+ Follow'}
+                  </Button>
+                  <NewMessageButton 
+                    currentUser={currentUser} 
+                    recipientEmail={profileEmail}
+                    recipientName={profileUser.full_name}
+                  />
+                </>
               )}
             </div>
 
