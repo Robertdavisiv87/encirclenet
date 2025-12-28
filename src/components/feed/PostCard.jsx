@@ -113,18 +113,19 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     }
 
     try {
-      await base44.entities.Transaction.create({
-        from_email: currentUser.email,
-        from_name: currentUser.full_name,
+      const response = await base44.functions.invoke('processTip', {
         to_email: post.created_by,
-        to_name: post.author_name,
         amount: tipAmount,
-        type: 'tip',
         post_id: post.id
       });
-      setShowTipModal(false);
-      alert(`✅ Sent $${tipAmount} tip to ${post.author_name}!`);
-      onTip && onTip(post.id, tipAmount);
+      
+      if (response.data.success) {
+        setShowTipModal(false);
+        alert(`✅ Sent $${tipAmount} tip to ${post.author_name}!`);
+        onTip && onTip(post.id, tipAmount);
+      } else {
+        throw new Error(response.data.error || 'Tip processing failed');
+      }
     } catch (error) {
       console.error('Failed to send tip:', error);
       alert('Failed to send tip. Please try again.');
