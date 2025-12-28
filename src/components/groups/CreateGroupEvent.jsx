@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import CoHostSelector from '../collaboration/CoHostSelector';
 
 export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel })
     location: '',
     max_attendees: ''
   });
+  const [coHosts, setCoHosts] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
@@ -27,6 +29,7 @@ export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel })
       const event = await base44.entities.GroupEvent.create({
         group_id: groupId,
         creator_email: user.email,
+        co_hosts: coHosts,
         title: formData.title,
         description: formData.description,
         event_date: formData.event_date,
@@ -107,6 +110,11 @@ export default function CreateGroupEvent({ groupId, user, onSuccess, onCancel })
             placeholder="Virtual or physical location"
           />
         </div>
+        <CoHostSelector
+          groupId={groupId}
+          selectedCoHosts={coHosts}
+          onCoHostsChange={setCoHosts}
+        />
         <div className="flex gap-2">
           <Button
             onClick={handleSubmit}

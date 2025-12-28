@@ -34,6 +34,7 @@ import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
 import Discover from './pages/Discover';
+import CollaborationHub from './pages/CollaborationHub';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +75,7 @@ export const PAGES = {
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
     "Discover": Discover,
+    "CollaborationHub": CollaborationHub,
 }
 
 export const pagesConfig = {

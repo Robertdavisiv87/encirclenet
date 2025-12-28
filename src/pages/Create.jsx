@@ -21,6 +21,7 @@ import { Label } from '@/components/ui/label';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import SEO from '../components/SEO';
+import CollaboratorSelector from '../components/collaboration/CollaboratorSelector';
 
 const contentTypes = [
   { id: 'photo', icon: Image, label: 'Photo', color: 'from-pink-500 to-rose-500' },
@@ -34,6 +35,7 @@ export default function Create() {
   const [contentType, setContentType] = useState('photo');
   const [caption, setCaption] = useState('');
   const [tags, setTags] = useState('');
+  const [collaborators, setCollaborators] = useState([]);
   const [isRawMode, setIsRawMode] = useState(false);
   const [mediaFile, setMediaFile] = useState(null);
   const [mediaPreview, setMediaPreview] = useState(null);
@@ -199,6 +201,7 @@ export default function Create() {
         caption: caption || '',
         author_name: user.full_name || 'Anonymous',
         author_avatar: user.avatar || '',
+        collaborators: collaborators,
         tags: tagArray,
         is_raw_mode: isRawMode,
         likes_count: 0,
@@ -428,6 +431,14 @@ export default function Create() {
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           className="bg-white border-gray-300 text-blue-900 placeholder:text-gray-400"
+        />
+      </div>
+
+      {/* Collaborators */}
+      <div className="mb-6">
+        <CollaboratorSelector
+          selectedCollaborators={collaborators}
+          onCollaboratorsChange={setCollaborators}
         />
       </div>
 
