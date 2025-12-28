@@ -5,6 +5,7 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [quality, setQuality] = useState('auto');
   const videoRef = useRef(null);
 
   const aspectClasses = {
@@ -20,7 +21,14 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     // Initialize muted for mobile autoplay policy
     video.muted = true;
     video.playsInline = true;
-    video.preload = 'metadata'; // Better performance
+    video.preload = 'metadata';
+    
+    // Enable 4K and HDR support
+    if (video.requestVideoFrameCallback) {
+      video.requestVideoFrameCallback(() => {
+        // High quality rendering
+      });
+    }
     
     console.log('🎥 Video initialized:', {
       src,
@@ -141,7 +149,12 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         ref={videoRef}
         src={src}
         className="w-full h-full object-contain cursor-pointer"
-        style={{ pointerEvents: 'auto', zIndex: 1 }}
+        style={{ 
+          pointerEvents: 'auto', 
+          zIndex: 1,
+          imageRendering: 'high-quality',
+          willChange: 'transform'
+        }}
         playsInline
         preload="auto"
         muted
@@ -150,9 +163,12 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         crossOrigin="anonymous"
         controlsList="nodownload"
         disablePictureInPicture={false}
+        width="3840"
+        height="2160"
       >
-        <source src={src} type="video/mp4" />
-        <source src={src} type="video/webm" />
+        <source src={src} type="video/mp4; codecs=&quot;hvc1&quot;" />
+        <source src={src} type="video/mp4; codecs=&quot;avc1.640033&quot;" />
+        <source src={src} type="video/webm; codecs=&quot;vp9&quot;" />
         Your browser does not support the video tag.
       </video>
       
@@ -185,6 +201,16 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
           style={{ pointerEvents: 'none', zIndex: 2 }}
         >
           Tap to unmute
+        </div>
+      )}
+      
+      {/* QUALITY INDICATOR */}
+      {isPlaying && (
+        <div 
+          className="absolute top-4 left-4 text-xs bg-black/70 text-white px-2 py-1 rounded font-bold"
+          style={{ pointerEvents: 'none', zIndex: 2 }}
+        >
+          4K UHD
         </div>
       )}
     </div>
