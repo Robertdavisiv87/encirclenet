@@ -56,6 +56,7 @@ Deno.serve(async (req) => {
     }
 
     // Create referral record with $0.50 commission
+    // Note: ALL users (including free tier) can earn referral commissions
     const referral = await base44.asServiceRole.entities.Referral.create({
       referrer_email: referrer_email,
       referrer_code: referral_code,
