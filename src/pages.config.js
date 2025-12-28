@@ -15,6 +15,7 @@ import Events from './pages/Events';
 import Explore from './pages/Explore';
 import Forums from './pages/Forums';
 import Gamification from './pages/Gamification';
+import Groups from './pages/Groups';
 import Home from './pages/Home';
 import Marketplace from './pages/Marketplace';
 import MasterSpec from './pages/MasterSpec';
@@ -29,10 +30,10 @@ import Search from './pages/Search';
 import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
+import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Groups from './pages/Groups';
-import ViewGroup from './pages/ViewGroup';
+import Discover from './pages/Discover';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +55,7 @@ export const PAGES = {
     "Explore": Explore,
     "Forums": Forums,
     "Gamification": Gamification,
+    "Groups": Groups,
     "Home": Home,
     "Marketplace": Marketplace,
     "MasterSpec": MasterSpec,
@@ -68,10 +70,10 @@ export const PAGES = {
     "Settings": Settings,
     "Subscription": Subscription,
     "SystemStatus": SystemStatus,
+    "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Groups": Groups,
-    "ViewGroup": ViewGroup,
+    "Discover": Discover,
 }
 
 export const pagesConfig = {
