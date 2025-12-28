@@ -34,6 +34,8 @@ import CollaborationsShowcase from '../components/profile/CollaborationsShowcase
 import PortfolioSection from '../components/profile/PortfolioSection';
 import ContentPreferences from '../components/profile/ContentPreferences';
 import PointsDisplay from '../components/gamification/PointsDisplay';
+import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
+import CreatorTierManager from '../components/monetization/CreatorTierManager';
 import { Briefcase, Palette } from 'lucide-react';
 
 export default function Profile() {
@@ -381,6 +383,16 @@ export default function Profile() {
             />
           </div>
         )}
+
+        {/* Creator Earnings */}
+        <div className="mb-6">
+          <CreatorEarningsCard creatorEmail={user.email} />
+        </div>
+
+        {/* Creator Tier Manager */}
+        <div className="mb-6">
+          <CreatorTierManager creatorEmail={user.email} />
+        </div>
 
         {/* Portfolio & Collaborations */}
         <div className="space-y-4 mb-6">
