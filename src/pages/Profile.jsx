@@ -32,7 +32,6 @@ import VideoPlayer from '../components/video/VideoPlayer';
 import ProfileCustomization from '../components/profile/ProfileCustomization';
 import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
 import PortfolioSection from '../components/profile/PortfolioSection';
-import VideoPlayer from '../components/video/VideoPlayer';
 import ContentPreferences from '../components/profile/ContentPreferences';
 import PointsDisplay from '../components/gamification/PointsDisplay';
 import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
