@@ -8,6 +8,7 @@ import TikTokFeed from '../components/feed/TikTokFeed';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
+import ReferralSuccessNotification from '../components/referrals/ReferralSuccessNotification';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-react';
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
@@ -240,6 +241,11 @@ export default function Home() {
 
       {/* AI Suggestions */}
       <SmartSuggestions user={user} />
+
+      {/* Referral Success Notification */}
+      <div className="px-4">
+        <ReferralSuccessNotification user={user} />
+      </div>
 
       {/* Feed */}
       <div className="px-4">
