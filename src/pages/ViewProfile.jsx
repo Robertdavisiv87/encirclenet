@@ -18,6 +18,10 @@ import BadgeShowcase from '../components/gamification/BadgeShowcase';
 import StreakDisplay from '../components/gamification/StreakDisplay';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
+import HireMeButton from '../components/profile/HireMeButton';
+import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
+import PortfolioSection from '../components/profile/PortfolioSection';
+import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
 
 export default function ViewProfile() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -154,15 +158,41 @@ export default function ViewProfile() {
   // Check if profile is private
   const isPrivate = profileUser.is_private && currentUser?.email !== profileEmail;
 
+  const isOwner = currentUser?.email === profileEmail;
+
+  const getThemeStyles = (theme) => {
+    const themes = {
+      default: 'from-purple-50 via-white to-pink-50',
+      dark: 'from-gray-900 via-gray-800 to-black',
+      minimal: 'from-white via-gray-50 to-white',
+      vibrant: 'from-orange-50 via-red-50 to-pink-50',
+      elegant: 'from-indigo-50 via-purple-50 to-pink-50',
+      professional: 'from-blue-50 via-cyan-50 to-white'
+    };
+    return themes[theme] || themes.default;
+  };
+
   return (
-    <div className="max-w-4xl mx-auto bg-gradient-to-b from-purple-50 via-white to-pink-50 min-h-screen">
+    <div className={`max-w-4xl mx-auto bg-gradient-to-b ${getThemeStyles(profileUser.profile_theme || 'default')} min-h-screen`}>
       <SEO 
         title={`${profileUser.full_name || 'User'} Profile - Encircle Net`}
         description={`View ${profileUser.full_name || 'User'}'s profile on Encircle Net`}
       />
 
+      {/* Banner */}
+      {profileUser.profile_banner && (
+        <div className="relative w-full h-48 md:h-64">
+          <img 
+            src={profileUser.profile_banner} 
+            alt="Profile Banner" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        </div>
+      )}
+
       {/* Header */}
-      <div className="p-4 flex items-center gap-4 border-b border-gray-200 bg-white">
+      <div className="p-4 flex items-center gap-4 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
         <Button 
           variant="ghost" 
           size="icon"
@@ -212,11 +242,83 @@ export default function ViewProfile() {
               </div>
             </div>
 
+            {profileUser.tagline && (
+              <p className="text-sm font-semibold text-purple-700 mb-2">
+                {profileUser.tagline}
+              </p>
+            )}
+            
             <p className="text-sm text-blue-800 mb-2">{profileUser.bio || 'No bio yet'}</p>
+            
             {profileUser.website && (
-              <a href={profileUser.website} target="_blank" rel="noopener noreferrer" className="text-sm text-purple-600 hover:underline">
-                🔗 {profileUser.website}
+              <a href={profileUser.website} target="_blank" rel="noopener noreferrer" className="text-sm text-purple-600 hover:underline flex items-center gap-1">
+                <ExternalLink className="w-3 h-3" />
+                {profileUser.website}
               </a>
+            )}
+
+            {/* Professional Info */}
+            {(profileUser.skills?.length > 0 || profileUser.services_offered?.length > 0) && (
+              <div className="mt-4 space-y-3">
+                {profileUser.skills?.length > 0 && (
+                  <div>
+                    <p className="text-xs text-gray-600 mb-2">Skills</p>
+                    <div className="flex flex-wrap gap-2">
+                      {profileUser.skills.map((skill, i) => (
+                        <span key={i} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {profileUser.services_offered?.length > 0 && (
+                  <div>
+                    <p className="text-xs text-gray-600 mb-2">Services Offered</p>
+                    <div className="flex flex-wrap gap-2">
+                      {profileUser.services_offered.map((service, i) => (
+                        <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold flex items-center gap-1">
+                          <Briefcase className="w-3 h-3" />
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {profileUser.availability_status && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className={`w-2 h-2 rounded-full ${
+                      profileUser.availability_status === 'available' ? 'bg-green-500' :
+                      profileUser.availability_status === 'busy' ? 'bg-yellow-500' :
+                      'bg-red-500'
+                    }`}></div>
+                    <span className="text-gray-700 capitalize">{profileUser.availability_status}</span>
+                    {profileUser.hourly_rate > 0 && (
+                      <span className="text-gray-500">• ${profileUser.hourly_rate}/hr</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Social Links */}
+            {profileUser.social_links && Object.keys(profileUser.social_links).some(k => profileUser.social_links[k]) && (
+              <div className="mt-4 flex gap-2">
+                {Object.entries(profileUser.social_links).map(([platform, url]) => url && (
+                  <a 
+                    key={platform}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-gray-200 hover:bg-purple-500 text-gray-700 hover:text-white flex items-center justify-center transition-all"
+                    title={platform}
+                  >
+                    {platform[0].toUpperCase()}
+                  </a>
+                ))}
+              </div>
             )}
 
             {/* Gamification Stats */}
@@ -237,6 +339,21 @@ export default function ViewProfile() {
             )}
           </div>
         </div>
+
+        {/* Hire Me Button */}
+        {!isOwner && profileUser.services_offered?.length > 0 && (
+          <div className="mb-4">
+            <HireMeButton creator={profileUser} />
+          </div>
+        )}
+
+        {/* Portfolio & Collaborations */}
+        {!isPrivate && (
+          <div className="space-y-4 mb-6">
+            <PortfolioSection userEmail={profileEmail} isOwner={isOwner} />
+            <CollaborationsShowcase user={profileUser} isOwner={isOwner} />
+          </div>
+        )}
       </div>
 
       {/* Content Tabs */}

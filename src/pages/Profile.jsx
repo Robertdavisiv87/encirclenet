@@ -29,6 +29,10 @@ import { createPageUrl } from '../utils';
 import { Switch } from '@/components/ui/switch';
 import ImageLightbox from '../components/ui/ImageLightbox';
 import VideoPlayer from '../components/video/VideoPlayer';
+import ProfileCustomization from '../components/profile/ProfileCustomization';
+import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
+import PortfolioSection from '../components/profile/PortfolioSection';
+import { Briefcase, Palette } from 'lucide-react';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -39,6 +43,7 @@ export default function Profile() {
   const [showImageLightbox, setShowImageLightbox] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showCustomization, setShowCustomization] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -239,12 +244,46 @@ export default function Profile() {
               </div>
             </div>
 
+            {user.tagline && (
+              <p className="text-sm font-semibold text-purple-600 mb-2 flex items-center gap-1">
+                <Briefcase className="w-3 h-3" />
+                {user.tagline}
+              </p>
+            )}
+
             <p className="text-sm text-black mb-2">{user.bio || 'No bio yet'}</p>
             {user.website && (
               <a href={user.website} className="text-sm text-purple-400 flex items-center gap-1">
                 <LinkIcon className="w-3 h-3" />
                 {user.website}
               </a>
+            )}
+
+            {/* Professional Info */}
+            {(user.skills?.length > 0 || user.availability_status) && (
+              <div className="mt-3 space-y-2">
+                {user.skills?.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {user.skills.slice(0, 5).map((skill, i) => (
+                      <span key={i} className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-xs">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {user.availability_status && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className={`w-2 h-2 rounded-full ${
+                      user.availability_status === 'available' ? 'bg-green-500' :
+                      user.availability_status === 'busy' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="capitalize">{user.availability_status}</span>
+                    {user.hourly_rate > 0 && (
+                      <span className="text-gray-500">• ${user.hourly_rate}/hr</span>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Gamification Stats */}
@@ -298,11 +337,34 @@ export default function Profile() {
           </Button>
           <Button 
             className="bg-gradient-to-r from-purple-600 to-pink-500"
-            onClick={() => window.location.href = createPageUrl('MyCircle')}
+            onClick={() => setShowCustomization(!showCustomization)}
           >
-            <Users className="w-4 h-4 mr-2" />
-            My Circle
+            <Palette className="w-4 h-4 mr-2" />
+            Customize
           </Button>
+        </div>
+
+        {/* Profile Customization Section */}
+        {showCustomization && (
+          <div className="mb-6">
+            <ProfileCustomization 
+              user={user} 
+              onSave={() => {
+                setShowCustomization(false);
+                const loadUser = async () => {
+                  const currentUser = await base44.auth.me();
+                  setUser(currentUser);
+                };
+                loadUser();
+              }}
+            />
+          </div>
+        )}
+
+        {/* Portfolio & Collaborations */}
+        <div className="space-y-4 mb-6">
+          <PortfolioSection userEmail={user.email} isOwner={true} />
+          <CollaborationsShowcase user={user} isOwner={true} />
         </div>
       </div>
 
