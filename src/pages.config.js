@@ -2,7 +2,12 @@ import Admin from './pages/Admin';
 import AdminRevenue from './pages/AdminRevenue';
 import Analytics from './pages/Analytics';
 import BusinessDashboard from './pages/BusinessDashboard';
+import Community from './pages/Community';
 import Create from './pages/Create';
+import CreateChallenge from './pages/CreateChallenge';
+import CreateCircle from './pages/CreateCircle';
+import CreateGroup from './pages/CreateGroup';
+import CreatorAnalytics from './pages/CreatorAnalytics';
 import CreatorEconomy from './pages/CreatorEconomy';
 import CreatorTools from './pages/CreatorTools';
 import Earnings from './pages/Earnings';
@@ -16,17 +21,13 @@ import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
+import ScheduleQA from './pages/ScheduleQA';
 import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Community from './pages/Community';
-import CreateGroup from './pages/CreateGroup';
-import CreateCircle from './pages/CreateCircle';
-import ScheduleQA from './pages/ScheduleQA';
-import CreateChallenge from './pages/CreateChallenge';
-import CreatorAnalytics from './pages/CreatorAnalytics';
+import Search from './pages/Search';
 import __Layout from './Layout.jsx';
 
 
@@ -35,7 +36,12 @@ export const PAGES = {
     "AdminRevenue": AdminRevenue,
     "Analytics": Analytics,
     "BusinessDashboard": BusinessDashboard,
+    "Community": Community,
     "Create": Create,
+    "CreateChallenge": CreateChallenge,
+    "CreateCircle": CreateCircle,
+    "CreateGroup": CreateGroup,
+    "CreatorAnalytics": CreatorAnalytics,
     "CreatorEconomy": CreatorEconomy,
     "CreatorTools": CreatorTools,
     "Earnings": Earnings,
@@ -49,17 +55,13 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Profile": Profile,
     "Referrals": Referrals,
+    "ScheduleQA": ScheduleQA,
     "Settings": Settings,
     "Subscription": Subscription,
     "SystemStatus": SystemStatus,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Community": Community,
-    "CreateGroup": CreateGroup,
-    "CreateCircle": CreateCircle,
-    "ScheduleQA": ScheduleQA,
-    "CreateChallenge": CreateChallenge,
-    "CreatorAnalytics": CreatorAnalytics,
+    "Search": Search,
 }
 
 export const pagesConfig = {
