@@ -14,6 +14,14 @@ import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-re
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Menu, User, Settings, LogOut } from 'lucide-react';
 
 const mockAds = [
   { id: 'ad1', type: 'ppc', title: 'Premium Fitness App', description: 'Get fit in 30 days. Join 1M+ users today!', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop', url: 'https://example.com', cta: 'Start Free Trial', value: 0.5 },
@@ -231,6 +239,31 @@ export default function Home() {
             >
               <RefreshCw className="w-5 h-5" />
             </Button>
+
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="hover-scale">
+                    <Menu className="w-5 h-5 text-gray-600" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Profile')}>
+                    <User className="w-4 h-4 mr-2" />
+                    User Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Settings')}>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => base44.auth.logout()}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </div>
