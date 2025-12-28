@@ -53,6 +53,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'AI Tools', icon: Sparkles, page: 'CreatorTools' },
+    { name: 'Community', icon: Users, page: 'Community' },
     { name: 'Messages', icon: MessageCircle, page: 'Messages' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
     { name: 'Referrals', icon: Users, page: 'Referrals' },
