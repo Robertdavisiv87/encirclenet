@@ -91,7 +91,16 @@ export default function ImageLightbox({ isOpen, imageUrl, onClose, caption }) {
               src={imageUrl}
               alt={caption || 'Image'}
               className="w-auto h-auto max-w-full max-h-[90vh] object-contain"
-              style={{ transform: `scale(${zoom})`, transition: 'transform 0.2s' }}
+              style={{ 
+                transform: `scale(${zoom})`, 
+                transition: 'transform 0.2s',
+                imageRendering: 'high-quality',
+                maxWidth: '3840px',
+                maxHeight: '2160px'
+              }}
+              loading="eager"
+              decoding="sync"
+              fetchpriority="high"
             />
           </motion.div>
 
