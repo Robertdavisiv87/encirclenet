@@ -30,6 +30,7 @@ import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
 import Forums from './pages/Forums';
 import Events from './pages/Events';
+import ModerationDashboard from './pages/ModerationDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "Forums": Forums,
     "Events": Events,
+    "ModerationDashboard": ModerationDashboard,
 }
 
 export const pagesConfig = {

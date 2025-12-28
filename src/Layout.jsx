@@ -69,6 +69,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Admin', icon: Shield, page: 'Admin' },
     { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' },
     { name: 'System', icon: TrendingUp, page: 'SystemStatus' },
+    { name: 'Moderation', icon: Shield, page: 'ModerationDashboard' },
     { name: 'Master Spec', icon: Sparkles, page: 'MasterSpec' }
   ] : [];
 

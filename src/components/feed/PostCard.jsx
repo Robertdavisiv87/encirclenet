@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic, Lock, Trash2, Link2, Flag, EyeOff, Share2 } from 'lucide-react';
 import MonetizationEligibility from '../monetization/MonetizationEligibility';
+import ReportButton from '../moderation/ReportButton';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -222,10 +223,6 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
             ) : (
               <>
                 <DropdownMenuItem>
-                  <Flag className="w-4 h-4 mr-2" />
-                  Report Post
-                </DropdownMenuItem>
-                <DropdownMenuItem>
                   <EyeOff className="w-4 h-4 mr-2" />
                   Hide Post
                 </DropdownMenuItem>
@@ -397,6 +394,17 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           <p className="text-xs text-yellow-500 mt-2">
             💰 ${post.tips_received} earned from this post
           </p>
+        )}
+
+        {!isOwnPost && currentUser && (
+          <div className="mt-3 pt-3 border-t border-gray-200">
+            <ReportButton 
+              contentType="post"
+              contentId={post.id}
+              reportedUserEmail={post.created_by}
+              currentUser={currentUser}
+            />
+          </div>
         )}
         </div>
 
