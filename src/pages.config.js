@@ -11,12 +11,15 @@ import CreatorAnalytics from './pages/CreatorAnalytics';
 import CreatorEconomy from './pages/CreatorEconomy';
 import CreatorTools from './pages/CreatorTools';
 import Earnings from './pages/Earnings';
+import Events from './pages/Events';
 import Explore from './pages/Explore';
+import Forums from './pages/Forums';
 import Gamification from './pages/Gamification';
 import Home from './pages/Home';
 import Marketplace from './pages/Marketplace';
 import MasterSpec from './pages/MasterSpec';
 import Messages from './pages/Messages';
+import ModerationDashboard from './pages/ModerationDashboard';
 import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
@@ -28,9 +31,6 @@ import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Forums from './pages/Forums';
-import Events from './pages/Events';
-import ModerationDashboard from './pages/ModerationDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -48,12 +48,15 @@ export const PAGES = {
     "CreatorEconomy": CreatorEconomy,
     "CreatorTools": CreatorTools,
     "Earnings": Earnings,
+    "Events": Events,
     "Explore": Explore,
+    "Forums": Forums,
     "Gamification": Gamification,
     "Home": Home,
     "Marketplace": Marketplace,
     "MasterSpec": MasterSpec,
     "Messages": Messages,
+    "ModerationDashboard": ModerationDashboard,
     "MyCircle": MyCircle,
     "Onboarding": Onboarding,
     "Profile": Profile,
@@ -65,9 +68,6 @@ export const PAGES = {
     "SystemStatus": SystemStatus,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Forums": Forums,
-    "Events": Events,
-    "ModerationDashboard": ModerationDashboard,
 }
 
 export const pagesConfig = {
