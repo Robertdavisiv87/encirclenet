@@ -77,6 +77,11 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           post_id: post.id,
           user_email: currentUser.email
         });
+        // Award points for liking
+        base44.functions.invoke('awardPoints', {
+          activity_type: 'post_liked',
+          related_id: post.id
+        }).catch(err => console.log('Points award failed:', err));
       }
       onLike && onLike(post.id, !wasLiked);
     } catch (error) {

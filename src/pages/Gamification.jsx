@@ -7,6 +7,8 @@ import { Progress } from '@/components/ui/progress';
 import StreakDisplay from '../components/gamification/StreakDisplay';
 import BadgeShowcase from '../components/gamification/BadgeShowcase';
 import ChallengeCard from '../components/gamification/ChallengeCard';
+import PointsDisplay from '../components/gamification/PointsDisplay';
+import Leaderboard from '../components/gamification/Leaderboard';
 import { motion } from 'framer-motion';
 
 export default function Gamification() {
@@ -37,6 +39,15 @@ export default function Gamification() {
         current_streak: 0,
         longest_streak: 0
       });
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: userPoints } = useQuery({
+    queryKey: ['user-points', user?.email],
+    queryFn: async () => {
+      const points = await base44.entities.UserPoints.filter({ user_email: user?.email });
+      return points[0] || null;
     },
     enabled: !!user?.email
   });
@@ -81,9 +92,20 @@ export default function Gamification() {
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold gradient-text mb-2">🏆 Daily Challenges & Achievements</h1>
-        <p className="text-blue-900 font-medium">Complete challenges, earn rewards, and level up your profile. Each action fuels your growth and unlocks new opportunities to earn!</p>
+        <h1 className="text-3xl font-bold gradient-text mb-2">🏆 Rewards & Achievements</h1>
+        <p className="text-blue-900 font-medium">Complete challenges, earn points, and level up your profile. Each action fuels your growth and unlocks new opportunities to earn!</p>
       </div>
+
+      {/* Points Display */}
+      {userPoints && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <PointsDisplay userPoints={userPoints} />
+        </motion.div>
+      )}
 
       {/* Level & Points */}
       <motion.div
@@ -148,30 +170,82 @@ export default function Gamification() {
         </Card>
       </motion.div>
 
-      {/* Daily Challenges */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        {/* Daily Challenges */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-900">
+                <Gift className="w-5 h-5 text-purple-600" />
+                Daily Challenges
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {challenges.map((challenge, index) => (
+                  <motion.div
+                    key={challenge.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                  >
+                    <ChallengeCard challenge={challenge} />
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Leaderboard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Leaderboard currentUser={user} />
+        </motion.div>
+      </div>
+
+      {/* Recent Activity */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.5 }}
       >
         <Card className="bg-white border-2 border-gray-200 realistic-shadow hover-lift">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-blue-900">
-              <Gift className="w-5 h-5 text-purple-600" />
-              Daily Challenges
+              <TrendingUp className="w-5 h-5 text-green-600" />
+              How to Earn Points
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
-              {challenges.map((challenge, index) => (
-                <motion.div
-                  key={challenge.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 + index * 0.1 }}
-                >
-                  <ChallengeCard challenge={challenge} />
-                </motion.div>
+              {[
+                { action: 'Create a post', points: 10, icon: '📝' },
+                { action: 'Comment on posts', points: 5, icon: '💬' },
+                { action: 'Like a post', points: 2, icon: '❤️' },
+                { action: 'RSVP to an event', points: 15, icon: '📅' },
+                { action: 'Attend an event', points: 25, icon: '✅' },
+                { action: 'Forum post', points: 10, icon: '🗣️' },
+                { action: 'Forum reply', points: 5, icon: '💭' },
+                { action: 'Referral signup', points: 50, icon: '👥' },
+                { action: 'Complete profile', points: 20, icon: '✨' },
+                { action: 'Daily login', points: 5, icon: '🔥' },
+                { action: 'Streak milestone', points: 30, icon: '🎯' }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{item.icon}</span>
+                    <span className="text-sm font-medium text-blue-900">{item.action}</span>
+                  </div>
+                  <span className="text-purple-600 font-bold">+{item.points}pts</span>
+                </div>
               ))}
             </div>
           </CardContent>
