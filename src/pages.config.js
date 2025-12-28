@@ -26,6 +26,7 @@ import CreateGroup from './pages/CreateGroup';
 import CreateCircle from './pages/CreateCircle';
 import ScheduleQA from './pages/ScheduleQA';
 import CreateChallenge from './pages/CreateChallenge';
+import CreatorAnalytics from './pages/CreatorAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "CreateCircle": CreateCircle,
     "ScheduleQA": ScheduleQA,
     "CreateChallenge": CreateChallenge,
+    "CreatorAnalytics": CreatorAnalytics,
 }
 
 export const pagesConfig = {
