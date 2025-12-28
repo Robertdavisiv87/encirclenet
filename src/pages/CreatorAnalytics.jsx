@@ -10,6 +10,10 @@ import TopPerformingPosts from '../components/analytics/TopPerformingPosts';
 import ReferralConversionRate from '../components/analytics/ReferralConversionRate';
 import EngagementChart from '../components/analytics/EngagementChart';
 import RevenueBreakdown from '../components/analytics/RevenueBreakdown';
+import RevenueBreakdownCard from '../components/analytics/RevenueBreakdownCard';
+import TipHistoryCard from '../components/analytics/TipHistoryCard';
+import AudienceGrowthChart from '../components/analytics/AudienceGrowthChart';
+import AutomatedPerksManager from '../components/automation/AutomatedPerksManager';
 import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
 
@@ -94,10 +98,20 @@ export default function CreatorAnalytics() {
         <RealTimeMetrics userEmail={user.email} />
       </div>
 
+      {/* Revenue Breakdown */}
+      <div className="mb-6">
+        <RevenueBreakdownCard creatorEmail={user.email} />
+      </div>
+
       {/* Charts Row 1 */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
+        <AudienceGrowthChart creatorEmail={user.email} />
         <RevenueChart userEmail={user.email} />
-        <FollowerGrowthChart userEmail={user.email} />
+      </div>
+
+      {/* Tip History */}
+      <div className="mb-6">
+        <TipHistoryCard creatorEmail={user.email} />
       </div>
 
       {/* Charts Row 2 */}
@@ -107,9 +121,14 @@ export default function CreatorAnalytics() {
       </div>
 
       {/* Bottom Row */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
         <TopPerformingPosts userEmail={user.email} />
         <ReferralConversionRate userEmail={user.email} />
+      </div>
+
+      {/* Automated Perks */}
+      <div className="mb-6">
+        <AutomatedPerksManager creatorEmail={user.email} />
       </div>
 
       {/* Footer Note */}
