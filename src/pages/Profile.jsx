@@ -115,6 +115,15 @@ export default function Profile() {
     enabled: !!user?.email
   });
 
+  const { data: userPoints } = useQuery({
+    queryKey: ['user-points-profile', user?.email],
+    queryFn: async () => {
+      const points = await base44.entities.UserPoints.filter({ user_email: user?.email });
+      return points[0] || null;
+    },
+    enabled: !!user?.email
+  });
+
   const handleLogout = () => {
     base44.auth.logout();
   };
@@ -285,6 +294,13 @@ export default function Profile() {
                     )}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Points Display */}
+            {userPoints && (
+              <div className="mt-3">
+                <PointsDisplay userPoints={userPoints} compact />
               </div>
             )}
 
