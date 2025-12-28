@@ -22,12 +22,12 @@ import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import ScheduleQA from './pages/ScheduleQA';
+import Search from './pages/Search';
 import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Search from './pages/Search';
 import __Layout from './Layout.jsx';
 
 
@@ -56,12 +56,12 @@ export const PAGES = {
     "Profile": Profile,
     "Referrals": Referrals,
     "ScheduleQA": ScheduleQA,
+    "Search": Search,
     "Settings": Settings,
     "Subscription": Subscription,
     "SystemStatus": SystemStatus,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Search": Search,
 }
 
 export const pagesConfig = {

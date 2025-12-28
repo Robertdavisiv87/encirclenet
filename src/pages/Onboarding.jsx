@@ -59,6 +59,14 @@ export default function Onboarding() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check for referral code in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        if (refCode) {
+          // Store referral code to process after onboarding
+          localStorage.setItem('pending_referral_code', refCode);
+        }
       } catch (e) {
         window.location.href = createPageUrl('Home');
       }
@@ -93,6 +101,19 @@ export default function Onboarding() {
         icon: '🚀',
         earned_date: new Date().toISOString()
       });
+
+      // Process referral if exists
+      const pendingRefCode = localStorage.getItem('pending_referral_code');
+      if (pendingRefCode) {
+        try {
+          await base44.functions.invoke('trackReferralSignup', {
+            referral_code: pendingRefCode
+          });
+          localStorage.removeItem('pending_referral_code');
+        } catch (refError) {
+          console.error('Referral tracking failed:', refError);
+        }
+      }
 
       window.location.href = createPageUrl('Home');
     } catch (error) {
