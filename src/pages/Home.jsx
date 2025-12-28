@@ -8,9 +8,10 @@ import TikTokFeed from '../components/feed/TikTokFeed';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
-import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell } from 'lucide-react';
+import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-react';
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
+import { createPageUrl } from '../utils';
 
 const mockAds = [
   { id: 'ad1', type: 'ppc', title: 'Premium Fitness App', description: 'Get fit in 30 days. Join 1M+ users today!', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop', url: 'https://example.com', cta: 'Start Free Trial', value: 0.5 },
@@ -201,6 +202,15 @@ export default function Home() {
             Encircle Net
           </h1>
           <div className="flex gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => window.location.href = createPageUrl('Search')}
+              className="text-gray-600 hover:text-gray-900 hover-scale"
+              title="Search Users"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
             <NotificationDropdown user={user} />
             <Button 
               variant="ghost" 
