@@ -705,6 +705,81 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* Advanced Community Building */}
+          <Card className="bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-6 h-6 text-cyan-600" />
+                Advanced Community-Building Features
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Creator-Led Groups</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Custom group creation with full moderation controls</li>
+                  <li>• Group-specific feeds, events, and announcements</li>
+                  <li>• Member management (invite, approve, remove)</li>
+                  <li>• Group analytics (engagement, growth, active members)</li>
+                  <li>• Threaded discussions and pinned posts</li>
+                  <li>• Integration with monetization streams</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Exclusive Content Circles (Tiered Access)</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Multi-tier membership levels (Free, Bronze, Silver, Gold, Platinum)</li>
+                  <li>• Content gating by tier with preview/teaser system</li>
+                  <li>• Exclusive perks per tier (early access, behind-the-scenes, 1-on-1 time)</li>
+                  <li>• Automated tier upgrades and downgrades</li>
+                  <li>• Member-only live streams and Q&A sessions</li>
+                  <li>• Revenue tracking per circle with 90% creator share</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Live Q&A Sessions</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Scheduled live sessions with calendar integration</li>
+                  <li>• Real-time question submission and upvoting</li>
+                  <li>• Moderation queue with spam filtering</li>
+                  <li>• Recording and replay for premium members</li>
+                  <li>• Live tipping and super chat features</li>
+                  <li>• Analytics: attendance, engagement, revenue per session</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Community Challenges</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Creator-initiated challenges with clear rules and deadlines</li>
+                  <li>• Participant submissions with voting system</li>
+                  <li>• Leaderboards and winner announcements</li>
+                  <li>• Prize pools and reward distribution (90% to winners)</li>
+                  <li>• Challenge templates (photo, video, creative, fitness, etc.)</li>
+                  <li>• Viral challenge propagation across platform</li>
+                  <li>• Sponsor integration for branded challenges</li>
+                </ul>
+              </div>
+              <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
+                <h3 className="font-bold text-cyan-900 mb-2">Engagement & Loyalty Features</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Member milestones and recognition (anniversaries, contributions)</li>
+                  <li>• Exclusive badges for top community members</li>
+                  <li>• Early access to new features and content</li>
+                  <li>• Community voting on group decisions</li>
+                  <li>• Direct messaging between circle members</li>
+                  <li>• Community events calendar with RSVP</li>
+                  <li>• Collaborative content creation tools</li>
+                </ul>
+              </div>
+              <div className="bg-cyan-100 rounded-lg p-3 border-2 border-cyan-300 mt-4">
+                <p className="text-xs font-semibold text-cyan-900">
+                  ✅ All community features must integrate seamlessly with the 90% revenue share model, 
+                  provide transparent analytics, and foster authentic engagement without manipulation.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Ethical Framework */}
           <Card className="bg-gradient-to-br from-green-50 to-teal-50 border-2 border-green-300 realistic-shadow">
             <CardHeader>
