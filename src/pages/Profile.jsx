@@ -395,11 +395,32 @@ export default function Profile() {
           <CreatorTierManager creatorEmail={user.email} />
         </div>
 
+        {/* Video Introduction */}
+        {user.video_intro_url && (
+          <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-sm mb-6">
+            <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+              <Video className="w-5 h-5 text-purple-600" />
+              Video Introduction
+            </h3>
+            <div className="rounded-xl overflow-hidden">
+              <VideoPlayer src={user.video_intro_url} aspectRatio="16/9" />
+            </div>
+          </div>
+        )}
+
         {/* Portfolio & Collaborations */}
         <div className="space-y-4 mb-6">
-          <PortfolioSection userEmail={user.email} isOwner={true} />
+          <PortfolioSection userEmail={user.email} isOwner={true} currentUser={user} />
           <CollaborationsShowcase user={user} isOwner={true} />
         </div>
+
+        {/* Custom Section */}
+        {user.custom_section_title && user.custom_section_content && (
+          <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 shadow-sm mb-6">
+            <h3 className="text-xl font-bold text-blue-900 mb-4">{user.custom_section_title}</h3>
+            <p className="text-gray-700 whitespace-pre-wrap">{user.custom_section_content}</p>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
