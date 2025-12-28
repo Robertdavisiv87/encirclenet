@@ -23,7 +23,6 @@ import CollaborationsShowcase from '../components/profile/CollaborationsShowcase
 import PortfolioSection from '../components/profile/PortfolioSection';
 import VideoPlayer from '../components/video/VideoPlayer';
 import NewMessageButton from '../components/messaging/NewMessageButton';
-import NewMessageButton from '../components/messaging/NewMessageButton';
 import SubscribeToCreatorButton from '../components/monetization/SubscribeToCreatorButton';
 import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
 import { ExternalLink, Briefcase, CheckCircle } from 'lucide-react';
