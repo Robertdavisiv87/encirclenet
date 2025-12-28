@@ -20,6 +20,7 @@ import SystemStatus from './pages/SystemStatus';
 import BusinessDashboard from './pages/BusinessDashboard';
 import MasterSpec from './pages/MasterSpec';
 import Marketplace from './pages/Marketplace';
+import CreatorTools from './pages/CreatorTools';
 import __Layout from './Layout.jsx';
 
 
@@ -46,6 +47,7 @@ export const PAGES = {
     "BusinessDashboard": BusinessDashboard,
     "MasterSpec": MasterSpec,
     "Marketplace": Marketplace,
+    "CreatorTools": CreatorTools,
 }
 
 export const pagesConfig = {
