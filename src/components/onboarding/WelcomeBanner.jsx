@@ -25,7 +25,7 @@ export default function WelcomeBanner() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white p-4 mb-4 rounded-2xl shadow-glow relative border-2 border-white/20"
+          className="bg-gradient-to-r from-[#4B6CB7] to-[#182848] text-white p-4 mb-4 rounded-2xl shadow-lg relative border-2 border-white/20"
         >
           <button
             onClick={handleDismiss}
