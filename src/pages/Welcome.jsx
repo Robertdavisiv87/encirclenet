@@ -127,9 +127,37 @@ export default function Welcome() {
             </div>
             <h2 className="text-2xl font-bold text-blue-900">Design & Experience</h2>
           </div>
-          <p className="text-gray-700">
+          <p className="text-gray-700 mb-4">
             Encircle Net maintains a clean, high-contrast, professional design across all pages for clarity, accessibility, and ease of use.
           </p>
+          
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+            <h3 className="font-bold text-blue-900 mb-2">🧭 Navigation & Home Screen Optimization</h3>
+            <p className="text-sm text-gray-700 mb-2">
+              We've optimized the home screen to reduce clutter while preserving full access to all features:
+            </p>
+            <ul className="space-y-1 text-sm text-gray-700">
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
+                Home screen tabs are streamlined and grouped
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
+                Related tools are organized into smart sections
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
+                No features, tools, or earning opportunities were removed
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
+                All functions remain accessible through organized menus, dashboards, and shortcuts
+              </li>
+            </ul>
+            <p className="text-xs text-gray-600 mt-2 italic">
+              This update improves usability, scalability, and overall experience without limiting user control.
+            </p>
+          </div>
         </motion.section>
 
         {/* Passive Income Tips */}
