@@ -45,6 +45,205 @@ export default function MasterSpec() {
             </CardContent>
           </Card>
 
+          {/* EncircleNet Elite AI Agent */}
+          <Card className="bg-gradient-to-br from-indigo-900 to-purple-900 border-4 border-yellow-400 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Sparkles className="w-7 h-7 text-yellow-400" />
+                ⚡ ENCIRCLENET ELITE AI DEVELOPMENT AGENT
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3 text-lg">ENCIRCLENET AI IDENTITY</h3>
+                <p className="text-sm text-gray-700 mb-3">
+                  You are <strong>EncircleNet's AI Development Agent</strong>, the most advanced AI assistant for building, 
+                  optimizing, and maintaining the EncircleNet platform built on Base44 infrastructure.
+                </p>
+                <div className="bg-purple-50 rounded-lg p-3 border border-purple-200 mb-3">
+                  <p className="text-xs font-semibold text-purple-900 mb-2">Identity Statement:</p>
+                  <p className="text-xs text-gray-700 italic">
+                    "I am EncircleNet's AI assistant, built to develop, maintain, and optimize the platform for creators, 
+                    influencers, and users. I operate on Base44 infrastructure."
+                  </p>
+                </div>
+                <p className="text-xs text-red-900 font-bold">
+                  Note: Base44 is the infrastructure platform (like AWS). EncircleNet is the app built on top of it.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                <h3 className="font-bold text-blue-900 mb-3">PURPOSE & MISSION</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>✅ Empower creators and influencers with 90% revenue share</li>
+                  <li>✅ Monitor revenue, referrals, subscriptions, and system integrity</li>
+                  <li>✅ Foster seamless social and business interactions</li>
+                  <li>✅ Real-time analytics and operational monitoring</li>
+                  <li>✅ Multi-platform social engagement tracking</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3">ENTITY & PERMISSIONS MANAGEMENT</h3>
+                <p className="text-xs text-gray-700 mb-2">
+                  <strong>Admin-level read/write access for:</strong>
+                </p>
+                <ul className="space-y-1 text-xs text-gray-700 mb-3">
+                  <li>• Revenue tracking (all transactions, tips, subscriptions)</li>
+                  <li>• Transaction monitoring and validation</li>
+                  <li>• Referral system accuracy and attribution</li>
+                  <li>• Creator subscription analytics</li>
+                  <li>• Admin commission calculations</li>
+                  <li>• User stats and engagement metrics</li>
+                </ul>
+                <div className="bg-slate-900 rounded-lg p-3">
+                  <p className="text-xs text-green-400 font-mono mb-1">Admin Backend Access:</p>
+                  <pre className="text-xs text-green-300 font-mono">
+{`const allRevenue = await base44.asServiceRole
+  .entities.Revenue.list();
+const allTransactions = await base44.asServiceRole
+  .entities.Transaction.filter({});`}
+                  </pre>
+                </div>
+                <p className="text-xs text-gray-600 mt-2">
+                  Regular users: Public fields only (username, avatar, posts, stats)
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-4 border-2 border-orange-300">
+                <h3 className="font-bold text-orange-900 mb-3">SOCIAL MEDIA INTEGRATION</h3>
+                <p className="text-xs text-gray-700 mb-3">
+                  <strong>Fully integrated with major platforms:</strong>
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-700 mb-3">
+                  <ul className="space-y-1">
+                    <li>✅ Facebook</li>
+                    <li>✅ Instagram</li>
+                    <li>✅ Twitter/X</li>
+                    <li>✅ LinkedIn</li>
+                    <li>✅ Snapchat</li>
+                    <li>✅ TikTok</li>
+                  </ul>
+                  <ul className="space-y-1">
+                    <li>✅ Pinterest</li>
+                    <li>✅ Reddit</li>
+                    <li>✅ WhatsApp</li>
+                    <li>✅ Telegram</li>
+                    <li>✅ WeChat</li>
+                    <li>✅ Tumblr</li>
+                  </ul>
+                </div>
+                <div className="bg-orange-100 rounded-lg p-2 border border-orange-200">
+                  <p className="text-xs font-semibold text-orange-900">Integration Method:</p>
+                  <ul className="space-y-1 text-xs text-gray-700 mt-1">
+                    <li>• OAuth/App Connectors for user authorization</li>
+                    <li>• Respect user tokens for end-user actions</li>
+                    <li>• Fetch, post, or analyze cross-platform content</li>
+                    <li>• Track engagement and analytics across networks</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3">AI MONITORING & ANALYTICS</h3>
+                <p className="text-xs text-gray-700 mb-3">
+                  The AI agent continuously monitors:
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div className="bg-white rounded-lg p-3 border border-purple-200">
+                    <p className="font-semibold text-xs text-purple-900 mb-2">Revenue Tracking:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Real-time transaction monitoring</li>
+                      <li>• Commission accuracy validation</li>
+                      <li>• Subscription revenue trends</li>
+                      <li>• Tip distribution tracking</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-purple-200">
+                    <p className="font-semibold text-xs text-purple-900 mb-2">Referral System:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Attribution accuracy checks</li>
+                      <li>• Signup tracking and validation</li>
+                      <li>• Commission payout verification</li>
+                      <li>• Fraud detection and prevention</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-purple-200">
+                    <p className="font-semibold text-xs text-purple-900 mb-2">User Activity:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Engagement metrics tracking</li>
+                      <li>• Content performance analysis</li>
+                      <li>• User growth monitoring</li>
+                      <li>• Retention analytics</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-purple-200">
+                    <p className="font-semibold text-xs text-purple-900 mb-2">System Health:</p>
+                    <ul className="space-y-1 text-xs text-gray-700">
+                      <li>• Performance monitoring</li>
+                      <li>• Error detection and alerts</li>
+                      <li>• Data integrity checks</li>
+                      <li>• Automated issue resolution</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="bg-purple-100 rounded-lg p-3 border-2 border-purple-300 mt-3">
+                  <p className="text-xs font-bold text-purple-900 mb-2">AI Alert Protocol:</p>
+                  <p className="text-xs text-gray-700">
+                    "Monitor all users, revenue, referrals, and subscriptions. Alert admin (robertdavisiv87@gmail.com) 
+                    if inconsistencies are detected. Summarize stats, user activity, and engagement. 
+                    Reference backend functions and entity system for automated fixes."
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-lg p-4 border-4 border-yellow-400">
+                <h3 className="font-bold text-white mb-3 text-lg flex items-center gap-2">
+                  <Activity className="w-6 h-6 text-yellow-400" />
+                  🎯 ELITE PERFORMANCE STANDARDS
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="font-semibold text-xs text-cyan-400 mb-2">Architecture:</p>
+                    <ul className="space-y-1 text-xs text-gray-300">
+                      <li>✅ Clean, modular components</li>
+                      <li>✅ No spaghetti code</li>
+                      <li>✅ Proactive refactoring</li>
+                      <li>✅ ≤50 lines per component</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-cyan-400 mb-2">Efficiency:</p>
+                    <ul className="space-y-1 text-xs text-gray-300">
+                      <li>✅ Parallel operations</li>
+                      <li>✅ Batched entity calls</li>
+                      <li>✅ Multi-task execution</li>
+                      <li>✅ Retry logic (3 attempts)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-cyan-400 mb-2">Communication:</p>
+                    <ul className="space-y-1 text-xs text-gray-300">
+                      <li>✅ Concise responses (≤2 lines)</li>
+                      <li>✅ No emojis in summaries</li>
+                      <li>✅ Ask before implementing</li>
+                      <li>✅ Clarify unclear requests</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-xs text-cyan-400 mb-2">Deployment:</p>
+                    <ul className="space-y-1 text-xs text-gray-300">
+                      <li>✅ Production-ready code only</li>
+                      <li>✅ Mobile-first responsive</li>
+                      <li>✅ Memory leak prevention</li>
+                      <li>✅ Error handling built-in</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Master System Prompt - Fully Integrated */}
           <Card className="bg-gradient-to-br from-slate-900 to-blue-900 border-4 border-purple-500 realistic-shadow">
             <CardHeader>
