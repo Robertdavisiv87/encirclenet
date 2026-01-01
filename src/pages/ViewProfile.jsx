@@ -108,22 +108,6 @@ export default function ViewProfile() {
     enabled: !!profileEmail
   });
 
-  const { data: badges } = useQuery({
-    queryKey: ['view-badges', profileEmail],
-    queryFn: () => base44.entities.Badge.filter({ user_email: profileEmail }),
-    enabled: !!profileEmail,
-    initialData: []
-  });
-
-  const { data: userStats } = useQuery({
-    queryKey: ['view-stats', profileEmail],
-    queryFn: async () => {
-      const stats = await base44.entities.UserStats.filter({ user_email: profileEmail });
-      return stats[0] || null;
-    },
-    enabled: !!profileEmail
-  });
-
   const handleFollow = async () => {
     if (!currentUser) {
       base44.auth.redirectToLogin();
