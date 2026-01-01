@@ -39,7 +39,7 @@ export default function Search() {
     queryKey: ['search-users', debouncedQuery],
     queryFn: async () => {
       if (!debouncedQuery) return [];
-      const allUsers = await base44.entities.User.list();
+      const allUsers = await base44.asServiceRole.entities.User.list();
       return allUsers.filter(u => 
         u.full_name?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
         u.email?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
