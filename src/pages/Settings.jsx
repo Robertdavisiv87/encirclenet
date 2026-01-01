@@ -12,13 +12,24 @@ export default function Settings() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (e) {}
+        if (mounted) {
+          setUser(currentUser);
+        }
+      } catch (e) {
+        console.error('Failed to load user:', e);
+      }
     };
+    
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const { data: preferences } = useQuery({
@@ -47,10 +58,10 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    if (preferences) {
-      setSelectedCategories(preferences.preferred_categories || []);
+    if (preferences?.preferred_categories) {
+      setSelectedCategories(preferences.preferred_categories);
     }
-  }, [preferences]);
+  }, [preferences?.preferred_categories]);
 
   useEffect(() => {
     if (privacySettings) {

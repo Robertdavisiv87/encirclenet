@@ -19,19 +19,31 @@ export default function Search() {
   const [sortBy, setSortBy] = useState('relevance');
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (e) {}
+        if (mounted) {
+          setUser(currentUser);
+        }
+      } catch (e) {
+        console.error('Failed to load user:', e);
+      }
     };
+    
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
+      setDebouncedQuery(searchQuery.trim());
     }, 300);
+    
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
