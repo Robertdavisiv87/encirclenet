@@ -51,11 +51,15 @@ export default function ViewProfile() {
 
       if (profileEmail) {
         try {
-          const users = await base44.entities.User.filter({ email: profileEmail });
+          const users = await base44.asServiceRole.entities.User.filter({ email: profileEmail });
           if (users.length > 0) {
             setProfileUser(users[0]);
+          } else {
+            console.error('No user found with email:', profileEmail);
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error('Error loading profile user:', e);
+        }
       }
     };
     loadUsers();
