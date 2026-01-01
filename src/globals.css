@@ -4,10 +4,15 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Clean white */
-    --foreground: 220 70% 20%; /* Navy blue */
+    --background: 216 25% 97%; /* #F4F6FA Light soft background */
+    --foreground: 0 0% 12%; /* #1F1F1F Dark gray text */
     
-    /* Elite Color System - Purple → Pink, Neon Accents */
+    /* Primary Color System - Deep Blues & Orange Accent */
+    --primary-blue: 215 52% 50%; /* #4B6CB7 Deep Blue */
+    --secondary-blue: 222 57% 19%; /* #182848 Dark Blue */
+    --accent-orange: 38 93% 56%; /* #F5A623 Orange/Gold for CTAs */
+    
+    /* Legacy Elite Colors (kept for backwards compatibility) */
     --primary-purple: 270 80% 60%; /* Elite Purple */
     --primary-pink: 330 80% 65%; /* Elite Pink */
     --primary-gold: 45 90% 55%; /* Gold accent */
@@ -18,22 +23,22 @@
     --neon-violet: 270 100% 65%; /* Electric violet */
     
     /* Neutrals - Professional & Clean */
-    --card: 0 0% 96%; /* Light gray #F5F5F5 */
-    --card-foreground: 220 70% 20%; /* Navy blue */
+    --card: 216 25% 97%; /* #F4F6FA Light soft */
+    --card-foreground: 0 0% 12%; /* #1F1F1F Dark gray */
     
     --popover: 0 0% 100%;
     --popover-foreground: 220 70% 20%; /* Navy blue */
     
-    --primary: 270 80% 60%;
+    --primary: 215 52% 50%; /* #4B6CB7 Deep Blue */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 220 70% 20%; /* Navy blue */
+    --secondary: 222 57% 19%; /* #182848 Dark Blue */
+    --secondary-foreground: 0 0% 100%;
     
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 270 80% 60%;
+    --accent: 38 93% 56%; /* #F5A623 Orange/Gold accent */
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
@@ -41,7 +46,7 @@
     
     --border: 0 0% 90%;
     --input: 0 0% 96%;
-    --ring: 270 80% 60%;
+    --ring: 215 52% 50%; /* #4B6CB7 Deep Blue */
     
     --radius: 0.75rem;
   }
@@ -53,7 +58,18 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+  }
+  
+  button {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    font-weight: 500;
   }
 }
 
