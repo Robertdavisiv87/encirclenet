@@ -16,6 +16,7 @@ import NotificationDropdown from '../components/notifications/NotificationDropdo
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
 import HomeChatbot from '../components/chat/HomeChatbot';
+import WelcomeBanner from '../components/onboarding/WelcomeBanner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -284,6 +285,11 @@ export default function Home() {
       {/* Stories */}
       <div className="border-b border-gray-200 bg-white">
         <StoryBar currentUser={user} />
+      </div>
+
+      {/* Welcome Banner */}
+      <div className="px-4 pt-4">
+        <WelcomeBanner />
       </div>
 
       {/* Personalized Recommendations */}
