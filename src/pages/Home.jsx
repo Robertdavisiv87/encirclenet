@@ -15,6 +15,7 @@ import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-re
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
+import HomeChatbot from '../components/chat/HomeChatbot';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -320,7 +321,10 @@ export default function Home() {
             onTip={() => queryClient.invalidateQueries(['posts'])}
           />
         )}
-      </div>
-    </div>
-  );
-}
+        </div>
+
+        {/* Chatbot */}
+        <HomeChatbot user={user} />
+        </div>
+        );
+        }
