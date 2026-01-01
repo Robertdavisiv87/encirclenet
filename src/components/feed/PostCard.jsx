@@ -365,10 +365,16 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
                 isLiked ? "text-red-500 fill-red-500 animate-bounce-in" : "text-gray-700"
               )} />
             </button>
-            <button className="hover:opacity-70 transition-opacity">
+            <button 
+              onClick={() => window.location.href = `/messages?user=${post.created_by}`}
+              className="hover:opacity-70 transition-opacity"
+            >
               <MessageCircle className="w-7 h-7 text-gray-700" />
             </button>
-            <button className="hover:opacity-70 transition-opacity">
+            <button 
+              onClick={handleShare}
+              className="hover:opacity-70 transition-opacity"
+            >
               <Send className="w-7 h-7 text-gray-700" />
             </button>
             {canMonetize ? (
