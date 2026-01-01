@@ -23,21 +23,35 @@ export default function Messages() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
+        if (mounted) {
+          setUser(currentUser);
+        }
       } catch (e) {
-        window.location.href = '/';
+        console.error('Failed to load user:', e);
+        if (mounted) {
+          base44.auth.redirectToLogin();
+        }
       }
     };
+    
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messages?.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages?.length]);
 
   const { data: threads = [] } = useQuery({
     queryKey: ['message-threads', user?.email],
@@ -186,6 +200,17 @@ export default function Messages() {
     const name = getThreadName(thread).toLowerCase();
     return name.includes(searchQuery.toLowerCase());
   });
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <MessageCircle className="w-12 h-12 mx-auto mb-4 text-purple-600 animate-pulse" />
+          <p className="text-gray-600">Loading messages...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto h-screen flex flex-col bg-white">
