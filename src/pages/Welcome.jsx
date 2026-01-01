@@ -26,9 +26,12 @@ export default function Welcome() {
             <Sparkles className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-4xl font-bold gradient-text mb-4">Welcome to Encircle Net</h1>
-          <p className="text-xl text-gray-700">
+          <p className="text-xl text-gray-700 mb-4">
             A creator-first platform designed to help you build identity, community, and income — without ads, without pressure, and without gatekeeping.
           </p>
+          <div className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 rounded-full border-2 border-purple-300 shadow-soft">
+            <p className="text-lg font-bold gradient-text">🎉 45 Days Free Service for All Paid Accounts</p>
+          </div>
         </motion.div>
 
         {/* Your Profile */}
@@ -277,6 +280,49 @@ export default function Welcome() {
           </p>
         </motion.section>
 
+        {/* Platform Ethics & Commitment */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 mb-6 shadow-soft border-2 border-blue-300"
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-blue-900 mb-2">🛡️ Our Commitment to You</h2>
+            <p className="text-gray-700 font-medium">Built on Ethics, Performance, Transparency & Empowerment</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div className="bg-white rounded-xl p-4 border border-blue-200">
+              <h3 className="font-bold text-blue-900 mb-2">✅ What We Guarantee</h3>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li>• Income opportunities through platform tools</li>
+                <li>• 100% optimal performance during normal use</li>
+                <li>• Automatic maintenance & optimization</li>
+                <li>• User ownership of content & services</li>
+                <li>• Ethical, sustainable growth systems</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white rounded-xl p-4 border border-blue-200">
+              <h3 className="font-bold text-blue-900 mb-2">❌ What We Don't Promise</h3>
+              <ul className="space-y-1 text-sm text-gray-700">
+                <li>• Guaranteed earnings or results</li>
+                <li>• Get-rich-quick schemes</li>
+                <li>• False or misleading claims</li>
+                <li>• Unrealistic income expectations</li>
+                <li>• Success without effort</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 border-2 border-indigo-300">
+            <p className="text-center text-gray-700 font-semibold">
+              Success on Encircle Net depends on: <span className="gradient-text">User Effort • Creativity • Consistency • Ethical Participation</span>
+            </p>
+          </div>
+        </motion.section>
+
         {/* Closing */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -286,8 +332,11 @@ export default function Welcome() {
         >
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 border-2 border-purple-300">
             <h3 className="text-3xl font-bold gradient-text mb-2">Welcome to Your Circle</h3>
-            <p className="text-gray-700 text-lg">
+            <p className="text-gray-700 text-lg mb-3">
               Your journey starts here. Build, grow, and earn on your terms.
+            </p>
+            <p className="text-sm text-gray-600 italic">
+              No deception. No misleading claims. No unrealistic promises.
             </p>
           </div>
         </motion.div>
