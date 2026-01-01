@@ -33,7 +33,8 @@ import CreatorServicesSection from '../components/marketplace/CreatorServicesSec
 import LiveQASession from '../components/community/LiveQASession';
 import PollCard from '../components/polls/PollCard';
 import CreatePollModal from '../components/polls/CreatePollModal';
-import { ExternalLink, Briefcase, CheckCircle, MessageCircle, BarChart3 } from 'lucide-react';
+import { ExternalLink, Briefcase, CheckCircle, MessageCircle, BarChart3, Trophy, Sparkles } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ViewProfile() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -362,24 +363,89 @@ export default function ViewProfile() {
               </div>
             )}
 
-            {/* Gamification Stats */}
-            {userStats && !isPrivate && (
-              <div className="mt-4 space-y-3">
-                <StreakDisplay 
-                  currentStreak={userStats.current_streak || 0}
-                  longestStreak={userStats.longest_streak || 0}
-                  size="sm"
-                />
-                {badges.length > 0 && (
-                  <div>
-                    <p className="text-xs text-gray-600 mb-2">Badges Earned</p>
-                    <BadgeShowcase badges={badges} maxDisplay={5} />
-                  </div>
-                )}
-              </div>
-            )}
+
           </div>
         </div>
+
+        {/* User Achievements Section */}
+        {!isPrivate && userStats && (
+          <Card className="mb-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-yellow-500" />
+                User Achievements
+              </h3>
+              
+              {/* Streaks */}
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                        <span className="text-2xl">🔥</span>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Current Streak</p>
+                        <p className="text-2xl font-bold text-orange-600">{userStats.current_streak || 0}</p>
+                        <p className="text-xs text-gray-500">days active</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                        <Trophy className="w-6 h-6 text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Longest Streak</p>
+                        <p className="text-2xl font-bold text-yellow-600">{userStats.longest_streak || 0}</p>
+                        <p className="text-xs text-gray-500">days record</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Badges */}
+              {badges.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    Badges Earned ({badges.length})
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {badges.slice(0, 8).map((badge, idx) => (
+                      <Card key={badge.id || idx} className="bg-white shadow-sm hover:shadow-md transition-all hover:scale-105 cursor-pointer">
+                        <CardContent className="p-3 text-center">
+                          <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                            <span className="text-2xl">{badge.icon || '🏆'}</span>
+                          </div>
+                          <p className="text-xs font-semibold text-gray-800 line-clamp-1">{badge.name || 'Badge'}</p>
+                          <p className="text-xs text-gray-500 line-clamp-1">{badge.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  {badges.length > 8 && (
+                    <p className="text-xs text-gray-500 mt-3 text-center">
+                      +{badges.length - 8} more badges
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {badges.length === 0 && (
+                <div className="text-center py-6 text-gray-500">
+                  <Sparkles className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No badges earned yet</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Creator Earnings (visible to others) */}
         {!isOwner && !isPrivate && (
