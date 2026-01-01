@@ -32,7 +32,6 @@ import VideoPlayer from '../components/video/VideoPlayer';
 import ProfileCustomization from '../components/profile/ProfileCustomization';
 import CollaborationsShowcase from '../components/profile/CollaborationsShowcase';
 import PortfolioSection from '../components/profile/PortfolioSection';
-import ContentPreferences from '../components/profile/ContentPreferences';
 import PointsDisplay from '../components/gamification/PointsDisplay';
 import CreatorEarningsCard from '../components/monetization/CreatorEarningsCard';
 import CreatorTierManager from '../components/monetization/CreatorTierManager';
@@ -344,9 +343,6 @@ export default function Profile() {
             }}
           />
         </div>
-
-        {/* Content Preferences */}
-        <ContentPreferences user={user} />
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-6">
