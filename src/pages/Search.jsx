@@ -39,14 +39,20 @@ export default function Search() {
     queryKey: ['search-users', debouncedQuery],
     queryFn: async () => {
       if (!debouncedQuery) return [];
-      const allUsers = await base44.asServiceRole.entities.User.list();
-      return allUsers.filter(u => 
-        u.full_name?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-        u.email?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-        u.bio?.toLowerCase().includes(debouncedQuery.toLowerCase())
-      );
+      try {
+        const allUsers = await base44.asServiceRole.entities.User.list();
+        return allUsers.filter(u => 
+          u.full_name?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+          u.email?.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+          u.bio?.toLowerCase().includes(debouncedQuery.toLowerCase())
+        );
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+      }
     },
-    enabled: debouncedQuery.length > 0 && (contentType === 'all' || contentType === 'users')
+    enabled: debouncedQuery.length > 0 && (contentType === 'all' || contentType === 'users'),
+    retry: 2
   });
 
   const { data: posts = [], isLoading: postsLoading } = useQuery({
