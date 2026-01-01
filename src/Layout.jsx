@@ -84,12 +84,12 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <HelmetProvider>
-      <div className="min-h-screen bg-white text-blue-900 transition-colors duration-500">
+      <div className="min-h-screen bg-[#F4F6FA] text-[#1F1F1F] transition-colors duration-500" style={{ fontFamily: 'Roboto, sans-serif' }}>
 
         {/* Desktop Sidebar */}
-        <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex-col p-6 z-50 shadow-lg transition-all duration-300">
+        <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex-col p-6 z-50 shadow-sm transition-all duration-300">
           <Link to={createPageUrl('Home')} className="mb-10 group">
-            <h1 className="text-2xl font-bold gradient-text hover-scale flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-[#4B6CB7] hover-scale flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
                 alt="Encircle Net" 

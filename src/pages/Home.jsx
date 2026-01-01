@@ -203,7 +203,7 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-lg mx-auto bg-gradient-to-b from-purple-50 via-white to-pink-50 min-h-screen">
+    <div className="max-w-lg mx-auto bg-[#F4F6FA] min-h-screen">
       <SEO 
         title="Encircle Net - #1 High Engagement Social Media Platform | Earn While You Share"
         description="Join 1M+ creators on Encircle Net, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
@@ -212,9 +212,9 @@ export default function Home() {
       />
       <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
       {/* Header */}
-      <div className="sticky top-0 bg-white/95 backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 bg-white backdrop-blur-lg z-40 border-b border-gray-200 shadow-sm">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-2xl font-bold gradient-text animate-shimmer flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-[#4B6CB7] flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694d8134627c7c1962086e4b/90c7b04a9_logo.jpg" 
               alt="Encircle Net" 
@@ -230,7 +230,7 @@ export default function Home() {
               variant="ghost" 
               size="icon" 
               onClick={() => window.location.href = createPageUrl('Search')}
-              className="text-gray-600 hover:text-gray-900 hover-scale"
+              className="text-[#182848] hover:text-[#4B6CB7] hover-scale"
               title="Search Users"
             >
               <Search className="w-5 h-5" />
@@ -240,7 +240,7 @@ export default function Home() {
               variant="ghost" 
               size="icon" 
               onClick={() => setFeedMode('tiktok')}
-              className="text-gray-600 hover:text-gray-900 hover-scale"
+              className="text-[#182848] hover:text-[#4B6CB7] hover-scale"
               title="TikTok Mode"
             >
               <LayoutGrid className="w-5 h-5" />
@@ -249,7 +249,7 @@ export default function Home() {
               variant="ghost" 
               size="icon" 
               onClick={handleRefresh}
-              className="text-gray-600 hover:text-gray-900 hover-scale"
+              className="text-[#182848] hover:text-[#4B6CB7] hover-scale"
             >
               <RefreshCw className="w-5 h-5" />
             </Button>
