@@ -49,13 +49,24 @@ export default function Profile() {
   const [showCustomization, setShowCustomization] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (e) {}
+        if (mounted) {
+          setUser(currentUser);
+        }
+      } catch (e) {
+        console.error('Failed to load user:', e);
+      }
     };
+    
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const { data: myPosts } = useQuery({

@@ -30,6 +30,8 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    
     const checkLike = async () => {
       if (!currentUser) return;
       try {
@@ -37,20 +39,30 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
           post_id: post.id,
           user_email: currentUser.email
         });
-        setIsLiked(likes.length > 0);
+        
+        if (mounted) {
+          setIsLiked(likes.length > 0);
+        }
 
-        // Check user subscription tier
         const subs = await base44.entities.Subscription.filter({
           user_email: currentUser.email,
           status: 'active'
         });
-        setUserSubscription(subs[0] || null);
+        
+        if (mounted) {
+          setUserSubscription(subs[0] || null);
+        }
       } catch (e) {
         console.error('Error checking like status:', e);
       }
     };
+    
     checkLike();
-  }, [post.id, currentUser]);
+    
+    return () => {
+      mounted = false;
+    };
+  }, [post.id, currentUser?.email]);
 
   const handleLike = async () => {
     if (!currentUser) {

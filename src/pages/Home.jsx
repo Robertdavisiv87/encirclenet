@@ -36,28 +36,33 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        // Check if onboarding is complete - skip this check for now
-        // if (!currentUser.onboarding_completed && currentUser.email) {
-        //   window.location.href = '/onboarding';
-        //   return;
-        // }
-
-        // Show grow prompt on first login or every 3 days
-        const lastPromptDate = localStorage.getItem('lastGrowPromptDate');
-        const today = new Date().toDateString();
-        
-        if (!lastPromptDate || 
-            (new Date(today) - new Date(lastPromptDate)) / (1000 * 60 * 60 * 24) >= 3) {
-          setTimeout(() => setShowGrowPrompt(true), 2000);
+        if (mounted) {
+          setUser(currentUser);
+          
+          const lastPromptDate = localStorage.getItem('lastGrowPromptDate');
+          const today = new Date().toDateString();
+          
+          if (!lastPromptDate || 
+              (new Date(today) - new Date(lastPromptDate)) / (1000 * 60 * 60 * 24) >= 3) {
+            setTimeout(() => {
+              if (mounted) setShowGrowPrompt(true);
+            }, 2000);
+          }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('Failed to load user:', e);
+      }
     };
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleCloseGrowPrompt = () => {

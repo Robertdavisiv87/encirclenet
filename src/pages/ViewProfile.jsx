@@ -46,11 +46,14 @@ export default function ViewProfile() {
   const profileEmail = urlParams.get('email');
 
   useEffect(() => {
+    let mounted = true;
+    
     const loadUsers = async () => {
-      setLoading(true);
+      if (mounted) setLoading(true);
+      
       try {
         const user = await base44.auth.me();
-        setCurrentUser(user);
+        if (mounted) setCurrentUser(user);
       } catch (e) {
         console.log('Not logged in');
       }
@@ -59,21 +62,31 @@ export default function ViewProfile() {
         try {
           const users = await base44.asServiceRole.entities.User.list();
           const foundUser = users.find(u => u.email === profileEmail);
-          if (foundUser) {
-            setProfileUser(foundUser);
-          } else {
-            console.error('No user found with email:', profileEmail);
+          if (mounted) {
+            if (foundUser) {
+              setProfileUser(foundUser);
+            } else {
+              console.error('No user found with email:', profileEmail);
+            }
           }
         } catch (e) {
           console.error('Error loading profile user:', e);
         }
       }
-      setLoading(false);
+      
+      if (mounted) setLoading(false);
     };
+    
     loadUsers();
+    
+    return () => {
+      mounted = false;
+    };
   }, [profileEmail]);
 
   useEffect(() => {
+    let mounted = true;
+    
     const checkFollowing = async () => {
       if (!currentUser || !profileEmail) return;
       try {
@@ -81,11 +94,20 @@ export default function ViewProfile() {
           follower_email: currentUser.email,
           following_email: profileEmail
         });
-        setIsFollowing(follows.length > 0);
-      } catch (e) {}
+        if (mounted) {
+          setIsFollowing(follows.length > 0);
+        }
+      } catch (e) {
+        console.error('Error checking follow status:', e);
+      }
     };
+    
     checkFollowing();
-  }, [currentUser, profileEmail]);
+    
+    return () => {
+      mounted = false;
+    };
+  }, [currentUser?.email, profileEmail]);
 
   const { data: posts } = useQuery({
     queryKey: ['user-posts', profileEmail],

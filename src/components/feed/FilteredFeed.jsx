@@ -15,12 +15,23 @@ export default function FilteredFeed({ user, onLike, onTip }) {
     enabled: !!user?.email
   });
 
-  const { data: allPosts, isLoading } = useQuery({
+  const { data: allPosts = [], isLoading } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
-      return await base44.entities.Post.list('-created_date', 100);
+      try {
+        const posts = await base44.entities.Post.list('-created_date', 100);
+        return posts.filter(post => 
+          post.moderation_status !== 'pending_review' && 
+          post.moderation_status !== 'rejected'
+        );
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+        return [];
+      }
     },
-    initialData: []
+    initialData: [],
+    staleTime: 30000,
+    retry: 2
   });
 
   // Filter posts based on user preferences

@@ -30,17 +30,24 @@ export default function Layout({ children, currentPageName }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
-    console.log("JavaScript is active!");
-
+    let mounted = true;
+    
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
+        if (mounted) {
+          setUser(currentUser);
+        }
       } catch (e) {
         // User not logged in
       }
     };
+    
     loadUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
