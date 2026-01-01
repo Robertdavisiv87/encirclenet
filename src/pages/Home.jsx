@@ -10,6 +10,8 @@ import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
 import ReferralSuccessNotification from '../components/referrals/ReferralSuccessNotification';
 import PersonalizedRecommendations from '../components/recommendations/PersonalizedRecommendations';
+import FilteredFeed from '../components/feed/FilteredFeed';
+import ContentPreferences from '../components/profile/ContentPreferences';
 import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-react';
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
@@ -279,6 +281,13 @@ export default function Home() {
         <StoryBar currentUser={user} />
       </div>
 
+      {/* Content Preferences */}
+      {user && (
+        <div className="px-4">
+          <ContentPreferences user={user} />
+        </div>
+      )}
+
       {/* Personalized Recommendations */}
       <div className="px-4">
         <PersonalizedRecommendations user={user} />
@@ -308,16 +317,12 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          posts.map((post) => (
-            <PostCard 
-              key={post.id}
-              post={post} 
-              currentUser={user}
-              onLike={() => queryClient.invalidateQueries(['posts'])}
-              onTip={() => queryClient.invalidateQueries(['posts'])}
-            />
-          ))
-          )}
+          <FilteredFeed 
+            user={user}
+            onLike={() => queryClient.invalidateQueries(['posts'])}
+            onTip={() => queryClient.invalidateQueries(['posts'])}
+          />
+        )}
       </div>
     </div>
   );

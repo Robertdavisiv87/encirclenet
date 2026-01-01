@@ -162,14 +162,14 @@ export default function ViewProfile() {
     }
   };
 
-  if (!profileUser) {
+  if (!profileEmail || !profileUser) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
         <div className="text-center">
-          <p className="text-gray-500">User not found</p>
+          <p className="text-gray-500 mb-4">User not found</p>
           <Button 
             onClick={() => window.location.href = createPageUrl('Home')}
-            className="mt-4"
+            className="gradient-bg-primary"
           >
             Go Home
           </Button>
