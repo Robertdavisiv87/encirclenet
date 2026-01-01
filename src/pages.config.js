@@ -10,6 +10,7 @@ import CreateCircle from './pages/CreateCircle';
 import CreateGroup from './pages/CreateGroup';
 import CreatorAnalytics from './pages/CreatorAnalytics';
 import CreatorEconomy from './pages/CreatorEconomy';
+import CreatorMessaging from './pages/CreatorMessaging';
 import CreatorTools from './pages/CreatorTools';
 import Discover from './pages/Discover';
 import Earnings from './pages/Earnings';
@@ -35,7 +36,6 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import CreatorMessaging from './pages/CreatorMessaging';
 import __Layout from './Layout.jsx';
 
 
@@ -52,6 +52,7 @@ export const PAGES = {
     "CreateGroup": CreateGroup,
     "CreatorAnalytics": CreatorAnalytics,
     "CreatorEconomy": CreatorEconomy,
+    "CreatorMessaging": CreatorMessaging,
     "CreatorTools": CreatorTools,
     "Discover": Discover,
     "Earnings": Earnings,
@@ -77,7 +78,6 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "CreatorMessaging": CreatorMessaging,
 }
 
 export const pagesConfig = {

@@ -131,8 +131,20 @@ export default function Admin() {
     <AdminProtection>
       <div className="max-w-7xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Platform analytics and revenue insights</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold gradient-text mb-2">Admin Dashboard</h1>
+            <p className="text-gray-600">Platform analytics and revenue insights</p>
+          </div>
+          <a 
+            href={base44.agents.getWhatsAppConnectURL('encirclenet_support_auditor')} 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors shadow-lg"
+          >
+            💬 Support Agent
+          </a>
+        </div>
       </div>
 
       {/* Stats Grid */}
