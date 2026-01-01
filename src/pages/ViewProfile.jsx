@@ -8,7 +8,8 @@ import {
   Users,
   Heart,
   DollarSign,
-  ArrowLeft
+  ArrowLeft,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -38,22 +39,27 @@ export default function ViewProfile() {
   const [currentUser, setCurrentUser] = useState(null);
   const [profileUser, setProfileUser] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const urlParams = new URLSearchParams(window.location.search);
   const profileEmail = urlParams.get('email');
 
   useEffect(() => {
     const loadUsers = async () => {
+      setLoading(true);
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
-      } catch (e) {}
+      } catch (e) {
+        console.log('Not logged in');
+      }
 
       if (profileEmail) {
         try {
-          const users = await base44.asServiceRole.entities.User.filter({ email: profileEmail });
-          if (users.length > 0) {
-            setProfileUser(users[0]);
+          const users = await base44.asServiceRole.entities.User.list();
+          const foundUser = users.find(u => u.email === profileEmail);
+          if (foundUser) {
+            setProfileUser(foundUser);
           } else {
             console.error('No user found with email:', profileEmail);
           }
@@ -61,6 +67,7 @@ export default function ViewProfile() {
           console.error('Error loading profile user:', e);
         }
       }
+      setLoading(false);
     };
     loadUsers();
   }, [profileEmail]);
@@ -149,6 +156,17 @@ export default function ViewProfile() {
       setIsFollowing(true);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!profileEmail || !profileUser) {
     return (
