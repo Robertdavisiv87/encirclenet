@@ -21,6 +21,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminProtection from '../components/auth/AdminProtection';
+import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
+import EarningsDashboard from '../components/creator/EarningsDashboard';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -204,6 +206,11 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Payout Approval Queue */}
+      <div className="mb-8">
+        <PayoutApprovalQueue />
+      </div>
 
       {/* Tabs for Recent Activity and Live Tracking */}
       <Tabs defaultValue="recent" className="mb-8">
