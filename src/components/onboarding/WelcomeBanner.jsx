@@ -49,6 +49,10 @@ export default function WelcomeBanner() {
               
               <p className="mb-2">🎉 <strong>45 Days Free Service</strong> for all paid accounts.</p>
               
+              <p className="mb-2 text-white/95 text-xs bg-white/10 rounded-lg p-2 border border-white/20">
+                📅 <strong>Billing Reminder:</strong> After your 45-day free period, paid service accounts are actively billed on the 5th of every month.
+              </p>
+              
               <p className="mb-2">📈 Grow as a creator, freelancer, influencer, or niche business.</p>
               
               <p className="mb-2 text-white/90 text-xs">Success depends on your effort, creativity, consistency & ethics.</p>
