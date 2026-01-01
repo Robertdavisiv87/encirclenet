@@ -81,8 +81,8 @@ export default function Referrals() {
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <SEO 
-        title="Referral Program - EncircleNet | Earn Rewards"
-        description="Invite friends to EncircleNet and earn lifetime commissions. Get paid for every signup and creator you refer."
+        title="Referral Program - Encircle Net | Earn Rewards"
+        description="Invite friends to Encircle Net and earn lifetime commissions. Get paid for every signup and creator you refer."
         keywords="referral program, earn rewards, invite friends, creator referrals, commission program"
       />
 
