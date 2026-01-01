@@ -307,27 +307,12 @@ export default function Home() {
 
       {/* Feed */}
       <div className="px-4">
-        {posts.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full gradient-bg-primary flex items-center justify-center shadow-glow">
-              <span className="text-4xl">🌟</span>
-            </div>
-            <h3 className="text-xl font-bold mb-2 text-blue-900">Welcome to Encircle Net!</h3>
-            <p className="text-gray-600 mb-6">
-              Your feed is empty. Start creating content or follow others to see posts.
-            </p>
-            <Button className="gradient-bg-primary text-white shadow-glow hover-glow">
-              Create Your First Post
-            </Button>
-          </div>
-        ) : (
-          <FilteredFeed 
-            user={user}
-            onLike={() => queryClient.invalidateQueries(['posts'])}
-            onTip={() => queryClient.invalidateQueries(['posts'])}
-          />
-        )}
-        </div>
+        <FilteredFeed 
+          user={user}
+          onLike={() => queryClient.invalidateQueries(['posts'])}
+          onTip={() => queryClient.invalidateQueries(['posts'])}
+        />
+      </div>
 
         {/* Chatbot */}
         <HomeChatbot user={user} />
