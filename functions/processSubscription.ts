@@ -9,7 +9,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { subscription_id, action } = await req.json();
+    const { subscription_id, action, user_email, creator_email, monthly_amount } = await req.json();
+
+    // Admin gets free subscriptions
+    if (user_email === 'robertdavisiv87@gmail.com') {
+      return Response.json({ 
+        success: true, 
+        message: 'Admin subscription granted free',
+        free_subscription: true
+      });
+    }
 
     if (action === 'create') {
       // Auto-create Revenue when subscription is created
@@ -17,6 +26,18 @@ Deno.serve(async (req) => {
       
       if (subscription.length > 0) {
         const sub = subscription[0];
+        
+        // Calculate platform commission (10%)
+        const platformCommission = sub.monthly_amount * 0.1;
+        
+        // Record admin commission
+        await base44.asServiceRole.entities.AdminCommission.create({
+          transaction_type: 'subscription',
+          reference_id: sub.id,
+          amount: platformCommission,
+          creator_email: sub.creator_email,
+          status: 'completed'
+        });
         
         // Create Revenue record
         await base44.asServiceRole.entities.Revenue.create({

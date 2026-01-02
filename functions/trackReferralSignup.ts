@@ -65,6 +65,15 @@ Deno.serve(async (req) => {
       status: 'completed',
       conversion_type: 'signup'
     });
+    
+    // Record admin commission for referrals (platform also earns)
+    await base44.asServiceRole.entities.AdminCommission.create({
+      transaction_type: 'referral',
+      reference_id: referral.id,
+      amount: 5.00,
+      creator_email: referrer_email,
+      status: 'completed'
+    });
 
     // Update referrer's total earnings
     const referrerUsers = await base44.asServiceRole.entities.User.filter({
