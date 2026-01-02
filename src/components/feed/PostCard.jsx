@@ -127,8 +127,9 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
     const userTier = userSubscription?.tier || 'free';
     const trialEndDate = new Date('2026-01-31');
     const isInTrialPeriod = new Date() <= trialEndDate;
+    const isAdmin = currentUser?.email === 'robertdavisiv87@gmail.com';
     
-    if (!isInTrialPeriod && userTier === 'free') {
+    if (!isAdmin && !isInTrialPeriod && userTier === 'free') {
       alert('Upgrade to Pro or Elite to send tips');
       return;
     }
@@ -157,7 +158,8 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   // Trial period ends 01/31/2026 - unlock all features during trial
   const trialEndDate = new Date('2026-01-31');
   const isInTrialPeriod = new Date() <= trialEndDate;
-  const canMonetize = isInTrialPeriod || userTier === 'pro' || userTier === 'elite';
+  const isAdmin = currentUser?.email === 'robertdavisiv87@gmail.com';
+  const canMonetize = isAdmin || isInTrialPeriod || userTier === 'pro' || userTier === 'elite';
   const isOwnPost = currentUser && post.created_by === currentUser.email;
 
   const handleDeletePost = async () => {
