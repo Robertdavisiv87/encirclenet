@@ -38,7 +38,7 @@ export default function MasterSpec() {
             <CardContent className="space-y-3">
               <p className="text-blue-900 leading-relaxed">
                 EncircleNet is a creator-first social platform where users earn real money through engagement, 
-                content creation, and network growth. Unlike traditional platforms (Instagram, TikTok) that give 
+                content creation, and network growth. Unlike traditional social platforms that give 
                 creators 0% revenue share, EncircleNet provides <span className="font-bold text-green-600">90% revenue share</span> and 
                 multiple passive income streams.
               </p>
@@ -275,7 +275,7 @@ const allTransactions = await base44.asServiceRole
                 <ul className="space-y-1 text-sm text-gray-700 mb-3">
                   <li>✅ Maintains <strong>100% backward compatibility</strong></li>
                   <li>✅ Preserves all existing features and data</li>
-                  <li>✅ Surpasses TikTok, Instagram, Facebook, Fiverr, Freelancer.com, and Upwork in:
+                  <li>✅ Surpasses TikTok, Facebook, Fiverr, Freelancer.com, and Upwork in:
                     <ul className="ml-6 mt-1 space-y-1">
                       <li>• Creator value</li>
                       <li>• Ethical monetization</li>
@@ -803,7 +803,7 @@ const allTransactions = await base44.asServiceRole
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-200">
-                <h3 className="font-bold text-purple-900 mb-2">vs. Instagram/TikTok</h3>
+                <h3 className="font-bold text-purple-900 mb-2">vs. Traditional Social Media</h3>
                 <ul className="space-y-1 text-sm text-gray-700">
                   <li>• <strong>Revenue Share:</strong> 90% vs 0%</li>
                   <li>• <strong>Earning Streams:</strong> 8+ vs 1 (brand deals only)</li>
@@ -844,7 +844,7 @@ const allTransactions = await base44.asServiceRole
                     <li>✅ No existing feature may break, degrade, or lose data</li>
                     <li>✅ All current functionality must continue to work perfectly</li>
                     <li>✅ All enhancements must be additive, stable, and production-safe</li>
-                    <li>✅ Must surpass TikTok, Instagram, and Facebook in reliability, monetization, and ethics</li>
+                    <li>✅ Must surpass TikTok and Facebook in reliability, monetization, and ethics</li>
                     <li>✅ Vertical, swipeable UI with blue-and-white color contrast for immersive experience</li>
                   </ul>
                 </div>
