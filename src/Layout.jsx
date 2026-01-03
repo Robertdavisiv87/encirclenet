@@ -19,7 +19,8 @@ import {
   Sparkles,
   Menu,
   X,
-  Crown
+  Crown,
+  Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AutoMonitor from './components/system/AutoMonitor';
@@ -58,8 +59,9 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', icon: Home, page: 'Home' },
+    { name: 'Hub', icon: Compass, page: 'Hub', highlight: true },
     { name: 'Discover', icon: Sparkles, page: 'Discover' },
-    { name: 'Services', icon: Compass, page: 'LocalServices' },
+    { name: 'Services', icon: Briefcase, page: 'LocalServices' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'Community', icon: Users, page: 'Groups' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
@@ -97,7 +99,7 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl(item.page)}
                 onClick={() => setActivePage(item.page)}
                 className={cn(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 hover-lift cursor-pointer",
+                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 hover-lift cursor-pointer relative",
                   activePage === item.page 
                     ? "gradient-bg-primary text-white shadow-glow" 
                     : "text-blue-700 hover:bg-gray-100 hover:text-blue-900"
@@ -108,6 +110,11 @@ export default function Layout({ children, currentPageName }) {
                   activePage === item.page && "text-purple-600 scale-110"
                 )} />
                 <span className="font-medium">{item.name}</span>
+                {item.highlight && (
+                  <Badge className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-1.5 py-0.5">
+                    NEW
+                  </Badge>
+                )}
               </Link>
             ))}
           </div>

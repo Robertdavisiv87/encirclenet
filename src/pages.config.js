@@ -42,6 +42,7 @@ import TrustCenter from './pages/TrustCenter';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import Hub from './pages/Hub';
 import __Layout from './Layout.jsx';
 
 
@@ -90,6 +91,7 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "Hub": Hub,
 }
 
 export const pagesConfig = {
