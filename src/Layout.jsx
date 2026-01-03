@@ -18,7 +18,8 @@ import {
   Shield,
   Sparkles,
   Menu,
-  X
+  X,
+  Crown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
