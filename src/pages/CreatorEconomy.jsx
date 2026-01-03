@@ -69,6 +69,14 @@ export default function CreatorEconomy() {
           console.log('🔄 Syncing referrals and earnings...');
           const syncResponse = await base44.functions.invoke('syncReferrals', {});
           console.log('Sync result:', syncResponse.data);
+          
+          if (syncResponse.data.new_referrals_found > 0) {
+            toast({
+              title: `✅ ${syncResponse.data.new_referrals_found} New Referral${syncResponse.data.new_referrals_found > 1 ? 's' : ''} Found!`,
+              description: `+$${syncResponse.data.new_earnings.toFixed(2)} detected`
+            });
+          }
+          
           await base44.functions.invoke('syncUserEarnings', {});
         } catch (e) {
           console.log('Sync failed:', e);
@@ -95,20 +103,27 @@ export default function CreatorEconomy() {
           setTimeout(async () => {
             try {
               const response = await base44.functions.invoke('migrateEarningsToStripe', {});
-              if (response.data.success && response.data.migrated_amount > 0) {
-                toast({
-                  title: "🎉 Earnings Migrated!",
-                  description: `$${response.data.migrated_amount.toFixed(2)} transferred to your Stripe account`,
-                });
+              console.log('Migration response:', response.data);
+              
+              if (response.data.success) {
+                if (response.data.migrated_amount > 0) {
+                  toast({
+                    title: "🎉 Earnings Migrated!",
+                    description: `$${response.data.migrated_amount.toFixed(2)} transferred to your Stripe account`,
+                  });
 
-                // Clear URL params and reload
-                window.history.replaceState({}, '', createPageUrl('CreatorEconomy'));
-                setTimeout(() => window.location.reload(), 1500);
+                  // Clear URL params and reload
+                  window.history.replaceState({}, '', createPageUrl('CreatorEconomy'));
+                  setTimeout(() => window.location.reload(), 1500);
+                } else {
+                  console.log('No earnings to migrate:', response.data);
+                  setIsMigrating(false);
+                }
               } else {
                 setIsMigrating(false);
               }
             } catch (error) {
-              console.log('Migration check:', error);
+              console.log('Migration error:', error);
               setIsMigrating(false);
             }
           }, setupComplete ? 1500 : 500);
