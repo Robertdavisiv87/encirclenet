@@ -72,13 +72,24 @@ export default function CreatorEconomy() {
           console.log('Sync failed:', e);
         }
 
+        // Check if returning from Stripe onboarding
+        const urlParams = new URLSearchParams(window.location.search);
+        const setupComplete = urlParams.get('setup') === 'complete';
+
         // Auto-migrate pending earnings if Stripe connected but not migrated yet
         const migrationChecked = sessionStorage.getItem('migration_checked');
         if (currentUser.stripe_account_id && !currentUser.earnings_migrated && !migrationChecked) {
           sessionStorage.setItem('migration_checked', 'true');
           setIsMigrating(true);
-          
-          // Trigger migration
+
+          if (setupComplete) {
+            toast({
+              title: "✅ Bank Account Connected!",
+              description: "Detecting and migrating your earnings..."
+            });
+          }
+
+          // Trigger migration after a brief delay
           setTimeout(async () => {
             try {
               const response = await base44.functions.invoke('migrateEarningsToStripe', {});
@@ -87,6 +98,9 @@ export default function CreatorEconomy() {
                   title: "🎉 Earnings Migrated!",
                   description: `$${response.data.migrated_amount.toFixed(2)} transferred to your Stripe account`,
                 });
+
+                // Clear URL params and reload
+                window.history.replaceState({}, '', createPageUrl('CreatorEconomy'));
                 setTimeout(() => window.location.reload(), 1500);
               } else {
                 setIsMigrating(false);
@@ -95,7 +109,7 @@ export default function CreatorEconomy() {
               console.log('Migration check:', error);
               setIsMigrating(false);
             }
-          }, 500);
+          }, setupComplete ? 1500 : 500);
         }
         
         // Clear any pending migration flag
@@ -541,12 +555,31 @@ export default function CreatorEconomy() {
           })}
         </div>
 
+        {/* Migration Status */}
+        {isMigrating && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl animate-pulse">
+            <div className="flex items-center gap-3">
+              <RefreshCw className="w-5 h-5 text-blue-600 animate-spin" />
+              <div>
+                <p className="text-sm text-blue-900 font-semibold">
+                  Detecting Pending Earnings...
+                </p>
+                <p className="text-xs text-blue-700">
+                  Checking for platform revenue to migrate
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Earnings Info */}
-        <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
-          <p className="text-sm text-green-900">
-            <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time and automatically synced to your Stripe account. Cash out anytime once you reach the $10 minimum threshold.
-          </p>
-        </div>
+        {!isMigrating && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
+            <p className="text-sm text-green-900">
+              <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time and automatically synced to your Stripe account. Cash out anytime once you reach the $10 minimum threshold.
+            </p>
+          </div>
+        )}
       </motion.div>
 
       {/* Main Content */}

@@ -58,13 +58,18 @@ Deno.serve(async (req) => {
       totalNewEarnings += commission;
     }
 
-    // Update user's total referral earnings
+    // Update affiliate program if exists
     if (totalNewEarnings > 0) {
-      // If user has Stripe connected and not yet migrated, trigger migration
-      if (user.stripe_account_id && !user.earnings_migrated) {
-        await base44.asServiceRole.auth.updateMe({
-          stripe_balance: (user.stripe_balance || 0) + totalNewEarnings,
-          earnings_migrated: true
+      const affiliatePrograms = await base44.entities.AffiliateProgram.filter({ 
+        user_email: user.email 
+      });
+      
+      if (affiliatePrograms.length > 0) {
+        const program = affiliatePrograms[0];
+        await base44.asServiceRole.entities.AffiliateProgram.update(program.id, {
+          referrals_count: (program.referrals_count || 0) + newReferrals.length,
+          conversions_count: (program.conversions_count || 0) + newReferrals.length,
+          total_commission_earned: (program.total_commission_earned || 0) + totalNewEarnings
         });
       }
     }
