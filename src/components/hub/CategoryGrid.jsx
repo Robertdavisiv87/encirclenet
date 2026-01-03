@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { 
   Car, Home, Scissors, Heart, GraduationCap, Dumbbell, Dog, PartyPopper,
   Camera, Truck, Laptop, Wrench, Briefcase, MoreHorizontal,
   Share2, PenTool, TrendingUp, Target, FileText, Users, Palette,
   Video, Mail, DollarSign, ShoppingCart, Code, BarChart, Smartphone,
-  Lightbulb, Megaphone, Package
+  Lightbulb, Megaphone, Package, Filter
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

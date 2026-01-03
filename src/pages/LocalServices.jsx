@@ -20,8 +20,6 @@ import { motion } from 'framer-motion';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
-import GlobalAIAssistant from '../components/ai/GlobalAIAssistant';
-import PerformanceMonitor from '../components/system/PerformanceMonitor';
 
 export default function LocalServices() {
   const [user, setUser] = useState(null);
@@ -66,8 +64,6 @@ export default function LocalServices() {
         title="Local Services Marketplace - Instant Booking | EncircleNet"
         description="Book trusted local services instantly. Real-time availability, automated confirmations, secure payments. From mechanics to tutors, all in one place."
       />
-      
-      <GlobalAIAssistant user={user} currentPage="Services" />
 
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -79,11 +75,6 @@ export default function LocalServices() {
           <h1 className="text-4xl font-bold gradient-text mb-2">Local Services</h1>
           <p className="text-gray-600">Instant booking • Real-time availability • Automated confirmations</p>
         </motion.div>
-
-        {/* System Monitor */}
-        <div className="mb-6">
-          <PerformanceMonitor />
-        </div>
 
         {/* Search & Location */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">

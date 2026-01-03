@@ -19,8 +19,6 @@ import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
 import HomeChatbot from '../components/chat/HomeChatbot';
 import WelcomeBanner from '../components/onboarding/WelcomeBanner';
-import GlobalAIAssistant from '../components/ai/GlobalAIAssistant';
-import AutoMonitor from '../components/system/AutoMonitor';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -270,9 +268,6 @@ export default function Home() {
           onTip={() => queryClient.invalidateQueries(['posts'])}
         />
         
-        {/* AI Assistant & System Monitoring */}
-        <GlobalAIAssistant user={user} currentPage="Home" />
-        <AutoMonitor />
         </div>
         );
         }

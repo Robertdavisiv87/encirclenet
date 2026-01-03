@@ -23,6 +23,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import AutoMonitor from './components/system/AutoMonitor';
 
 const ADMIN_EMAIL = 'robertdavisiv87@gmail.com';
@@ -177,9 +178,9 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
 
-        {/* Global System Monitor */}
-        <AutoMonitor />
-        </div>
-        </HelmetProvider>
-        );
+      {/* Global System Monitor */}
+      <AutoMonitor />
+    </div>
+  </HelmetProvider>
+);
 }
