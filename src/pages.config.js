@@ -36,6 +36,8 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import ManageServiceVerticals from './pages/ManageServiceVerticals';
+import ServiceRequest from './pages/ServiceRequest';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +80,8 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "ManageServiceVerticals": ManageServiceVerticals,
+    "ServiceRequest": ServiceRequest,
 }
 
 export const pagesConfig = {

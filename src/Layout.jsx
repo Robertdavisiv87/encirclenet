@@ -60,6 +60,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Search', icon: Search, page: 'Search' },
     { name: 'Explore', icon: Compass, page: 'Explore' },
     { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
+    { name: 'Services', icon: Sparkles, page: 'ServiceRequest' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'AI Tools', icon: Sparkles, page: 'CreatorTools' },
     { name: 'Community', icon: Users, page: 'Community' },
@@ -79,6 +80,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' },
     { name: 'System', icon: TrendingUp, page: 'SystemStatus' },
     { name: 'Moderation', icon: Shield, page: 'ModerationDashboard' },
+    { name: 'Service Verticals', icon: Sparkles, page: 'ManageServiceVerticals' },
     { name: 'Master Spec', icon: Sparkles, page: 'MasterSpec' }
   ] : [];
 
