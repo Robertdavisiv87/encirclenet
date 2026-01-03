@@ -53,6 +53,8 @@ export default function CreatorEconomy() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
   const [isMigrating, setIsMigrating] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -373,7 +375,6 @@ export default function CreatorEconomy() {
           title: "Opening Stripe Dashboard",
           description: "Redirecting to update your bank account..."
         });
-        // If already connected, open Stripe dashboard
         window.open('https://connect.stripe.com/express_login', '_blank');
       }
     } catch (error) {
@@ -384,6 +385,37 @@ export default function CreatorEconomy() {
       });
     } finally {
       setConnectingBank(false);
+    }
+  };
+
+  const handleResetStripeAccount = async () => {
+    setShowResetConfirm(false);
+    setIsResetting(true);
+    
+    try {
+      const response = await base44.functions.invoke('resetStripeAccount', {});
+      
+      if (response.data.success) {
+        toast({
+          title: "✅ Account Reset",
+          description: response.data.message
+        });
+        
+        sessionStorage.removeItem('migration_checked');
+        
+        // Wait a moment then trigger reconnection
+        setTimeout(() => {
+          setIsResetting(false);
+          handleConnectBank();
+        }, 1500);
+      }
+    } catch (error) {
+      toast({
+        title: "Reset Failed",
+        description: error.message,
+        variant: "destructive"
+      });
+      setIsResetting(false);
     }
   };
 
@@ -1287,15 +1319,26 @@ export default function CreatorEconomy() {
                         </p>
                       </div>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      onClick={handleConnectBank}
-                      disabled={connectingBank}
-                      className="border-2 border-purple-400"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Update Bank Account
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={handleConnectBank}
+                        disabled={connectingBank || isResetting}
+                        className="border-2 border-purple-400 flex-1"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Update Bank
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowResetConfirm(true)}
+                        disabled={connectingBank || isResetting}
+                        className="border-2 border-orange-400 hover:bg-orange-50"
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Reconnect
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -1506,6 +1549,50 @@ export default function CreatorEconomy() {
           window.location.reload();
         }}
       />
+
+      {/* Reset Confirmation Modal */}
+      <Dialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reconnect Bank Account</DialogTitle>
+            <DialogDescription>
+              This will disconnect your current bank and allow you to connect a new one. Your earnings will be preserved and migrated to the new account.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="bg-orange-50 border-2 border-orange-300 rounded-lg p-4">
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>What happens:</strong>
+              </p>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-600">•</span>
+                  Current Stripe account will be disconnected
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-600">•</span>
+                  You'll be redirected to Stripe to enter your real bank details
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-600">•</span>
+                  All earnings will be automatically migrated
+                </li>
+              </ul>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResetConfirm(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleResetStripeAccount}
+              className="bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              Reset & Reconnect
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
