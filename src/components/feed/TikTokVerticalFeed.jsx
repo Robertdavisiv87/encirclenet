@@ -124,20 +124,6 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
                 </div>
               </button>
 
-              {/* Like */}
-              <motion.button
-                whileTap={{ scale: 0.8 }}
-                onClick={() => handleLike(post.id, isLiked)}
-                className="flex flex-col items-center gap-1"
-              >
-                <Heart 
-                  className={`w-8 h-8 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'} drop-shadow-lg`}
-                />
-                <span className="text-white text-xs font-semibold drop-shadow-lg">
-                  {post.likes_count || 0}
-                </span>
-              </motion.button>
-
               {/* Comment */}
               <motion.button
                 whileTap={{ scale: 0.8 }}
@@ -150,6 +136,20 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
                 <MessageCircle className="w-8 h-8 text-white drop-shadow-lg" />
                 <span className="text-white text-xs font-semibold drop-shadow-lg">
                   {post.comments_count || 0}
+                </span>
+              </motion.button>
+
+              {/* Like */}
+              <motion.button
+                whileTap={{ scale: 0.8 }}
+                onClick={() => handleLike(post.id, isLiked)}
+                className="flex flex-col items-center gap-1"
+              >
+                <Heart 
+                  className={`w-8 h-8 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'} drop-shadow-lg`}
+                />
+                <span className="text-white text-xs font-semibold drop-shadow-lg">
+                  {post.likes_count || 0}
                 </span>
               </motion.button>
 
