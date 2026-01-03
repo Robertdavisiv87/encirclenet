@@ -40,30 +40,25 @@ export default function WelcomeBanner() {
             </div>
             
             <div className="flex-1 text-sm">
-              <h3 className="font-bold mb-2 text-lg">💡 Welcome to Encircle Net!</h3>
-              <p className="mb-2 font-semibold">Your world. Your voice. Your value.</p>
-              
-              <p className="mb-2">✨ Earn passive income in any niche online.</p>
-              
-              <p className="mb-2">💰 <strong>Referral Sign-Ups:</strong> Earn $5 per sign-up (user & platform commission).</p>
-              
-              <p className="mb-2">🎉 <strong>45 Days Free Service</strong> for all paid accounts.</p>
-              
-              <p className="mb-2 text-white/95 text-xs bg-white/10 rounded-lg p-2 border border-white/20">
-                📅 <strong>Billing Reminder:</strong> After your 45-day free period, paid service accounts are actively billed on the 5th of every month.
+              <h3 className="font-bold mb-2 text-lg">🚀 Start Making Money in 24 Hours</h3>
+              <p className="text-white/90 mb-4">
+                Watch real people succeed, start earning money today, and explore opportunities near you. Multiple income streams, local services, and creative content — all in one place.
               </p>
               
-              <p className="mb-2">📈 Grow as a creator, freelancer, influencer, or niche business.</p>
+              <div className="bg-white/10 rounded-lg p-3 mb-3 border border-white/20">
+                <p className="font-semibold mb-2">What You Can Do:</p>
+                <ul className="space-y-1 text-xs">
+                  <li>💰 <strong>Passive Income:</strong> Referrals, affiliate programs, network earnings</li>
+                  <li>🎬 <strong>Creator Hub:</strong> Monetize content, tips, exclusive posts</li>
+                  <li>🛠️ <strong>Local Services:</strong> Hire or offer services nearby with AI matching</li>
+                  <li>📚 <strong>Learn & Replicate:</strong> Watch real success stories in your niche</li>
+                  <li>🌐 <strong>Free to Start:</strong> No subscription, just opportunities</li>
+                </ul>
+              </div>
               
-              <p className="mb-2 text-white/90 text-xs">Success depends on your effort, creativity, consistency & ethics.</p>
-              
-              <p className="mb-2 text-white/90 text-xs">🛡️ We follow Ethics & Licensure, Governance, End User Rights, and #EthicalSource principles.</p>
-              
-              <p className="mb-2 text-white/90 text-xs">⚙️ App runs 100% smoothly with auto maintenance for optimal performance.</p>
-              
-              <p className="text-white/90 text-xs italic">No guaranteed income – realistic, ethical, and rewarding opportunities only.</p>
-              
-              <p className="mt-3 font-bold">Let's get started – create, engage, and grow! 🚀</p>
+              <p className="text-white/90 text-xs italic">
+                No scams, no heavy security, just freedom to express yourself and create real value in the real world.
+              </p>
             </div>
           </div>
         </motion.div>
