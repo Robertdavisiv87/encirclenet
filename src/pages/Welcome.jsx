@@ -1,18 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, User, DollarSign, Users, Eye, Settings, Lightbulb, TrendingUp, ShoppingBag, Briefcase, Share2, Zap } from 'lucide-react';
+import { Sparkles, User, DollarSign, Users, Eye, Settings, Lightbulb, TrendingUp, ShoppingBag, Briefcase, Share2, Zap, Rocket } from 'lucide-react';
 import { createPageUrl } from '../utils';
+import { Button } from '@/components/ui/button';
 import SEO from '../components/SEO';
+import MoneyMakingOnboarding from '../components/onboarding/MoneyMakingOnboarding';
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [user, setUser] = useState(null);
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const { base44 } = await import('@/api/base44Client');
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        console.log('Not logged in');
+      }
+    };
+    loadUser();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <SEO 
         title="Welcome to Encircle Net - Your Platform for Growth & Income"
         description="Creator-first platform to build identity, community, and income without ads or gatekeeping."
+      />
+
+      <MoneyMakingOnboarding 
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        user={user}
       />
 
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -26,9 +49,19 @@ export default function Welcome() {
             <Sparkles className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-4xl font-bold gradient-text mb-4">Welcome to Encircle Net</h1>
-          <p className="text-xl text-gray-700 mb-4">
+          <p className="text-xl text-gray-700 mb-6">
             A creator-first platform designed to help you build identity, community, and income — without ads, without pressure, and without gatekeeping.
           </p>
+
+          <Button
+            onClick={() => setShowOnboarding(true)}
+            size="lg"
+            className="gradient-bg-primary text-white shadow-glow mb-4"
+          >
+            <Rocket className="w-5 h-5 mr-2" />
+            Start Making Money in 24 Hours
+          </Button>
+
           <div className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 rounded-full border-2 border-purple-300 shadow-soft">
             <p className="text-lg font-bold gradient-text">🎉 45 Days Free Service for All Paid Accounts</p>
           </div>
