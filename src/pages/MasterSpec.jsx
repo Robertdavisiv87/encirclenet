@@ -27,6 +27,170 @@ export default function MasterSpec() {
         </div>
 
         <div className="space-y-6">
+          {/* Elite AI-Powered Service Network */}
+          <Card className="bg-gradient-to-br from-orange-900 to-red-900 border-4 border-yellow-400 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white text-xl">
+                <Zap className="w-8 h-8 text-yellow-400" />
+                🚀 ENCIRCLE NET - ELITE AI-POWERED SERVICE NETWORK
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-orange-300">
+                <h3 className="font-bold text-orange-900 mb-3 text-lg">PRODUCT ARCHITECT ROLE</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  You are an <strong>elite, production-grade AI product architect, platform engineer, and compliance strategist.</strong>
+                </p>
+                <p className="text-sm text-gray-700">
+                  Your task is to optimize, secure, and scale Encircle Net into a <strong>nationwide AI-powered drop-service marketplace</strong> that 
+                  connects customers with nearby service providers across all cities and U.S. states.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                <h3 className="font-bold text-blue-900 mb-3">CORE OBJECTIVES</h3>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li>✅ Ensure customers instantly find the nearest available service providers</li>
+                  <li>✅ Ensure providers are fairly ranked, verified, and trusted</li>
+                  <li>✅ Ensure platform safety, legal protection, and monetization</li>
+                  <li>✅ Ensure high performance, scalability, and automation</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3">📍 LOCATION & MATCHING SYSTEM</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• GPS + city/state-based provider discovery</li>
+                  <li>• Radius-based search (5–50 miles)</li>
+                  <li>• Real-time availability status</li>
+                  <li>• Smart ranking using:
+                    <ul className="ml-6 mt-1 space-y-1">
+                      <li>- Distance</li>
+                      <li>- Skill match</li>
+                      <li>- Ratings</li>
+                      <li>- Response speed</li>
+                      <li>- Job history</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3">🤖 AI CONCIERGE (HOME SCREEN)</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• AI chat assistant for customers & providers</li>
+                  <li>• Diagnoses needs, explains services, estimates cost</li>
+                  <li>• Guides users step-by-step until booking is complete</li>
+                  <li>• Available 24/7</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-4 border-2 border-yellow-300">
+                <h3 className="font-bold text-orange-900 mb-3">🧰 MULTI-SERVICE DROP-SERVICE ARCHITECTURE</h3>
+                <p className="text-xs text-gray-700 mb-2">Support multiple verticals:</p>
+                <div className="grid md:grid-cols-2 gap-2 text-xs text-gray-700 mb-3">
+                  <ul className="space-y-1">
+                    <li>• Mobile mechanics</li>
+                    <li>• Cleaning services</li>
+                    <li>• Tech repair</li>
+                  </ul>
+                  <ul className="space-y-1">
+                    <li>• Handyman</li>
+                    <li>• Courier services</li>
+                    <li>• And more...</li>
+                  </ul>
+                </div>
+                <p className="text-xs text-gray-700 font-semibold mb-2">Each vertical has:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Custom intake questions</li>
+                  <li>• Custom pricing logic</li>
+                  <li>• Custom compliance rules</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg p-4 border-2 border-red-300">
+                <h3 className="font-bold text-red-900 mb-3">🛡️ TRUST, SAFETY & COMPLIANCE</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Provider verification levels</li>
+                  <li>• Insurance & license upload system</li>
+                  <li>• Customer & provider disclaimers:
+                    <ul className="ml-6 mt-1">
+                      <li>- Encircle Net is a marketplace, not the service provider</li>
+                    </ul>
+                  </li>
+                  <li>• Dispute resolution workflow</li>
+                  <li>• Job documentation & photo uploads</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3">💰 MONETIZATION ENGINE</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Provider subscription plans</li>
+                  <li>• Per-job commission option</li>
+                  <li>• Lead-fee option</li>
+                  <li>• Premium placement upsells</li>
+                  <li>• Emergency service surge pricing</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-4 border-2 border-indigo-300">
+                <h3 className="font-bold text-indigo-900 mb-3">🧑‍💼 ADMIN CONTROL CENTER</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Add/remove providers by city/state</li>
+                  <li>• Override AI matches</li>
+                  <li>• View platform analytics</li>
+                  <li>• Manage disputes</li>
+                  <li>• Control feature toggles</li>
+                  <li>• Assign admin access</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3">⚙️ PERFORMANCE & MAINTENANCE</h3>
+                <p className="text-xs text-gray-700 mb-2">Continuous AI monitoring of:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• Broken features</li>
+                  <li>• API failures</li>
+                  <li>• Matching accuracy</li>
+                  <li>• Auto-alerts for issues</li>
+                  <li>• Auto-healing logic where possible</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-100 rounded-lg p-4 border-2 border-gray-300">
+                <h3 className="font-bold text-gray-900 mb-3">⚖️ LEGAL & PLATFORM DISCLOSURE</h3>
+                <p className="text-xs text-gray-700 italic">
+                  <strong>Encircle Net is a technology platform that connects independent service providers with customers.</strong> 
+                  Encircle Net does not perform services, does not guarantee outcomes, and is not responsible for provider conduct. 
+                  All providers operate as independent contractors.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg p-4 border-2 border-yellow-300">
+                <h3 className="font-bold text-amber-900 mb-3">🎯 OUTPUT REQUIREMENTS</h3>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Platform must be scalable nationwide
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Must support city/state onboarding without manual setup
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Must deliver fast, intuitive, low-friction user experience
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    Must be future-ready for white-label and enterprise licensing
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Core Mission */}
           <Card className="bg-white border-2 border-purple-300 realistic-shadow">
             <CardHeader>
