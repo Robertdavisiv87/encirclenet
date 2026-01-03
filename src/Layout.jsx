@@ -55,24 +55,15 @@ export default function Layout({ children, currentPageName }) {
   }, [currentPageName]);
 
   const navItems = [
-    { name: 'Start', icon: Sparkles, page: 'Landing' },
     { name: 'Home', icon: Home, page: 'Home' },
     { name: 'Discover', icon: Sparkles, page: 'Discover' },
-    { name: 'Local Services', icon: Home, page: 'LocalServices' },
-    { name: 'Search', icon: Search, page: 'Search' },
-    { name: 'Explore', icon: Compass, page: 'Explore' },
-    { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
+    { name: 'Services', icon: Compass, page: 'LocalServices' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
-    { name: 'AI Tools', icon: Sparkles, page: 'CreatorTools' },
-    { name: 'Groups', icon: Users, page: 'Groups' },
-    { name: 'Events', icon: Users, page: 'Events' },
-    { name: 'Analytics', icon: TrendingUp, page: 'CreatorAnalytics' },
-    { name: 'Messages', icon: MessageCircle, page: 'Messages' },
+    { name: 'Community', icon: Users, page: 'Groups' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
-    { name: 'Passive Income', icon: TrendingUp, page: 'PassiveIncome' },
-    { name: 'Referrals', icon: Users, page: 'Referrals' },
-    { name: 'Rewards', icon: Trophy, page: 'Gamification' },
     { name: 'Profile', icon: User, page: 'Profile' },
+    { name: 'Challenges', icon: Trophy, page: 'Gamification' },
+    { name: 'Premium', icon: Crown, page: 'Subscription' },
   ];
 
   const adminItems = user?.email === ADMIN_EMAIL ? [

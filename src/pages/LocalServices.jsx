@@ -17,6 +17,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
 
@@ -118,6 +119,30 @@ export default function LocalServices() {
             </CardContent>
           </Card>
         </div>
+
+        {/* AI Suggestions */}
+        <AISuggestions
+          title="Popular Near You"
+          suggestions={[
+            {
+              type: 'trending',
+              title: 'Mobile Mechanic',
+              description: 'Average $75/hr in your area',
+              cta: 'Book',
+              action: 'mechanic'
+            },
+            {
+              type: 'earning',
+              title: 'House Cleaning',
+              description: '4.9★ rated providers nearby',
+              cta: 'Hire',
+              action: 'cleaning'
+            }
+          ]}
+          onAction={(suggestion) => {
+            window.location.href = `${createPageUrl('ServiceRequest')}?vertical=${suggestion.action}`;
+          }}
+        />
 
         {isLoading && (
           <div className="flex items-center justify-center py-20">

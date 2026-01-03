@@ -25,6 +25,7 @@ import { useToast } from '@/components/ui/use-toast';
 import MultiStreamDashboard from '../components/monetization/MultiStreamDashboard';
 import AffiliateTracker from '../components/monetization/AffiliateTracker';
 import ReferralCard from '../components/monetization/ReferralCard';
+import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
 
@@ -293,6 +294,29 @@ export default function CreatorEconomy() {
         </div>
 
         <TabsContent value="overview">
+          <AISuggestions
+            title="Boost Your Earnings"
+            suggestions={[
+              {
+                type: 'earning',
+                title: 'Activate Affiliate Program',
+                description: 'Earn 15% commission per sale',
+                cta: 'Start',
+                action: 'affiliate'
+              },
+              {
+                type: 'trending',
+                title: 'Create Premium Content',
+                description: 'Top earners make $500+/mo',
+                cta: 'Learn',
+                action: 'premium'
+              }
+            ]}
+            onAction={(suggestion) => {
+              if (suggestion.action === 'affiliate') navigate(createPageUrl('PassiveIncome'));
+              if (suggestion.action === 'premium') navigate(createPageUrl('Create'));
+            }}
+          />
           <MultiStreamDashboard 
             earnings={earnings} 
             onCashOut={() => toast({

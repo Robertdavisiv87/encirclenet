@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, TrendingUp, Users, Sparkles } from 'lucide-react';
 import PostCard from '../components/feed/PostCard';
 import GroupPostCard from '../components/groups/GroupPostCard';
+import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import {
   Select,
@@ -177,6 +178,39 @@ export default function Discover() {
       </div>
 
       <div className="p-4">
+        {/* AI Suggestions */}
+        <AISuggestions
+          title="Recommended For You"
+          suggestions={[
+            {
+              type: 'trending',
+              title: 'Trending: Freelance Design',
+              description: '50+ new gigs posted today',
+              cta: 'Explore',
+              action: 'browse_design'
+            },
+            {
+              type: 'earning',
+              title: 'High-Paying Tasks',
+              description: 'Earn $50-$200 per project',
+              cta: 'Start',
+              action: 'start_task'
+            },
+            {
+              type: 'community',
+              title: 'Join Digital Marketing Group',
+              description: '2.5K active members',
+              cta: 'Join',
+              action: 'join_group'
+            }
+          ]}
+          onAction={(suggestion) => {
+            if (suggestion.action === 'browse_design') window.location.href = '/search';
+            if (suggestion.action === 'start_task') window.location.href = '/create';
+            if (suggestion.action === 'join_group') window.location.href = '/groups';
+          }}
+        />
+
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           <Card className="border-2 border-purple-200">

@@ -20,6 +20,8 @@ import Forums from './pages/Forums';
 import Gamification from './pages/Gamification';
 import Groups from './pages/Groups';
 import Home from './pages/Home';
+import Landing from './pages/Landing';
+import LocalServices from './pages/LocalServices';
 import ManageServiceVerticals from './pages/ManageServiceVerticals';
 import Marketplace from './pages/Marketplace';
 import MasterSpec from './pages/MasterSpec';
@@ -40,8 +42,6 @@ import TrustCenter from './pages/TrustCenter';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Landing from './pages/Landing';
-import LocalServices from './pages/LocalServices';
 import __Layout from './Layout.jsx';
 
 
@@ -68,6 +68,8 @@ export const PAGES = {
     "Gamification": Gamification,
     "Groups": Groups,
     "Home": Home,
+    "Landing": Landing,
+    "LocalServices": LocalServices,
     "ManageServiceVerticals": ManageServiceVerticals,
     "Marketplace": Marketplace,
     "MasterSpec": MasterSpec,
@@ -88,8 +90,6 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Landing": Landing,
-    "LocalServices": LocalServices,
 }
 
 export const pagesConfig = {
