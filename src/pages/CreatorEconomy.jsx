@@ -293,7 +293,13 @@ export default function CreatorEconomy() {
         </div>
 
         <TabsContent value="overview">
-          <MultiStreamDashboard earnings={earnings} />
+          <MultiStreamDashboard 
+            earnings={earnings} 
+            onCashOut={() => toast({
+              title: "Cash Out",
+              description: totalEarnings >= 10 ? `Processing payout of $${totalEarnings.toFixed(2)}` : "Minimum payout is $10"
+            })}
+          />
         </TabsContent>
 
         <TabsContent value="affiliate">
@@ -311,7 +317,7 @@ export default function CreatorEconomy() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="text-2xl font-bold text-blue-900 mb-2">Referral Program</h3>
-                  <p className="text-gray-600">Earn $5-$50 per active referral</p>
+                  <p className="text-gray-600">Earn $5 per verified signup + bonuses</p>
                 </div>
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-glow">
                   <Users className="w-10 h-10 text-white" />

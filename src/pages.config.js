@@ -20,26 +20,26 @@ import Forums from './pages/Forums';
 import Gamification from './pages/Gamification';
 import Groups from './pages/Groups';
 import Home from './pages/Home';
+import ManageServiceVerticals from './pages/ManageServiceVerticals';
 import Marketplace from './pages/Marketplace';
 import MasterSpec from './pages/MasterSpec';
 import Messages from './pages/Messages';
 import ModerationDashboard from './pages/ModerationDashboard';
 import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
+import PassiveIncome from './pages/PassiveIncome';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import ScheduleQA from './pages/ScheduleQA';
 import Search from './pages/Search';
+import ServiceRequest from './pages/ServiceRequest';
 import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
+import TrustCenter from './pages/TrustCenter';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import ManageServiceVerticals from './pages/ManageServiceVerticals';
-import ServiceRequest from './pages/ServiceRequest';
-import TrustCenter from './pages/TrustCenter';
-import PassiveIncome from './pages/PassiveIncome';
 import __Layout from './Layout.jsx';
 
 
@@ -66,26 +66,26 @@ export const PAGES = {
     "Gamification": Gamification,
     "Groups": Groups,
     "Home": Home,
+    "ManageServiceVerticals": ManageServiceVerticals,
     "Marketplace": Marketplace,
     "MasterSpec": MasterSpec,
     "Messages": Messages,
     "ModerationDashboard": ModerationDashboard,
     "MyCircle": MyCircle,
     "Onboarding": Onboarding,
+    "PassiveIncome": PassiveIncome,
     "Profile": Profile,
     "Referrals": Referrals,
     "ScheduleQA": ScheduleQA,
     "Search": Search,
+    "ServiceRequest": ServiceRequest,
     "Settings": Settings,
     "Subscription": Subscription,
     "SystemStatus": SystemStatus,
+    "TrustCenter": TrustCenter,
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "ManageServiceVerticals": ManageServiceVerticals,
-    "ServiceRequest": ServiceRequest,
-    "TrustCenter": TrustCenter,
-    "PassiveIncome": PassiveIncome,
 }
 
 export const pagesConfig = {

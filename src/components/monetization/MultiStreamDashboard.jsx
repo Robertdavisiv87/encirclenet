@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -8,11 +9,12 @@ import {
   Link as LinkIcon,
   Crown,
   Zap,
-  Target
+  Target,
+  Wallet
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function MultiStreamDashboard({ earnings = {} }) {
+export default function MultiStreamDashboard({ earnings = {}, onCashOut }) {
   const streams = [
     {
       id: 'tips',
@@ -90,7 +92,15 @@ export default function MultiStreamDashboard({ earnings = {} }) {
               <TrendingUp className="w-6 h-6" />
             </div>
             <p className="text-sm opacity-90 mb-1">Total Earnings (All Time)</p>
-            <p className="text-4xl font-bold">${totalEarnings.toFixed(2)}</p>
+            <p className="text-4xl font-bold mb-3">${totalEarnings.toFixed(2)}</p>
+            <Button 
+              onClick={onCashOut}
+              disabled={totalEarnings < 10}
+              className="w-full bg-white text-green-700 hover:bg-gray-100 font-semibold"
+            >
+              <Wallet className="w-4 h-4 mr-2" />
+              Cash Out {totalEarnings >= 10 ? `$${totalEarnings.toFixed(2)}` : '(Min $10)'}
+            </Button>
           </CardContent>
         </Card>
 
@@ -223,3 +233,5 @@ export default function MultiStreamDashboard({ earnings = {} }) {
     </div>
   );
 }
+
+import { Button } from '@/components/ui/button';
