@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, DollarSign, Mic, Lock, Trash2, Link2, Flag, EyeOff, Share2 } from 'lucide-react';
 import MonetizationEligibility from '../monetization/MonetizationEligibility';
 import ReportButton from '../moderation/ReportButton';
+import CommentsModal from './CommentsModal';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -28,6 +29,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
   const [userSubscription, setUserSubscription] = useState(null);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -374,7 +376,7 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
               )} />
             </button>
             <button 
-              onClick={() => window.location.href = `/messages?user=${post.created_by}`}
+              onClick={() => setShowCommentsModal(true)}
               className="hover:opacity-70 transition-opacity"
             >
               <MessageCircle className="w-7 h-7 text-gray-700" />
@@ -405,6 +407,15 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         </div>
 
         <p className="font-semibold text-sm mb-2 text-blue-900">{likesCount} likes</p>
+        
+        {post.comments_count > 0 && (
+          <button 
+            onClick={() => setShowCommentsModal(true)}
+            className="text-sm text-gray-600 hover:text-gray-800 mb-2 block"
+          >
+            View all {post.comments_count} comments
+          </button>
+        )}
         
         {post.content_type !== 'text' && post.caption && (
           <p className="text-sm text-blue-800">
@@ -500,6 +511,14 @@ export default function PostCard({ post, currentUser, onLike, onTip }) {
         imageUrl={post.media_url}
         caption={post.caption}
         onClose={() => setShowImageLightbox(false)}
+      />
+
+      {/* Comments Modal */}
+      <CommentsModal
+        post={post}
+        isOpen={showCommentsModal}
+        onClose={() => setShowCommentsModal(false)}
+        currentUser={currentUser}
       />
     </div>
   );
