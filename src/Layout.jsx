@@ -61,6 +61,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Explore', icon: Compass, page: 'Explore' },
     { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
     { name: 'Services', icon: Sparkles, page: 'ServiceRequest' },
+    { name: 'Trust Center', icon: Shield, page: 'TrustCenter' },
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'AI Tools', icon: Sparkles, page: 'CreatorTools' },
     { name: 'Community', icon: Users, page: 'Community' },

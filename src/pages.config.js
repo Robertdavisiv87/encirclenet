@@ -38,6 +38,7 @@ import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
 import ManageServiceVerticals from './pages/ManageServiceVerticals';
 import ServiceRequest from './pages/ServiceRequest';
+import TrustCenter from './pages/TrustCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -82,6 +83,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "ManageServiceVerticals": ManageServiceVerticals,
     "ServiceRequest": ServiceRequest,
+    "TrustCenter": TrustCenter,
 }
 
 export const pagesConfig = {
