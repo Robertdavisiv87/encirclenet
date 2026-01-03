@@ -73,12 +73,12 @@ export default function CreatorEconomy() {
     };
     loadUser();
     
-    // Auto-refresh earnings every 30 seconds
+    // Auto-refresh earnings every 60 seconds
     const interval = setInterval(() => {
       base44.functions.invoke('syncUserEarnings', {}).catch(e => {
         console.log('Auto-sync failed:', e);
       });
-    }, 30000);
+    }, 60000);
     
     return () => clearInterval(interval);
   }, []);
@@ -223,7 +223,7 @@ export default function CreatorEconomy() {
       type: 'payout'
     }),
     enabled: !!user?.email,
-    refetchInterval: 60000
+    refetchInterval: 60000 // Auto-refresh every 60 seconds
   });
 
   const handleCopyReferralLink = () => {
