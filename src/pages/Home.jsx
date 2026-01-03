@@ -7,6 +7,7 @@ import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
 import TikTokVerticalFeed from '../components/feed/TikTokVerticalFeed';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
+import MoneyMissionFlow from '../components/onboarding/MoneyMissionFlow';
 import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
 import ReferralSuccessNotification from '../components/referrals/ReferralSuccessNotification';
@@ -39,6 +40,8 @@ export default function Home() {
   const [showGrowPrompt, setShowGrowPrompt] = useState(false);
   const queryClient = useQueryClient();
 
+  const [showMoneyMission, setShowMoneyMission] = useState(false);
+
   useEffect(() => {
     let mounted = true;
     
@@ -47,6 +50,14 @@ export default function Home() {
         const currentUser = await base44.auth.me();
         if (mounted) {
           setUser(currentUser);
+          
+          // Check if user has started money mission
+          const missions = await base44.entities.MoneyMission.filter({ user_email: currentUser.email });
+          if (missions.length === 0) {
+            setTimeout(() => {
+              if (mounted) setShowMoneyMission(true);
+            }, 3000);
+          }
           
           const lastPromptDate = localStorage.getItem('lastGrowPromptDate');
           const today = new Date().toDateString();
@@ -159,6 +170,11 @@ export default function Home() {
           title="Encircle Net Feed - Viral Content & High Engagement Social Media"
           description="Discover trending posts, viral content, and connect with top creators on Encircle Net. The most engaging social media platform with real-time interactions."
           url="https://encirclenet.net"
+        />
+        <MoneyMissionFlow 
+          isOpen={showMoneyMission} 
+          onClose={() => setShowMoneyMission(false)} 
+          user={user}
         />
         <GrowAndEarnPrompt isOpen={showGrowPrompt} onClose={handleCloseGrowPrompt} />
         {/* Floating Header */}

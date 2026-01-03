@@ -27,6 +27,169 @@ export default function MasterSpec() {
         </div>
 
         <div className="space-y-6">
+          {/* The Missing Power - 24-Hour Money Mission */}
+          <Card className="bg-gradient-to-br from-green-900 to-emerald-900 border-4 border-yellow-400 realistic-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white text-xl">
+                <DollarSign className="w-8 h-8 text-yellow-400" />
+                💰 THE MISSING POWER: 24-HOUR MONEY MISSION
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-white rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3 text-lg">CORE FEATURE: Your First Dollar in 24 Hours</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  Every new user enters a guided flow that actively pushes them toward income-producing actions.
+                </p>
+                <div className="bg-green-50 rounded-lg p-3 border border-green-200 mt-3">
+                  <p className="text-xs font-semibold text-green-900">
+                    ✅ Clear monetization paths<br/>
+                    ✅ Location-based matching<br/>
+                    ✅ Fast activation flow<br/>
+                    ✅ AI guidance at every step<br/>
+                    ✅ Built-in trust & safety<br/>
+                    ✅ Proof-of-action system (not passive browsing)
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border-2 border-blue-300">
+                <h3 className="font-bold text-blue-900 mb-3">🟢 STEP 1: Smart Role Selection (5 Minutes)</h3>
+                <p className="text-xs text-gray-700 mb-2 font-semibold">"How do you want to make money on Encircle Net today?"</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>🔧 Offer a Service (Mechanic, Cleaner, Tech, Freelancer)</li>
+                  <li>🤝 Connect Buyers & Providers (Drop Servicer)</li>
+                  <li>📢 Promote Local Services (Affiliate Style)</li>
+                  <li>🧠 Digital Hustles (AI tasks, posting, outreach)</li>
+                  <li>🚚 Mobile / On-Demand Services</li>
+                </ul>
+                <p className="text-xs text-gray-600 mt-2 italic">Auto-configures: Dashboard, Recommended gigs, Nearby demand, AI scripts</p>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                <h3 className="font-bold text-purple-900 mb-3">🟢 STEP 2: Instant Location Matching (5 Minutes)</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• GPS + city/state selection</li>
+                  <li>• Radius filter (5–50 miles)</li>
+                  <li>• "Available Now" toggle</li>
+                  <li>• Heatmap of nearby demand</li>
+                </ul>
+                <p className="text-xs text-purple-700 mt-2 font-semibold">
+                  Result: Users instantly see real people near them who need services
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg p-4 border-2 border-orange-300">
+                <h3 className="font-bold text-orange-900 mb-3">🟢 STEP 3: One-Tap Service Activation (10 Minutes)</h3>
+                <p className="text-xs text-gray-700 mb-2">Pre-built service templates:</p>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>• "Mobile Mechanic – Diagnostics"</li>
+                  <li>• "Same-Day Home Cleaning"</li>
+                  <li>• "Local Lead Connector"</li>
+                  <li>• "AI Setup for Small Business"</li>
+                </ul>
+                <p className="text-xs text-gray-600 mt-2 italic">
+                  Auto-generates: Service description, Pricing, Delivery timeline, Safety disclaimer
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg p-4 border-2 border-cyan-300">
+                <h3 className="font-bold text-cyan-900 mb-3">🟢 STEP 4: AI Money Assistant (Always On)</h3>
+                <p className="text-xs text-gray-700 mb-2 font-semibold">Built-in chat bot on home screen</p>
+                <div className="grid md:grid-cols-2 gap-2 text-xs text-gray-700">
+                  <ul className="space-y-1">
+                    <li>• Suggest fastest-paying gigs</li>
+                    <li>• Write outreach messages</li>
+                    <li>• Negotiate prices</li>
+                    <li>• Match providers</li>
+                  </ul>
+                  <ul className="space-y-1">
+                    <li>• Close deals</li>
+                    <li>• Handle objections</li>
+                    <li>• Recommend upsells</li>
+                    <li>• Track progress</li>
+                  </ul>
+                </div>
+                <div className="bg-cyan-100 rounded-lg p-2 border border-cyan-200 mt-2">
+                  <p className="text-xs font-semibold text-cyan-900">"Want me to help you land your first paid job today?"</p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-indigo-50 to-violet-50 rounded-lg p-4 border-2 border-indigo-300">
+                <h3 className="font-bold text-indigo-900 mb-3">🟢 STEP 5: Fast Outreach Engine (15–30 Minutes)</h3>
+                <p className="text-xs text-gray-700 mb-2">Ready-to-send scripts via:</p>
+                <ul className="space-y-1 text-xs text-gray-700 mb-2">
+                  <li>• SMS • In-app messages • Email • Social DM copy</li>
+                </ul>
+                <div className="bg-indigo-100 rounded-lg p-2 border border-indigo-200">
+                  <p className="text-xs text-gray-700 italic">
+                    "Hey! I saw you needed a mobile mechanic nearby. I can connect you with someone available today. Want me to handle it?"
+                  </p>
+                </div>
+                <p className="text-xs text-indigo-700 mt-2 font-semibold">
+                  Enables drop servicing immediately, even without skills
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+                <h3 className="font-bold text-green-900 mb-3">🟢 STEP 6: Escrow + Payout Protection</h3>
+                <ul className="space-y-1 text-xs text-gray-700">
+                  <li>1. Customer pays upfront</li>
+                  <li>2. Provider completes job</li>
+                  <li>3. Funds released automatically</li>
+                  <li>4. Platform takes commission</li>
+                  <li>5. User gets paid same or next day</li>
+                </ul>
+              </div>
+
+              <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg p-4 border-2 border-red-300">
+                <h3 className="font-bold text-red-900 mb-3">🟢 STEP 7: Trust & Safety Layer</h3>
+                <div className="grid md:grid-cols-2 gap-2 text-xs text-gray-700">
+                  <ul className="space-y-1">
+                    <li>• ID verification</li>
+                    <li>• Ratings & reviews</li>
+                    <li>• Job confirmation photos</li>
+                  </ul>
+                  <ul className="space-y-1">
+                    <li>• Dispute resolution AI</li>
+                    <li>• Safety compliance</li>
+                    <li>• Legal disclaimers</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg p-4 border-2 border-yellow-300">
+                <h3 className="font-bold text-orange-900 mb-3">💰 HOW USERS MAKE MONEY IN 24 HOURS</h3>
+                <div className="grid md:grid-cols-2 gap-3 text-xs">
+                  <div className="bg-white rounded-lg p-2 border border-gray-200">
+                    <p className="font-semibold text-gray-900">🔧 Service Providers</p>
+                    <p className="text-gray-600">Turn on availability → Accept nearby jobs → Get paid same day</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 border border-gray-200">
+                    <p className="font-semibold text-gray-900">🤝 Drop Servicers</p>
+                    <p className="text-gray-600">Find customers → Assign to providers → Keep the margin</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 border border-gray-200">
+                    <p className="font-semibold text-gray-900">📢 Affiliates</p>
+                    <p className="text-gray-600">Share service links → Earn per booking</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-2 border border-gray-200">
+                    <p className="font-semibold text-gray-900">🧠 Digital Hustlers</p>
+                    <p className="text-gray-600">AI-assisted tasks → Outreach & lead gen → Paid micro-gigs</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-yellow-100 rounded-lg p-4 border-2 border-yellow-300">
+                <h3 className="font-bold text-yellow-900 mb-2">🔥 WHY THIS CHANGES EVERYTHING</h3>
+                <p className="text-sm text-gray-700 font-semibold">
+                  Encircle Net doesn't just list services — it forces momentum. Users aren't left asking "Now what?" 
+                  The app tells them exactly what to do next to get paid.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Elite AI-Powered Service Network */}
           <Card className="bg-gradient-to-br from-orange-900 to-red-900 border-4 border-yellow-400 realistic-shadow">
             <CardHeader>
