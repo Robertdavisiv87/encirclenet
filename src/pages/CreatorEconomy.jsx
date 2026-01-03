@@ -180,12 +180,18 @@ export default function CreatorEconomy() {
   const { data: referrals = [], refetch: refetchReferrals } = useQuery({
     queryKey: ['referrals', user?.email],
     queryFn: async () => {
+      // Sync referrals first to catch any new ones
+      try {
+        await base44.functions.invoke('syncReferrals', {});
+      } catch (e) {
+        console.log('Sync during fetch:', e);
+      }
       const allReferrals = await base44.entities.Referral.filter({ referrer_email: user?.email });
       console.log('Referrals loaded:', allReferrals);
       return allReferrals;
     },
     enabled: !!user?.email,
-    refetchInterval: 10000, // Refresh every 10 seconds for real-time updates
+    refetchInterval: 15000, // Refresh every 15 seconds for real-time updates
     refetchOnMount: true,
     refetchOnWindowFocus: true
   });
@@ -332,12 +338,12 @@ export default function CreatorEconomy() {
     }
   };
 
-  // Calculate accurate earnings from all sources (include ALL referral earnings regardless of status)
+  // Calculate accurate earnings from all sources
   const tipsTotal = tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
   const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90; // 90% revenue share
   const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0); // All referrals count
   const affiliateTotal = affiliateLinks.reduce((sum, a) => sum + (a.earnings || 0), 0);
-  
+
   const earnings = {
     tips: tipsTotal,
     subscriptions: subscriptionsTotal,
@@ -347,9 +353,12 @@ export default function CreatorEconomy() {
     brands: brandAccount?.total_spent || 0
   };
 
-  // Include Stripe balance (migrated earnings)
+  // If migrated, use Stripe balance; otherwise use calculated platform earnings
   const stripeBalance = user?.stripe_balance || 0;
-  const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0) + stripeBalance;
+  const platformEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
+
+  // Total earnings = migrated Stripe balance OR unmigrated platform earnings (not both)
+  const totalEarnings = user?.earnings_migrated ? stripeBalance : platformEarnings;
   const totalPayouts = payouts.reduce((sum, p) => sum + (p.amount || 0), 0);
   const availableBalance = totalEarnings - totalPayouts;
   
@@ -505,20 +514,26 @@ export default function CreatorEconomy() {
               whileHover={{ scale: 1.05 }}
               className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow cursor-pointer"
               onClick={() => {
-                if (totalEarnings >= 10) {
-                  handlePayout();
+                if (availableBalance >= 10 && user?.stripe_account_id) {
+                  setShowConfirmModal(true);
+                } else if (!user?.stripe_account_id) {
+                  toast({
+                    title: "Connect Bank Account",
+                    description: "Link your bank account to cash out earnings"
+                  });
+                  setShowBankSetup(true);
                 } else {
                   toast({
                     title: "Keep Earning!",
-                    description: `You need $${(10 - totalEarnings).toFixed(2)} more to cash out.`
+                    description: `You need $${(10 - availableBalance).toFixed(2)} more to cash out.`
                   });
                 }
               }}
             >
-              <p className="text-sm opacity-90 mb-1">Total Earnings</p>
-              <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
+              <p className="text-sm opacity-90 mb-1">Available to Cash Out</p>
+              <p className="text-3xl font-bold">${availableBalance.toFixed(2)}</p>
               <p className="text-xs opacity-75 mt-2">
-                {totalEarnings >= 10 ? 'Click to Cash Out' : `Need $${(10 - totalEarnings).toFixed(2)} more`}
+                {availableBalance >= 10 && user?.stripe_account_id ? '✅ Click to Cash Out' : availableBalance >= 10 ? '🔗 Connect Bank' : `Need $${(10 - availableBalance).toFixed(2)} more`}
               </p>
             </motion.div>
           </div>
@@ -529,8 +544,8 @@ export default function CreatorEconomy() {
           {[
             { label: 'Active Streams', value: Object.values(earnings).filter(e => e > 0).length.toString(), icon: Zap, color: 'from-purple-500 to-pink-500' },
             { label: 'Total Referrals', value: referrals.length.toString(), icon: Users, color: 'from-blue-500 to-cyan-500' },
-            { label: 'Tips Received', value: tipTransactions.length.toString(), icon: DollarSign, color: 'from-green-500 to-emerald-500' },
-            { label: 'This Month', value: `$${totalEarnings.toFixed(2)}`, icon: TrendingUp, color: 'from-orange-500 to-red-500' }
+            { label: 'Total Earnings', value: `$${totalEarnings.toFixed(2)}`, icon: DollarSign, color: 'from-green-500 to-emerald-500' },
+            { label: 'Available Balance', value: `$${availableBalance.toFixed(2)}`, icon: TrendingUp, color: 'from-orange-500 to-red-500' }
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
@@ -701,10 +716,13 @@ export default function CreatorEconomy() {
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
-                  <p className="text-sm text-gray-600 mb-1">Earnings</p>
+                  <p className="text-sm text-gray-600 mb-1">Total Earned</p>
                   <p className="text-3xl font-bold text-purple-900">
                     ${referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0).toFixed(2)}
                   </p>
+                  {user?.earnings_migrated && (
+                    <p className="text-xs text-green-600 mt-1">✅ Synced to Stripe</p>
+                  )}
                 </div>
               </div>
 
