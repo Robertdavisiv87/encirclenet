@@ -12,7 +12,7 @@ import SmartSuggestions from '../components/ai/SmartSuggestions';
 import ReferralSuccessNotification from '../components/referrals/ReferralSuccessNotification';
 import PersonalizedRecommendations from '../components/recommendations/PersonalizedRecommendations';
 import FilteredFeed from '../components/feed/FilteredFeed';
-import { Loader2, RefreshCw, Search } from 'lucide-react';
+import { Loader2, RefreshCw, Search, TrendingUp } from 'lucide-react';
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
@@ -24,8 +24,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
-import { Menu, User, Settings, LogOut } from 'lucide-react';
+import { Menu, User, Settings, LogOut, Crown, DollarSign, Shield, Palette, Bell, Lock } from 'lucide-react';
 
 const mockAds = [
   { id: 'ad1', type: 'ppc', title: 'Premium Fitness App', description: 'Get fit in 30 days. Join 1M+ users today!', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop', url: 'https://example.com', cta: 'Start Free Trial', value: 0.5 },
@@ -180,6 +181,7 @@ export default function Home() {
               >
                 <RefreshCw className="w-5 h-5" />
               </Button>
+              {user && <NotificationDropdown user={user} />}
               {user && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -187,7 +189,9 @@ export default function Home() {
                       <Menu className="w-5 h-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuContent align="end" className="w-64">
+                    <DropdownMenuLabel className="font-bold gradient-text">My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Profile')}>
                       <User className="w-4 h-4 mr-2" />
                       Profile
@@ -197,7 +201,33 @@ export default function Home() {
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => base44.auth.logout()}>
+                    <DropdownMenuLabel className="text-xs text-gray-500">Elite Features</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Subscription')}>
+                      <Crown className="w-4 h-4 mr-2 text-purple-600" />
+                      Subscription & Tier
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('CreatorEconomy')}>
+                      <DollarSign className="w-4 h-4 mr-2 text-green-600" />
+                      Monetization Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('CreatorAnalytics')}>
+                      <TrendingUp className="w-4 h-4 mr-2 text-blue-600" />
+                      Analytics & Insights
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Profile')}>
+                      <Palette className="w-4 h-4 mr-2 text-pink-600" />
+                      Profile Customization
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Settings')}>
+                      <Lock className="w-4 h-4 mr-2 text-orange-600" />
+                      Privacy Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('ModerationDashboard')}>
+                      <Shield className="w-4 h-4 mr-2 text-red-600" />
+                      Content Moderation
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => base44.auth.logout()} className="text-red-600">
                       <LogOut className="w-4 h-4 mr-2" />
                       Logout
                     </DropdownMenuItem>
