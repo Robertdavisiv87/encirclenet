@@ -532,10 +532,40 @@ export default function CreatorEconomy() {
               size="icon"
               onClick={handleRefreshEarnings}
               className="border-2 border-purple-300 hover:bg-purple-50"
-              title="Refresh all earnings data"
+              title="Sync referrals & migrate earnings"
             >
               <RefreshCw className="w-4 h-4" />
             </Button>
+            {user?.stripe_account_id && !user?.earnings_migrated && (
+              <Button
+                onClick={async () => {
+                  try {
+                    const result = await base44.functions.invoke('migrateEarningsToStripe', {});
+                    if (result.data.migrated_amount > 0) {
+                      toast({
+                        title: "✅ Migration Complete!",
+                        description: `$${result.data.migrated_amount.toFixed(2)} transferred`
+                      });
+                      setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                      toast({
+                        title: "No Earnings Found",
+                        description: "Click refresh button to sync referrals first"
+                      });
+                    }
+                  } catch (e) {
+                    toast({
+                      title: "Migration Failed",
+                      description: e.message,
+                      variant: "destructive"
+                    });
+                  }
+                }}
+                className="gradient-bg-primary text-white"
+              >
+                Migrate Earnings Now
+              </Button>
+            )}
             <motion.div
               whileHover={{ scale: 1.05 }}
               className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow cursor-pointer"

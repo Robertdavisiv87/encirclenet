@@ -69,18 +69,31 @@ Deno.serve(async (req) => {
       affiliateEarnings + 
       shopEarnings + 
       brandEarnings;
+    
+    console.log(`📊 Earnings Breakdown for ${user.email}:`, {
+      referrals: `$${referralEarnings} (${referrals.length} referrals)`,
+      tips: `$${tipsEarnings}`,
+      subscriptions: `$${subscriptionEarnings}`,
+      affiliate: `$${affiliateEarnings}`,
+      shop: `$${shopEarnings}`,
+      brands: `$${brandEarnings}`,
+      TOTAL: `$${totalPendingEarnings}`
+    });
 
-    // If no earnings to migrate, mark as migrated anyway
+    // If no earnings to migrate, DON'T mark as migrated (allow retry)
     if (totalPendingEarnings <= 0) {
-      await base44.asServiceRole.auth.updateMe({
-        earnings_migrated: true,
-        stripe_balance: 0
-      });
-      
       return Response.json({ 
         success: true, 
-        message: 'No pending earnings to migrate',
-        migrated_amount: 0
+        message: 'No pending earnings detected. Run sync first.',
+        migrated_amount: 0,
+        breakdown: {
+          referrals: referralEarnings,
+          tips: tipsEarnings,
+          subscriptions: subscriptionEarnings,
+          affiliate: affiliateEarnings,
+          shop: shopEarnings,
+          brands: brandEarnings
+        }
       });
     }
 
