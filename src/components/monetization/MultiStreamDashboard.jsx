@@ -95,11 +95,11 @@ export default function MultiStreamDashboard({ earnings = {}, onCashOut }) {
             <p className="text-4xl font-bold mb-3">${totalEarnings.toFixed(2)}</p>
             <Button 
               onClick={onCashOut}
-              disabled={totalEarnings < 10}
-              className="w-full bg-white text-green-700 hover:bg-gray-100 font-semibold"
+              disabled={totalEarnings < 5}
+              className="w-full bg-white text-green-700 hover:bg-gray-100 font-semibold disabled:opacity-50"
             >
               <Wallet className="w-4 h-4 mr-2" />
-              Cash Out {totalEarnings >= 10 ? `$${totalEarnings.toFixed(2)}` : '(Min $10)'}
+              {totalEarnings >= 5 ? `Cash Out $${totalEarnings.toFixed(2)}` : 'Cash Out (Min $5)'}
             </Button>
           </CardContent>
         </Card>

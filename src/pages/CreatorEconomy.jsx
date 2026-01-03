@@ -320,10 +320,34 @@ export default function CreatorEconomy() {
           />
           <MultiStreamDashboard 
             earnings={earnings} 
-            onCashOut={() => toast({
-              title: "Cash Out",
-              description: totalEarnings >= 10 ? `Processing payout of $${totalEarnings.toFixed(2)}` : "Minimum payout is $10"
-            })}
+            onCashOut={async () => {
+              if (totalEarnings >= 5) {
+                toast({
+                  title: "🎉 Payout Requested!",
+                  description: `Processing $${totalEarnings.toFixed(2)} to your account. Funds typically arrive in 1-3 business days.`
+                });
+                
+                // Create payout record
+                try {
+                  await base44.entities.Transaction.create({
+                    from_email: 'system@encirclenet.net',
+                    to_email: user.email,
+                    type: 'payout',
+                    amount: totalEarnings,
+                    status: 'pending',
+                    description: 'Earnings cashout'
+                  });
+                } catch (e) {
+                  console.error('Payout record failed:', e);
+                }
+              } else {
+                toast({
+                  title: "Minimum Payout Not Met",
+                  description: `You need at least $5 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
+                  variant: "destructive"
+                });
+              }
+            }}
           />
         </TabsContent>
 
