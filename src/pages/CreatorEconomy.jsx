@@ -570,7 +570,7 @@ export default function CreatorEconomy() {
               whileHover={{ scale: 1.05 }}
               className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow cursor-pointer"
               onClick={() => {
-                if (availableBalance >= 10 && user?.stripe_account_id) {
+                if (availableBalance >= 5 && user?.stripe_account_id) {
                   setShowConfirmModal(true);
                 } else if (!user?.stripe_account_id) {
                   toast({
@@ -581,7 +581,7 @@ export default function CreatorEconomy() {
                 } else {
                   toast({
                     title: "Keep Earning!",
-                    description: `You need $${(10 - availableBalance).toFixed(2)} more to cash out.`
+                    description: `You need $${(5 - availableBalance).toFixed(2)} more to cash out.`
                   });
                 }
               }}
@@ -647,7 +647,7 @@ export default function CreatorEconomy() {
         {!isMigrating && (
           <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
             <p className="text-sm text-green-900">
-              <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time and automatically synced to your Stripe account. Cash out anytime once you reach the $10 minimum threshold.
+              <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time and automatically synced to your Stripe account. Cash out anytime once you reach the $5 minimum threshold.
             </p>
           </div>
         )}
@@ -1395,7 +1395,7 @@ export default function CreatorEconomy() {
                 </div>
                 <p className="text-4xl font-bold">${availableBalance.toFixed(2)}</p>
                 <p className="text-xs opacity-75 mt-2">
-                  {availableBalance >= 10 ? '✅ Ready for withdrawal' : `Need $${(10 - availableBalance).toFixed(2)} more`}
+                  {availableBalance >= 5 ? '✅ Ready for withdrawal' : `Need $${(5 - availableBalance).toFixed(2)} more`}
                 </p>
               </motion.div>
 
