@@ -156,10 +156,10 @@ export default function CreatorEconomy() {
       return;
     }
 
-    if (totalEarnings < 10) {
+    if (totalEarnings < 5) {
       toast({
         title: "Minimum Payout Not Met",
-        description: `You need at least $10 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
+        description: `You need at least $5 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
         variant: "destructive"
       });
       return;
@@ -589,7 +589,7 @@ export default function CreatorEconomy() {
               <p className="text-sm opacity-90 mb-1">Available to Cash Out</p>
               <p className="text-3xl font-bold">${availableBalance.toFixed(2)}</p>
               <p className="text-xs opacity-75 mt-2">
-                {availableBalance >= 10 && user?.stripe_account_id ? '✅ Click to Cash Out' : availableBalance >= 10 ? '🔗 Connect Bank' : `Need $${(10 - availableBalance).toFixed(2)} more`}
+                {availableBalance >= 5 && user?.stripe_account_id ? '✅ Click to Cash Out' : availableBalance >= 5 ? '🔗 Connect Bank' : `Need $${(5 - availableBalance).toFixed(2)} more`}
               </p>
             </motion.div>
           </div>
@@ -716,7 +716,7 @@ export default function CreatorEconomy() {
             onCashOut={handlePayout}
           />
           
-          {!user?.stripe_account_id && totalEarnings >= 10 && (
+          {!user?.stripe_account_id && totalEarnings >= 5 && (
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
               <div className="flex items-start gap-3">
                 <CreditCard className="w-6 h-6 text-orange-600 mt-1" />
@@ -1516,7 +1516,7 @@ export default function CreatorEconomy() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {availableBalance >= 10 ? (
+                  {availableBalance >= 5 ? (
                     <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl">
                       <p className="text-sm text-gray-700 mb-3">
                         You have <span className="font-bold text-green-900">${availableBalance.toFixed(2)}</span> available to withdraw
@@ -1541,10 +1541,10 @@ export default function CreatorEconomy() {
                   ) : (
                     <div className="p-4 bg-blue-50 border-2 border-blue-300 rounded-xl">
                       <p className="text-sm text-gray-700">
-                        Minimum payout is <span className="font-bold">$10.00</span>. You currently have <span className="font-bold">${availableBalance.toFixed(2)}</span>.
+                        Minimum payout is <span className="font-bold">$5.00</span>. You currently have <span className="font-bold">${availableBalance.toFixed(2)}</span>.
                       </p>
                       <p className="text-sm text-gray-600 mt-2">
-                        Keep earning! You need <span className="font-bold text-blue-900">${(10 - availableBalance).toFixed(2)}</span> more to cash out.
+                        Keep earning! You need <span className="font-bold text-blue-900">${(5 - availableBalance).toFixed(2)}</span> more to cash out.
                       </p>
                     </div>
                   )}
