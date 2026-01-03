@@ -190,6 +190,9 @@ export default function Home() {
           onLike={() => queryClient.invalidateQueries(['posts'])}
           onTip={() => queryClient.invalidateQueries(['posts'])}
         />
+        
+        {/* Chatbot */}
+        <HomeChatbot user={user} />
       </div>
     );
   }
