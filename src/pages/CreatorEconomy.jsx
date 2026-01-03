@@ -68,36 +68,33 @@ export default function CreatorEconomy() {
           console.log('Earnings sync failed:', e);
         }
 
-        // Check if user just connected bank (returning from Stripe onboarding)
-        const pendingMigration = localStorage.getItem('pending_stripe_migration');
-        if (pendingMigration && currentUser.stripe_account_id && !currentUser.earnings_migrated) {
-          localStorage.removeItem('pending_stripe_migration');
-          
+        // Auto-migrate pending earnings if Stripe connected but not migrated yet
+        if (currentUser.stripe_account_id && !currentUser.earnings_migrated) {
           // Show migration in progress message
           toast({
-            title: "Migrating Your Earnings...",
-            description: "Transferring your platform earnings to Stripe"
+            title: "Detecting Pending Earnings...",
+            description: "Checking for platform revenue to migrate"
           });
           
           // Trigger migration
           setTimeout(async () => {
             try {
               const response = await base44.functions.invoke('migrateEarningsToStripe', {});
-              if (response.data.success) {
+              if (response.data.success && response.data.migrated_amount > 0) {
                 toast({
-                  title: "🎉 Migration Complete!",
-                  description: response.data.message,
+                  title: "🎉 Earnings Migrated!",
+                  description: `$${response.data.migrated_amount.toFixed(2)} transferred to your Stripe account`,
                 });
                 setTimeout(() => window.location.reload(), 2000);
               }
             } catch (error) {
-              toast({
-                title: "Migration Notice",
-                description: "Earnings will be available shortly",
-              });
+              console.log('Migration check:', error);
             }
           }, 1000);
         }
+        
+        // Clear any pending migration flag
+        localStorage.removeItem('pending_stripe_migration');
       } catch (e) {
         window.location.href = '/';
       }
@@ -328,7 +325,9 @@ export default function CreatorEconomy() {
     brands: brandAccount?.total_spent || 0
   };
 
-  const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
+  // Include Stripe balance (migrated earnings)
+  const stripeBalance = user?.stripe_balance || 0;
+  const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0) + stripeBalance;
   const totalPayouts = payouts.reduce((sum, p) => sum + (p.amount || 0), 0);
   const availableBalance = totalEarnings - totalPayouts;
   
@@ -340,9 +339,11 @@ export default function CreatorEconomy() {
     referrals: referralsTotal,
     shop: creatorShop?.total_revenue || 0,
     brands: brandAccount?.total_spent || 0,
+    stripe_balance: stripeBalance,
     total: totalEarnings,
     payouts: totalPayouts,
-    available: availableBalance
+    available: availableBalance,
+    earnings_migrated: user?.earnings_migrated
   });
   
   const handleRefreshEarnings = () => {
@@ -1248,7 +1249,9 @@ export default function CreatorEconomy() {
                   <p className="text-sm opacity-90">Total Earnings</p>
                 </div>
                 <p className="text-4xl font-bold">${totalEarnings.toFixed(2)}</p>
-                <p className="text-xs opacity-75 mt-2">All-time revenue</p>
+                <p className="text-xs opacity-75 mt-2">
+                  {user?.earnings_migrated ? 'Synced with Stripe' : 'All-time revenue'}
+                </p>
               </motion.div>
 
               <motion.div
@@ -1262,7 +1265,9 @@ export default function CreatorEconomy() {
                   <p className="text-sm opacity-90">Available to Cash Out</p>
                 </div>
                 <p className="text-4xl font-bold">${availableBalance.toFixed(2)}</p>
-                <p className="text-xs opacity-75 mt-2">Ready for withdrawal</p>
+                <p className="text-xs opacity-75 mt-2">
+                  {availableBalance >= 10 ? '✅ Ready for withdrawal' : `Need $${(10 - availableBalance).toFixed(2)} more`}
+                </p>
               </motion.div>
 
               <motion.div
@@ -1293,9 +1298,13 @@ export default function CreatorEconomy() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 p-4 bg-green-50 border-2 border-green-300 rounded-xl">
                       <CheckCircle2 className="w-6 h-6 text-green-600" />
-                      <div>
+                      <div className="flex-1">
                         <p className="font-semibold text-blue-900">Bank Account Connected</p>
-                        <p className="text-sm text-gray-600">Stripe Verified</p>
+                        <p className="text-sm text-gray-600">
+                          {user?.earnings_migrated 
+                            ? `✅ Earnings synced • Ready to cash out` 
+                            : 'Stripe Verified'}
+                        </p>
                       </div>
                     </div>
                     <Button 
