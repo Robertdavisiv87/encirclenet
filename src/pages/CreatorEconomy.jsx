@@ -69,7 +69,7 @@ export default function CreatorEconomy() {
   }, []);
 
   const handlePayout = async () => {
-    if (!user.bank_account_linked) {
+    if (!user.stripe_account_id) {
       setShowBankSetup(true);
       return;
     }
@@ -85,7 +85,7 @@ export default function CreatorEconomy() {
 
     setIsProcessingPayout(true);
     try {
-      const response = await base44.functions.invoke('processPayout', {
+      const response = await base44.functions.invoke('processStripePayout', {
         amount: totalEarnings
       });
 
@@ -447,7 +447,7 @@ export default function CreatorEconomy() {
             onCashOut={handlePayout}
           />
           
-          {!user?.bank_account_linked && totalEarnings >= 5 && (
+          {!user?.stripe_account_id && totalEarnings >= 5 && (
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
               <div className="flex items-start gap-3">
                 <CreditCard className="w-6 h-6 text-orange-600 mt-1" />
