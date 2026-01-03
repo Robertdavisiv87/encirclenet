@@ -64,16 +64,10 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
     { name: 'Profile', icon: User, page: 'Profile' },
     { name: 'Challenges', icon: Trophy, page: 'Gamification' },
-    { name: 'Premium', icon: Crown, page: 'Subscription' },
   ];
 
   const adminItems = user?.email === ADMIN_EMAIL ? [
     { name: 'Admin', icon: Shield, page: 'Admin' },
-    { name: 'Revenue', icon: DollarSign, page: 'AdminRevenue' },
-    { name: 'System', icon: TrendingUp, page: 'SystemStatus' },
-    { name: 'Moderation', icon: Shield, page: 'ModerationDashboard' },
-    { name: 'Service Verticals', icon: Sparkles, page: 'ManageServiceVerticals' },
-    { name: 'Master Spec', icon: Sparkles, page: 'MasterSpec' }
   ] : [];
 
   return (
