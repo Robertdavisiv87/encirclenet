@@ -39,6 +39,7 @@ import Welcome from './pages/Welcome';
 import ManageServiceVerticals from './pages/ManageServiceVerticals';
 import ServiceRequest from './pages/ServiceRequest';
 import TrustCenter from './pages/TrustCenter';
+import PassiveIncome from './pages/PassiveIncome';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "ManageServiceVerticals": ManageServiceVerticals,
     "ServiceRequest": ServiceRequest,
     "TrustCenter": TrustCenter,
+    "PassiveIncome": PassiveIncome,
 }
 
 export const pagesConfig = {

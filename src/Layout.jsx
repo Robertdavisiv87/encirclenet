@@ -71,6 +71,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Analytics', icon: TrendingUp, page: 'CreatorAnalytics' },
     { name: 'Messages', icon: MessageCircle, page: 'Messages' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
+    { name: 'Passive Income', icon: TrendingUp, page: 'PassiveIncome' },
     { name: 'Referrals', icon: Users, page: 'Referrals' },
     { name: 'Rewards', icon: Trophy, page: 'Gamification' },
     { name: 'Profile', icon: User, page: 'Profile' },
