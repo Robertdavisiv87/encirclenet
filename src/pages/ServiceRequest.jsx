@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ServiceVerticalSelector from '../components/services/ServiceVerticalSelector';
-import DynamicServiceIntake from '../components/services/DynamicServiceIntake';
+import ServiceRequestWizard from '../components/services/ServiceRequestWizard';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
