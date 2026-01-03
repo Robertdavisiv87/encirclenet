@@ -167,8 +167,8 @@ export default function Home() {
     return (
     <div className="relative">
         <SEO 
-          title="Encircle Net Feed - Viral Content & High Engagement Social Media"
-          description="Discover trending posts, viral content, and connect with top creators on Encircle Net. The most engaging social media platform with real-time interactions."
+          title="EncircleNet - Learn, Earn & Engage | Social Income Platform"
+          description="Watch real people succeed, start earning money today, and explore opportunities near you. Passive income, local services, and creator monetization all in one app."
           url="https://encirclenet.net"
         />
         <MoneyMissionFlow 
