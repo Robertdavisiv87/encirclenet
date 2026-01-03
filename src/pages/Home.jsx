@@ -5,6 +5,7 @@ import PostCard from '../components/feed/PostCard';
 import StoryBar from '../components/feed/StoryBar';
 import AdCard from '../components/monetization/AdCard';
 import TikTokFeed from '../components/feed/TikTokFeed';
+import TikTokVerticalFeed from '../components/feed/TikTokVerticalFeed';
 import GrowAndEarnPrompt from '../components/onboarding/GrowAndEarnPrompt';
 import SEO from '../components/SEO';
 import SmartSuggestions from '../components/ai/SmartSuggestions';
@@ -33,7 +34,7 @@ const mockAds = [
 
 export default function Home() {
   const [user, setUser] = useState(null);
-  const [feedMode, setFeedMode] = useState('classic'); // classic or tiktok
+  const [feedMode, setFeedMode] = useState('tiktok'); // classic or tiktok
   const [showGrowPrompt, setShowGrowPrompt] = useState(false);
   const queryClient = useQueryClient();
 
@@ -192,7 +193,7 @@ export default function Home() {
           </div>
         </div>
 
-        <TikTokFeed 
+        <TikTokVerticalFeed 
           posts={posts}
           currentUser={user}
           onLike={() => queryClient.invalidateQueries(['posts'])}
