@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -58,7 +58,7 @@ export default function MoneyMissionFlow({ isOpen, onClose, user }) {
     mutationFn: (data) => base44.entities.MoneyMission.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['money-mission']);
-      setStep(2);
+      setStep(3);
     }
   });
 
@@ -185,7 +185,8 @@ export default function MoneyMissionFlow({ isOpen, onClose, user }) {
             </motion.div>
           )}
 
-          {step === 2 && (
+          {/* Step 3: Success */}
+          {step === 3 && (
             <motion.div
               key="step2"
               initial={{ opacity: 0, x: 20 }}
