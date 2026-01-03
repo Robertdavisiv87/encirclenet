@@ -89,10 +89,10 @@ export default function CreatorEconomy() {
       return;
     }
 
-    if (totalEarnings < 5) {
+    if (totalEarnings < 10) {
       toast({
         title: "Minimum Payout Not Met",
-        description: `You need at least $5 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
+        description: `You need at least $10 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
         variant: "destructive"
       });
       return;
@@ -412,12 +412,12 @@ export default function CreatorEconomy() {
               whileHover={{ scale: 1.05 }}
               className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow cursor-pointer"
               onClick={() => {
-                if (totalEarnings >= 5) {
+                if (totalEarnings >= 10) {
                   handlePayout();
                 } else {
                   toast({
                     title: "Keep Earning!",
-                    description: `You need $${(5 - totalEarnings).toFixed(2)} more to cash out.`
+                    description: `You need $${(10 - totalEarnings).toFixed(2)} more to cash out.`
                   });
                 }
               }}
@@ -425,7 +425,7 @@ export default function CreatorEconomy() {
               <p className="text-sm opacity-90 mb-1">Total Earnings</p>
               <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
               <p className="text-xs opacity-75 mt-2">
-                {totalEarnings >= 5 ? 'Click to Cash Out' : `Need $${(5 - totalEarnings).toFixed(2)} more`}
+                {totalEarnings >= 10 ? 'Click to Cash Out' : `Need $${(10 - totalEarnings).toFixed(2)} more`}
               </p>
             </motion.div>
           </div>
@@ -465,7 +465,7 @@ export default function CreatorEconomy() {
         {/* Earnings Info */}
         <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
           <p className="text-sm text-green-900">
-            <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time. Cash out anytime once you reach the $5 minimum threshold.
+            <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time and automatically synced to your Stripe account. Cash out anytime once you reach the $10 minimum threshold.
           </p>
         </div>
       </motion.div>
@@ -533,7 +533,7 @@ export default function CreatorEconomy() {
             onCashOut={handlePayout}
           />
           
-          {!user?.stripe_account_id && totalEarnings >= 5 && (
+          {!user?.stripe_account_id && totalEarnings >= 10 && (
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
               <div className="flex items-start gap-3">
                 <CreditCard className="w-6 h-6 text-orange-600 mt-1" />
@@ -1311,7 +1311,7 @@ export default function CreatorEconomy() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {availableBalance >= 5 ? (
+                  {availableBalance >= 10 ? (
                     <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl">
                       <p className="text-sm text-gray-700 mb-3">
                         You have <span className="font-bold text-green-900">${availableBalance.toFixed(2)}</span> available to withdraw
@@ -1336,10 +1336,10 @@ export default function CreatorEconomy() {
                   ) : (
                     <div className="p-4 bg-blue-50 border-2 border-blue-300 rounded-xl">
                       <p className="text-sm text-gray-700">
-                        Minimum payout is <span className="font-bold">$5.00</span>. You currently have <span className="font-bold">${availableBalance.toFixed(2)}</span>.
+                        Minimum payout is <span className="font-bold">$10.00</span>. You currently have <span className="font-bold">${availableBalance.toFixed(2)}</span>.
                       </p>
                       <p className="text-sm text-gray-600 mt-2">
-                        Keep earning! You need <span className="font-bold text-blue-900">${(5 - availableBalance).toFixed(2)}</span> more to cash out.
+                        Keep earning! You need <span className="font-bold text-blue-900">${(10 - availableBalance).toFixed(2)}</span> more to cash out.
                       </p>
                     </div>
                   )}
