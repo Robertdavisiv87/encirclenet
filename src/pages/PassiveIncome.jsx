@@ -60,16 +60,46 @@ export default function PassiveIncome() {
     contentMonetization.length > 0
   ].filter(Boolean).length;
 
-  const handleCashOut = () => {
-    if (lifetimeEarnings >= 10) {
+  const handleCashOut = async () => {
+    if (!user?.bank_account_linked) {
       toast({
-        title: "Cash Out Request",
-        description: `Processing payout of $${lifetimeEarnings.toFixed(2)}. Funds will be deposited within 1-3 business days.`
+        title: "Bank Account Required",
+        description: "Please link your bank account in Creator Economy dashboard to cash out."
       });
-    } else {
+      setTimeout(() => {
+        window.location.href = '/creator-economy';
+      }, 2000);
+      return;
+    }
+
+    if (lifetimeEarnings < 5) {
       toast({
         title: "Minimum Not Met",
-        description: "Minimum payout is $10. Keep earning!"
+        description: "Minimum payout is $5. Keep earning!",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const response = await base44.functions.invoke('processPayout', {
+        amount: lifetimeEarnings
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "🎉 Payout Successful!",
+          description: response.data.message
+        });
+        window.location.reload();
+      } else {
+        throw new Error(response.data.error || 'Payout failed');
+      }
+    } catch (error) {
+      toast({
+        title: "Payout Failed",
+        description: error.message || "Please try again later",
+        variant: "destructive"
       });
     }
   };
@@ -104,12 +134,12 @@ export default function PassiveIncome() {
               <p className="text-sm text-gray-700">Lifetime Earned</p>
               <Button 
                 onClick={handleCashOut}
-                disabled={lifetimeEarnings < 10}
-                className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white"
+                disabled={lifetimeEarnings < 5}
+                className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
                 size="sm"
               >
                 <Wallet className="w-4 h-4 mr-2" />
-                Cash Out {lifetimeEarnings >= 10 ? `$${lifetimeEarnings.toFixed(2)}` : '(Min $10)'}
+                Cash Out {lifetimeEarnings >= 5 ? `$${lifetimeEarnings.toFixed(2)}` : '(Min $5)'}
               </Button>
             </CardContent>
           </Card>
