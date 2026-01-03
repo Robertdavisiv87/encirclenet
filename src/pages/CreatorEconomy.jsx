@@ -52,6 +52,7 @@ export default function CreatorEconomy() {
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
+  const [isMigrating, setIsMigrating] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -69,12 +70,10 @@ export default function CreatorEconomy() {
         }
 
         // Auto-migrate pending earnings if Stripe connected but not migrated yet
-        if (currentUser.stripe_account_id && !currentUser.earnings_migrated) {
-          // Show migration in progress message
-          toast({
-            title: "Detecting Pending Earnings...",
-            description: "Checking for platform revenue to migrate"
-          });
+        const migrationChecked = sessionStorage.getItem('migration_checked');
+        if (currentUser.stripe_account_id && !currentUser.earnings_migrated && !migrationChecked) {
+          sessionStorage.setItem('migration_checked', 'true');
+          setIsMigrating(true);
           
           // Trigger migration
           setTimeout(async () => {
@@ -85,12 +84,15 @@ export default function CreatorEconomy() {
                   title: "🎉 Earnings Migrated!",
                   description: `$${response.data.migrated_amount.toFixed(2)} transferred to your Stripe account`,
                 });
-                setTimeout(() => window.location.reload(), 2000);
+                setTimeout(() => window.location.reload(), 1500);
+              } else {
+                setIsMigrating(false);
               }
             } catch (error) {
               console.log('Migration check:', error);
+              setIsMigrating(false);
             }
-          }, 1000);
+          }, 500);
         }
         
         // Clear any pending migration flag
@@ -364,19 +366,15 @@ export default function CreatorEconomy() {
       const response = await base44.functions.invoke('createStripeConnectAccount', {});
       
       if (response.data.onboarding_url) {
-        // Save return URL to trigger migration after onboarding
-        localStorage.setItem('pending_stripe_migration', 'true');
+        sessionStorage.removeItem('migration_checked');
         window.location.href = response.data.onboarding_url;
       } else {
         toast({
-          title: "Already Connected",
-          description: "Your bank account is already linked"
+          title: "Opening Stripe Dashboard",
+          description: "Redirecting to update your bank account..."
         });
-        
-        // Try migration if not done yet
-        if (!user.earnings_migrated) {
-          await handleMigration();
-        }
+        // If already connected, open Stripe dashboard
+        window.open('https://connect.stripe.com/express_login', '_blank');
       }
     } catch (error) {
       toast({
@@ -386,24 +384,6 @@ export default function CreatorEconomy() {
       });
     } finally {
       setConnectingBank(false);
-    }
-  };
-
-  const handleMigration = async () => {
-    try {
-      const response = await base44.functions.invoke('migrateEarningsToStripe', {});
-      
-      if (response.data.success && !response.data.already_migrated) {
-        toast({
-          title: "🎉 Earnings Migrated!",
-          description: response.data.message,
-        });
-        
-        // Refresh page to show updated balance
-        setTimeout(() => window.location.reload(), 2000);
-      }
-    } catch (error) {
-      console.log('Migration check:', error);
     }
   };
 
