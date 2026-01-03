@@ -233,5 +233,3 @@ export default function MultiStreamDashboard({ earnings = {}, onCashOut }) {
     </div>
   );
 }
-
-import { Button } from '@/components/ui/button';
