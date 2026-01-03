@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, DollarSign, MoreVertical, User } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import VideoPlayer from '../video/VideoPlayer';
+import CommentsModal from './CommentsModal';
 
 export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef(null);
   const [likedPosts, setLikedPosts] = useState({});
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -138,7 +141,10 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
               {/* Comment */}
               <motion.button
                 whileTap={{ scale: 0.8 }}
-                onClick={() => window.location.href = `/messages?user=${post.created_by}`}
+                onClick={() => {
+                  setSelectedPost(post);
+                  setShowCommentsModal(true);
+                }}
                 className="flex flex-col items-center gap-1"
               >
                 <MessageCircle className="w-8 h-8 text-white drop-shadow-lg" />
@@ -210,6 +216,19 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
           </div>
         );
       })}
+
+      {/* Comments Modal */}
+      {selectedPost && (
+        <CommentsModal
+          post={selectedPost}
+          isOpen={showCommentsModal}
+          onClose={() => {
+            setShowCommentsModal(false);
+            setSelectedPost(null);
+          }}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }
