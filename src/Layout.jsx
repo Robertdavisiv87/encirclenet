@@ -66,7 +66,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Create', icon: PlusSquare, page: 'Create' },
     { name: 'Community', icon: Users, page: 'Groups' },
     { name: 'Economy', icon: DollarSign, page: 'CreatorEconomy' },
-    { name: 'Payouts', icon: TrendingUp, page: 'PayoutSettings' },
+
     { name: 'Profile', icon: User, page: 'Profile' },
     { name: 'Challenges', icon: Trophy, page: 'Gamification' },
   ];
