@@ -31,23 +31,13 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Process referral payouts
+    // Process referral payouts - DON'T create Transaction records, referrals are already counted
     for (const referral of completedReferrals) {
       try {
         if (referral.commission_earned > 0) {
-          // Mark referral as paid
+          // Mark referral as paid (but don't create duplicate transaction)
           await base44.asServiceRole.entities.Referral.update(referral.id, {
             status: 'paid'
-          });
-
-          // Create transaction record
-          await base44.asServiceRole.entities.Transaction.create({
-            from_email: 'system@encirclenet.net',
-            to_email: referral.referrer_email,
-            amount: referral.commission_earned,
-            type: 'payout',
-            status: 'completed',
-            description: `Referral commission payout for ${referral.referred_email}`
           });
 
           results.referrals_processed++;
