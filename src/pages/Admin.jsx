@@ -25,6 +25,9 @@ import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
 import AdvancedAnalyticsDashboard from '../components/admin/AdvancedAnalyticsDashboard';
 import AIContentModerator from '../components/admin/AIContentModerator';
 import EarningsDashboard from '../components/creator/EarningsDashboard';
+import PerformanceMonitor from '../components/system/PerformanceMonitor';
+import { createPageUrl } from '../utils';
+import { Button } from '@/components/ui/button';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -135,10 +138,10 @@ export default function Admin() {
     <AdminProtection>
       <div className="max-w-7xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
       <div className="mb-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Platform analytics and revenue insights</p>
+            <p className="text-gray-600">24/7 Auto-Monitoring • AI-Powered • Elite Performance</p>
           </div>
           <a 
             href={base44.agents.getWhatsAppConnectURL('encirclenet_support_auditor')} 
@@ -148,6 +151,11 @@ export default function Admin() {
           >
             💬 Support Agent
           </a>
+        </div>
+        
+        {/* System Performance Monitor */}
+        <div className="mb-6">
+          <PerformanceMonitor />
         </div>
       </div>
 
