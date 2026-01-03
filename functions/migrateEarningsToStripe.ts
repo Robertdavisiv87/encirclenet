@@ -23,6 +23,13 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Sync referrals first to catch any missing ones
+    try {
+      await base44.functions.invoke('syncReferrals', {});
+    } catch (e) {
+      console.log('Referral sync during migration:', e.message);
+    }
+
     // Calculate total pending earnings from all sources
     const referrals = await base44.entities.Referral.filter({ 
       referrer_email: user.email 
