@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Heart, MessageCircle } from 'lucide-react';
 import moment from 'moment';
+import CommentsModal from '../feed/CommentsModal';
 
 export default function GroupPostCard({ post, currentUser }) {
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
   return (
     <Card className="border-2 border-gray-200 hover:border-purple-300 transition-all">
       <CardContent className="p-4">
@@ -34,12 +36,22 @@ export default function GroupPostCard({ post, currentUser }) {
             <Heart className="w-4 h-4" />
             {post.likes_count || 0}
           </button>
-          <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
+          <button 
+            onClick={() => setShowCommentsModal(true)}
+            className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+          >
             <MessageCircle className="w-4 h-4" />
             {post.comments_count || 0}
           </button>
         </div>
       </CardContent>
+
+      <CommentsModal
+        post={post}
+        isOpen={showCommentsModal}
+        onClose={() => setShowCommentsModal(false)}
+        currentUser={currentUser}
+      />
     </Card>
   );
 }
