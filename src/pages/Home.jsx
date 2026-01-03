@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
 import HomeChatbot from '../components/chat/HomeChatbot';
 import WelcomeBanner from '../components/onboarding/WelcomeBanner';
+import GlobalAIAssistant from '../components/ai/GlobalAIAssistant';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -267,7 +268,9 @@ export default function Home() {
           onLike={() => queryClient.invalidateQueries(['posts'])}
           onTip={() => queryClient.invalidateQueries(['posts'])}
         />
-        
+
+        {/* AI Assistant Chatbot */}
+        <GlobalAIAssistant user={user} currentPage="Home" />
         </div>
         );
         }
