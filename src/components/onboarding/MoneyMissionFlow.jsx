@@ -48,6 +48,10 @@ const roleOptions = [
 export default function MoneyMissionFlow({ isOpen, onClose, user }) {
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [profileData, setProfileData] = useState({
+    interests: [],
+    location: ''
+  });
   const queryClient = useQueryClient();
 
   const createMissionMutation = useMutation({
@@ -83,7 +87,54 @@ export default function MoneyMissionFlow({ isOpen, onClose, user }) {
         </DialogHeader>
 
         <AnimatePresence mode="wait">
-          {step === 1 && (
+          {/* Step 1: Profile Setup */}
+      {step === 1 && (
+        <motion.div
+          key="profile"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-2xl gradient-text">Welcome! Let's Get Started</DialogTitle>
+            <DialogDescription>Tell us a bit about yourself (optional)</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-6">
+            <div>
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">Your Interests</label>
+              <div className="flex flex-wrap gap-2">
+                {['Freelancing', 'Content Creation', 'Local Services', 'Influencer', 'Gig Work'].map(interest => (
+                  <button
+                    key={interest}
+                    onClick={() => {
+                      const newInterests = profileData.interests.includes(interest)
+                        ? profileData.interests.filter(i => i !== interest)
+                        : [...profileData.interests, interest];
+                      setProfileData({ ...profileData, interests: newInterests });
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      profileData.interests.includes(interest)
+                        ? 'gradient-bg-primary text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {interest}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={onClose} variant="outline" className="flex-1">Skip for Now</Button>
+            <Button onClick={() => setStep(2)} className="flex-1 gradient-bg-primary text-white">
+              Next
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Step 2: Pick Income Stream */}
+      {step === 2 && (
             <motion.div
               key="step1"
               initial={{ opacity: 0, x: 20 }}

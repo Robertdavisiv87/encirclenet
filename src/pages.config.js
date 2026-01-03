@@ -40,6 +40,8 @@ import TrustCenter from './pages/TrustCenter';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import Landing from './pages/Landing';
+import LocalServices from './pages/LocalServices';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +88,8 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "Landing": Landing,
+    "LocalServices": LocalServices,
 }
 
 export const pagesConfig = {

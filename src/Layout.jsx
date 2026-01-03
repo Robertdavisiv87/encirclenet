@@ -55,8 +55,10 @@ export default function Layout({ children, currentPageName }) {
   }, [currentPageName]);
 
   const navItems = [
+    { name: 'Start', icon: Sparkles, page: 'Landing' },
     { name: 'Home', icon: Home, page: 'Home' },
     { name: 'Discover', icon: Sparkles, page: 'Discover' },
+    { name: 'Local Services', icon: Home, page: 'LocalServices' },
     { name: 'Search', icon: Search, page: 'Search' },
     { name: 'Explore', icon: Compass, page: 'Explore' },
     { name: 'Welcome', icon: Sparkles, page: 'Welcome' },
