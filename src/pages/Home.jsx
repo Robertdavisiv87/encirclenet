@@ -51,6 +51,13 @@ export default function Home() {
         if (mounted) {
           setUser(currentUser);
           
+          // Auto-update streak on login
+          try {
+            await base44.functions.invoke('updateStreak', {});
+          } catch (e) {
+            console.log('Streak update failed:', e);
+          }
+          
           // Check if user has started money mission
           const missions = await base44.entities.MoneyMission.filter({ user_email: currentUser.email });
           if (missions.length === 0) {
