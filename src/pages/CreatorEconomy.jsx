@@ -178,10 +178,10 @@ export default function CreatorEconomy() {
     }
   };
 
-  // Calculate accurate earnings from all sources
+  // Calculate accurate earnings from all sources (include ALL referral earnings regardless of status)
   const tipsTotal = tipTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
   const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90; // 90% revenue share
-  const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0); // All referrals count
   const affiliateTotal = affiliateLinks.reduce((sum, a) => sum + (a.earnings || 0), 0);
   
   const earnings = {
