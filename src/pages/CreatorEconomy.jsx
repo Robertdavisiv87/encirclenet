@@ -67,6 +67,37 @@ export default function CreatorEconomy() {
         } catch (e) {
           console.log('Earnings sync failed:', e);
         }
+
+        // Check if user just connected bank (returning from Stripe onboarding)
+        const pendingMigration = localStorage.getItem('pending_stripe_migration');
+        if (pendingMigration && currentUser.stripe_account_id && !currentUser.earnings_migrated) {
+          localStorage.removeItem('pending_stripe_migration');
+          
+          // Show migration in progress message
+          toast({
+            title: "Migrating Your Earnings...",
+            description: "Transferring your platform earnings to Stripe"
+          });
+          
+          // Trigger migration
+          setTimeout(async () => {
+            try {
+              const response = await base44.functions.invoke('migrateEarningsToStripe', {});
+              if (response.data.success) {
+                toast({
+                  title: "🎉 Migration Complete!",
+                  description: response.data.message,
+                });
+                setTimeout(() => window.location.reload(), 2000);
+              }
+            } catch (error) {
+              toast({
+                title: "Migration Notice",
+                description: "Earnings will be available shortly",
+              });
+            }
+          }, 1000);
+        }
       } catch (e) {
         window.location.href = '/';
       }
@@ -332,12 +363,19 @@ export default function CreatorEconomy() {
       const response = await base44.functions.invoke('createStripeConnectAccount', {});
       
       if (response.data.onboarding_url) {
+        // Save return URL to trigger migration after onboarding
+        localStorage.setItem('pending_stripe_migration', 'true');
         window.location.href = response.data.onboarding_url;
       } else {
         toast({
           title: "Already Connected",
           description: "Your bank account is already linked"
         });
+        
+        // Try migration if not done yet
+        if (!user.earnings_migrated) {
+          await handleMigration();
+        }
       }
     } catch (error) {
       toast({
@@ -347,6 +385,24 @@ export default function CreatorEconomy() {
       });
     } finally {
       setConnectingBank(false);
+    }
+  };
+
+  const handleMigration = async () => {
+    try {
+      const response = await base44.functions.invoke('migrateEarningsToStripe', {});
+      
+      if (response.data.success && !response.data.already_migrated) {
+        toast({
+          title: "🎉 Earnings Migrated!",
+          description: response.data.message,
+        });
+        
+        // Refresh page to show updated balance
+        setTimeout(() => window.location.reload(), 2000);
+      }
+    } catch (error) {
+      console.log('Migration check:', error);
     }
   };
 
@@ -1403,7 +1459,7 @@ export default function CreatorEconomy() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
-                  Your earnings from referrals, tips, services, and subscriptions automatically appear here
+                  Your earnings from referrals, tips, services, and subscriptions are automatically migrated to Stripe when you connect your bank
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
