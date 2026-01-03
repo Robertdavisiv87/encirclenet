@@ -370,14 +370,16 @@ export default function CreatorEconomy() {
     brands: brandAccount?.total_spent || 0
   };
 
-  // If migrated, use Stripe balance; otherwise use calculated platform earnings
+  // Always use Stripe balance if migrated, otherwise calculate from platform earnings
   const stripeBalance = user?.stripe_balance || 0;
   const platformEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
 
-  // Total earnings = migrated Stripe balance OR unmigrated platform earnings (not both)
+  // Use Stripe balance if earnings are migrated, otherwise use platform earnings
   const totalEarnings = user?.earnings_migrated ? stripeBalance : platformEarnings;
   const totalPayouts = payouts.reduce((sum, p) => sum + (p.amount || 0), 0);
-  const availableBalance = totalEarnings - totalPayouts;
+  
+  // Prevent negative balance - if there's a discrepancy, use totalEarnings directly
+  const availableBalance = Math.max(totalEarnings - totalPayouts, 0);
   
   // Log for debugging
   console.log('Earnings Breakdown:', {
@@ -589,7 +591,7 @@ export default function CreatorEconomy() {
               <p className="text-sm opacity-90 mb-1">Available to Cash Out</p>
               <p className="text-3xl font-bold">${availableBalance.toFixed(2)}</p>
               <p className="text-xs opacity-75 mt-2">
-                {availableBalance >= 5 && user?.stripe_account_id ? '✅ Click to Cash Out' : availableBalance >= 5 ? '🔗 Connect Bank' : `Need $${(5 - availableBalance).toFixed(2)} more`}
+                {availableBalance >= 5 && user?.stripe_account_id ? '✅ Click to Cash Out' : availableBalance >= 5 ? '🔗 Connect Bank' : availableBalance > 0 ? `Need $${(5 - availableBalance).toFixed(2)} more` : 'Start earning!'}
               </p>
             </motion.div>
           </div>
@@ -716,14 +718,14 @@ export default function CreatorEconomy() {
             onCashOut={handlePayout}
           />
           
-          {!user?.stripe_account_id && totalEarnings >= 5 && (
+          {!user?.stripe_account_id && availableBalance >= 5 && (
             <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
               <div className="flex items-start gap-3">
                 <CreditCard className="w-6 h-6 text-orange-600 mt-1" />
                 <div className="flex-1">
                   <h3 className="font-bold text-blue-900 mb-2">Link Your Bank Account</h3>
                   <p className="text-sm text-gray-700 mb-4">
-                    You have ${totalEarnings.toFixed(2)} ready to cash out! Link your bank account to receive payments.
+                    You have ${availableBalance.toFixed(2)} ready to cash out! Link your bank account to receive payments.
                   </p>
                   <Button 
                     onClick={() => setShowBankSetup(true)}

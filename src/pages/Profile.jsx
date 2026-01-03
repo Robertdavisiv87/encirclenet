@@ -97,7 +97,17 @@ export default function Profile() {
     initialData: []
   });
 
-  const totalEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+  // Fetch referrals to calculate total earnings properly
+  const { data: referrals = [] } = useQuery({
+    queryKey: ['profile-referrals', user?.email],
+    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const transactionEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+  const totalEarnings = user?.stripe_balance || (referralEarnings + transactionEarnings);
 
   const { data: subscription } = useQuery({
     queryKey: ['profile-subscription', user?.email],
