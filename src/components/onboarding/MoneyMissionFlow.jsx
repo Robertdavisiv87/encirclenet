@@ -13,41 +13,77 @@ const roleOptions = [
     icon: '🔧',
     title: 'Offer a Service',
     subtitle: 'Mechanic, Cleaner, Tech, Freelancer',
-    color: 'from-blue-500 to-cyan-500'
+    color: 'from-blue-500 to-cyan-500',
+    quickStart: [
+      'List your top 3 services',
+      'Set competitive pricing in your area',
+      'Upload portfolio/work samples',
+      'Activate your profile and go live'
+    ],
+    aiTip: 'Start with services you can deliver today. Most providers earn their first $50-100 within 48 hours.'
   },
   {
     id: 'drop_servicer',
     icon: '🤝',
     title: 'Connect Buyers & Providers',
     subtitle: 'Drop Servicer - No skills needed',
-    color: 'from-purple-500 to-pink-500'
+    color: 'from-purple-500 to-pink-500',
+    quickStart: [
+      'Browse available service providers',
+      'Share service links on social media',
+      'Earn 10-15% per successful booking',
+      'Track your referrals and earnings'
+    ],
+    aiTip: 'Focus on high-demand services like mobile mechanics and cleaning. Share in local Facebook groups for quick wins.'
   },
   {
     id: 'affiliate',
     icon: '📢',
     title: 'Promote Local Services',
     subtitle: 'Affiliate Style - Earn per booking',
-    color: 'from-orange-500 to-red-500'
+    color: 'from-orange-500 to-red-500',
+    quickStart: [
+      'Get your unique referral link',
+      'Share with your network',
+      'Promote on TikTok, Instagram, Facebook',
+      'Earn commission on every sale'
+    ],
+    aiTip: 'Target services with high demand in your area. Create short video testimonials for better conversion rates.'
   },
   {
     id: 'digital_hustler',
     icon: '🧠',
     title: 'Digital Hustles',
     subtitle: 'AI tasks, posting, outreach',
-    color: 'from-green-500 to-emerald-500'
+    color: 'from-green-500 to-emerald-500',
+    quickStart: [
+      'Pick 2-3 digital tasks (social media, data entry)',
+      'Complete your first gig today',
+      'Build your reputation with reviews',
+      'Scale to multiple income streams'
+    ],
+    aiTip: 'Start with simple tasks like content posting or data entry. Average earnings: $20-50 per hour.'
   },
   {
     id: 'mobile_on_demand',
     icon: '🚚',
     title: 'Mobile Services',
     subtitle: 'On-demand delivery & services',
-    color: 'from-indigo-500 to-violet-500'
+    color: 'from-indigo-500 to-violet-500',
+    quickStart: [
+      'Set your service area and availability',
+      'Upload vehicle/equipment photos',
+      'Accept your first on-demand job',
+      'Get paid instantly after completion'
+    ],
+    aiTip: 'Be available during peak hours (lunch, evening). Most mobile providers make $100-300 per day.'
   }
 ];
 
 export default function MoneyMissionFlow({ isOpen, onClose, user }) {
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedStreams, setSelectedStreams] = useState([]);
   const [profileData, setProfileData] = useState({
     interests: [],
     location: ''
@@ -185,25 +221,63 @@ export default function MoneyMissionFlow({ isOpen, onClose, user }) {
             </motion.div>
           )}
 
-          {/* Step 3: Success */}
-          {step === 3 && (
+          {/* Step 3: Quick Start Guide */}
+          {step === 3 && selectedRole && (
             <motion.div
-              key="step2"
+              key="quickstart"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
-              <div className="text-center py-8">
-                <div className="text-6xl mb-4">🎉</div>
-                <h2 className="text-3xl font-bold gradient-text mb-3">Mission Activated!</h2>
-                <p className="text-gray-700 mb-4">
-                  Your personalized dashboard is ready. Let's get you earning!
-                </p>
-                <Button onClick={onClose} className="gradient-bg-primary text-white shadow-glow">
-                  Go to Dashboard
-                </Button>
-              </div>
+              {(() => {
+                const role = roleOptions.find(r => r.id === selectedRole);
+                return (
+                  <>
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
+                      <h3 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
+                        <Sparkles className="w-5 h-5" />
+                        AI Quick-Start Guide
+                      </h3>
+                      <p className="text-sm text-gray-700 mb-3">{role.aiTip}</p>
+                    </div>
+
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">Your 24-Hour Action Plan</h3>
+                        <div className="space-y-3">
+                          {role.quickStart.map((task, idx) => (
+                            <div key={idx} className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full gradient-bg-primary text-white flex items-center justify-center font-bold flex-shrink-0">
+                                {idx + 1}
+                              </div>
+                              <div className="flex-1 pt-1">
+                                <p className="text-gray-800 font-medium">{task}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <div className="bg-green-50 rounded-lg p-4 border-2 border-green-300">
+                      <h4 className="font-bold text-green-900 mb-2">💰 Expected Earnings</h4>
+                      <p className="text-sm text-gray-700">
+                        Most users in this path earn their first <strong>$50-200</strong> within 24-48 hours of activation.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <Button variant="outline" onClick={() => setStep(2)} className="flex-1">
+                        Back
+                      </Button>
+                      <Button onClick={onClose} className="flex-1 gradient-bg-primary text-white shadow-glow">
+                        Start Earning Now
+                      </Button>
+                    </div>
+                  </>
+                );
+              })()}
             </motion.div>
           )}
         </AnimatePresence>

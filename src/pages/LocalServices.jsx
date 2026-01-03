@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
+import { Link } from 'react-router-dom';
 
 export default function LocalServices() {
   const [user, setUser] = useState(null);

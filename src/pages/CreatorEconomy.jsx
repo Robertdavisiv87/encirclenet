@@ -28,6 +28,7 @@ import ReferralCard from '../components/monetization/ReferralCard';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
+import { Link } from 'react-router-dom';
 
 export default function CreatorEconomy() {
   const [user, setUser] = useState(null);
