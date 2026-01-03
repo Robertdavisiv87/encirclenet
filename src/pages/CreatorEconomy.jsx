@@ -64,11 +64,12 @@ export default function CreatorEconomy() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
-        // Auto-sync earnings on page load
+        // Auto-sync earnings and referrals on page load
         try {
           await base44.functions.invoke('syncUserEarnings', {});
+          await base44.functions.invoke('syncReferrals', {});
         } catch (e) {
-          console.log('Earnings sync failed:', e);
+          console.log('Sync failed:', e);
         }
 
         // Auto-migrate pending earnings if Stripe connected but not migrated yet
@@ -105,11 +106,14 @@ export default function CreatorEconomy() {
     };
     loadUser();
     
-    // Auto-refresh earnings every 60 seconds
-    const interval = setInterval(() => {
-      base44.functions.invoke('syncUserEarnings', {}).catch(e => {
+    // Auto-refresh earnings and referrals every 60 seconds
+    const interval = setInterval(async () => {
+      try {
+        await base44.functions.invoke('syncReferrals', {});
+        await base44.functions.invoke('syncUserEarnings', {});
+      } catch (e) {
         console.log('Auto-sync failed:', e);
-      });
+      }
     }, 60000);
     
     return () => clearInterval(interval);
@@ -350,13 +354,19 @@ export default function CreatorEconomy() {
     earnings_migrated: user?.earnings_migrated
   });
   
-  const handleRefreshEarnings = () => {
-    refetchReferrals();
-    refetchTips();
+  const handleRefreshEarnings = async () => {
     toast({
-      title: "Refreshing Earnings...",
-      description: "Updating all revenue streams"
+      title: "Syncing Earnings...",
+      description: "Detecting new referrals and updating balances"
     });
+
+    try {
+      await base44.functions.invoke('syncReferrals', {});
+      await base44.functions.invoke('syncUserEarnings', {});
+    } catch (e) {
+      console.log('Sync error:', e);
+    }
+
     setTimeout(() => {
       window.location.reload();
     }, 1000);
