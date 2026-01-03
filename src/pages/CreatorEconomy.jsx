@@ -66,8 +66,10 @@ export default function CreatorEconomy() {
         
         // Auto-sync earnings and referrals on page load
         try {
+          console.log('🔄 Syncing referrals and earnings...');
+          const syncResponse = await base44.functions.invoke('syncReferrals', {});
+          console.log('Sync result:', syncResponse.data);
           await base44.functions.invoke('syncUserEarnings', {});
-          await base44.functions.invoke('syncReferrals', {});
         } catch (e) {
           console.log('Sync failed:', e);
         }
@@ -384,7 +386,16 @@ export default function CreatorEconomy() {
     });
 
     try {
-      await base44.functions.invoke('syncReferrals', {});
+      const syncResult = await base44.functions.invoke('syncReferrals', {});
+      console.log('Sync result:', syncResult.data);
+
+      if (syncResult.data.new_referrals_found > 0) {
+        toast({
+          title: `✅ ${syncResult.data.new_referrals_found} New Referral${syncResult.data.new_referrals_found > 1 ? 's' : ''} Found!`,
+          description: `+$${syncResult.data.new_earnings.toFixed(2)} added to your earnings`
+        });
+      }
+
       await base44.functions.invoke('syncUserEarnings', {});
     } catch (e) {
       console.log('Sync error:', e);
@@ -392,7 +403,7 @@ export default function CreatorEconomy() {
 
     setTimeout(() => {
       window.location.reload();
-    }, 1000);
+    }, 1500);
   };
 
   const handleConnectBank = async () => {
