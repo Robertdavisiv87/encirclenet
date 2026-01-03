@@ -76,10 +76,12 @@ export default function MasterSpec() {
                 <h3 className="font-bold text-blue-900 mb-3">PURPOSE & MISSION</h3>
                 <ul className="space-y-1 text-xs text-gray-700">
                   <li>✅ Empower creators and influencers with 90% revenue share</li>
+                  <li>✅ TikTok-style vertical, swipeable, content-first interface</li>
                   <li>✅ Monitor revenue, referrals, subscriptions, and system integrity</li>
                   <li>✅ Foster seamless social and business interactions</li>
                   <li>✅ Real-time analytics and operational monitoring</li>
                   <li>✅ Multi-platform social engagement tracking</li>
+                  <li>✅ Immersive mobile-first scrolling with blue-and-white color scheme</li>
                 </ul>
               </div>
 
@@ -832,18 +834,20 @@ const allTransactions = await base44.asServiceRole
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-white rounded-lg p-4 border-2 border-orange-200">
-                <h3 className="font-bold text-orange-900 mb-2">Core Objective</h3>
-                <p className="text-sm text-gray-700 mb-2">
-                  Advance Encircle Net to state-of-the-art, category-defining status while maintaining 
-                  100% backward compatibility.
-                </p>
-                <ul className="space-y-1 text-xs text-gray-700">
-                  <li>✅ No existing feature may break, degrade, or lose data</li>
-                  <li>✅ All current functionality must continue to work perfectly</li>
-                  <li>✅ All enhancements must be additive, stable, and production-safe</li>
-                  <li>✅ Must surpass TikTok, Instagram, and Facebook in reliability, monetization, and ethics</li>
-                </ul>
-              </div>
+                  <h3 className="font-bold text-orange-900 mb-2">Core Objective</h3>
+                  <p className="text-sm text-gray-700 mb-2">
+                    Advance Encircle Net to state-of-the-art, category-defining status while maintaining 
+                    100% backward compatibility. The interface is vertical, swipeable, and content-first, 
+                    inspired by TikTok, optimized for immersive scrolling and quick engagement.
+                  </p>
+                  <ul className="space-y-1 text-xs text-gray-700">
+                    <li>✅ No existing feature may break, degrade, or lose data</li>
+                    <li>✅ All current functionality must continue to work perfectly</li>
+                    <li>✅ All enhancements must be additive, stable, and production-safe</li>
+                    <li>✅ Must surpass TikTok, Instagram, and Facebook in reliability, monetization, and ethics</li>
+                    <li>✅ Vertical, swipeable UI with blue-and-white color contrast for immersive experience</li>
+                  </ul>
+                </div>
               <div className="bg-white rounded-lg p-4 border-2 border-orange-200">
                 <h3 className="font-bold text-orange-900 mb-2">Performance Requirements</h3>
                 <ul className="space-y-1 text-xs text-gray-700">
@@ -1240,9 +1244,11 @@ const allTransactions = await base44.asServiceRole
                     <p className="font-semibold text-xs text-red-900 mb-1">User Interface:</p>
                     <ul className="space-y-1 text-xs text-gray-700">
                       <li>• Fully interactive, visually polished, professional, and user-friendly</li>
-                      <li>• Bright but clean color scheme, dark text on light backgrounds for readability</li>
+                      <li>• TikTok-style vertical, swipeable, content-first interface</li>
+                      <li>• Blue-and-white color scheme with clean contrast for readability</li>
                       <li>• Smooth animations and transitions without breaking performance</li>
-                      <li>• Mobile-responsive across all screen sizes</li>
+                      <li>• Mobile-first responsive design optimized for vertical scrolling</li>
+                      <li>• Immersive full-screen content consumption mode</li>
                     </ul>
                   </div>
                   <div>
