@@ -17,7 +17,8 @@ import {
   Copy,
   ExternalLink,
   Plus,
-  CreditCard
+  CreditCard,
+  RefreshCw
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -94,11 +95,12 @@ export default function CreatorEconomy() {
     }
   };
 
-  // Fetch referrals
+  // Fetch referrals with real-time updates
   const { data: referrals = [] } = useQuery({
     queryKey: ['referrals', user?.email],
     queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
-    enabled: !!user?.email
+    enabled: !!user?.email,
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
   // Fetch creator shop
@@ -128,14 +130,16 @@ export default function CreatorEconomy() {
     enabled: !!user?.email
   });
 
-  // Fetch transactions for tips
+  // Fetch transactions for tips with real-time updates
   const { data: tipTransactions = [] } = useQuery({
     queryKey: ['tip-transactions', user?.email],
     queryFn: () => base44.entities.Transaction.filter({ 
       to_email: user?.email,
-      type: 'tip'
+      type: 'tip',
+      status: 'completed'
     }),
-    enabled: !!user?.email
+    enabled: !!user?.email,
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
   // Fetch subscriptions (platform tier subscriptions)
@@ -261,23 +265,35 @@ export default function CreatorEconomy() {
             <h1 className="text-4xl font-bold gradient-text mb-2">Creator Economy</h1>
             <p className="text-gray-600">Multi-stream monetization dashboard</p>
           </div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow"
-          >
-            <p className="text-sm opacity-90 mb-1">Total Earnings</p>
-            <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
-            <p className="text-xs opacity-75 mt-2">Beta: Tracking & Accruing</p>
-          </motion.div>
+          <div className="flex gap-3 items-center">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                window.location.reload();
+              }}
+              className="border-2 border-purple-300 hover:bg-purple-50"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow"
+            >
+              <p className="text-sm opacity-90 mb-1">Total Earnings</p>
+              <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
+              <p className="text-xs opacity-75 mt-2">All-Time Total</p>
+            </motion.div>
+          </div>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
-            { label: 'Active Streams', value: '6', icon: Zap, color: 'from-purple-500 to-pink-500' },
-            { label: 'Conversion Rate', value: '3.2%', icon: Target, color: 'from-blue-500 to-cyan-500' },
-            { label: 'Total Clicks', value: '12.4K', icon: TrendingUp, color: 'from-green-500 to-emerald-500' },
-            { label: 'Growth', value: '+24%', icon: Rocket, color: 'from-orange-500 to-red-500' }
+            { label: 'Active Streams', value: Object.values(earnings).filter(e => e > 0).length.toString(), icon: Zap, color: 'from-purple-500 to-pink-500' },
+            { label: 'Total Referrals', value: referrals.length.toString(), icon: Users, color: 'from-blue-500 to-cyan-500' },
+            { label: 'Tips Received', value: tipTransactions.length.toString(), icon: DollarSign, color: 'from-green-500 to-emerald-500' },
+            { label: 'This Month', value: `$${totalEarnings.toFixed(2)}`, icon: TrendingUp, color: 'from-orange-500 to-red-500' }
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
@@ -302,10 +318,10 @@ export default function CreatorEconomy() {
           })}
         </div>
 
-        {/* Beta Disclaimer */}
-        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-xl">
-          <p className="text-sm text-blue-900">
-            <strong>Beta Notice:</strong> Earnings shown during beta represent tracked and accruing revenue. Cash payouts activate once monetization streams go live.
+        {/* Earnings Info */}
+        <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
+          <p className="text-sm text-green-900">
+            <strong>💰 Live Earnings:</strong> All earnings are tracked in real-time. Cash out anytime once you reach the $5 minimum threshold.
           </p>
         </div>
       </motion.div>
