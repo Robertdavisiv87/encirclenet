@@ -46,13 +46,6 @@ export default function Messages() {
     };
   }, []);
 
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    if (messages?.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages?.length]);
-
   const { data: threads = [] } = useQuery({
     queryKey: ['message-threads', user?.email],
     queryFn: async () => {
@@ -101,6 +94,13 @@ export default function Messages() {
     enabled: !!selectedThread?.id && !!user?.email,
     refetchInterval: 2000 // Refresh every 2 seconds for real-time messages
   });
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (messages?.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages?.length]);
 
   const sendMessageMutation = useMutation({
     mutationFn: async () => {
