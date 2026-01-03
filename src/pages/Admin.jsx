@@ -153,38 +153,38 @@ export default function Admin() {
 
       {/* Quick Links */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <Link to={createPageUrl('AdminRevenue')}>
+        <a href={createPageUrl('AdminRevenue')}>
           <Card className="hover:shadow-lg transition-all cursor-pointer border-2 border-green-200">
             <CardContent className="p-4 text-center">
               <DollarSign className="w-8 h-8 mx-auto mb-2 text-green-600" />
               <p className="font-semibold text-sm text-gray-900">Revenue</p>
             </CardContent>
           </Card>
-        </Link>
-        <Link to={createPageUrl('SystemStatus')}>
+        </a>
+        <a href={createPageUrl('SystemStatus')}>
           <Card className="hover:shadow-lg transition-all cursor-pointer border-2 border-blue-200">
             <CardContent className="p-4 text-center">
               <TrendingUp className="w-8 h-8 mx-auto mb-2 text-blue-600" />
               <p className="font-semibold text-sm text-gray-900">System Status</p>
             </CardContent>
           </Card>
-        </Link>
-        <Link to={createPageUrl('ModerationDashboard')}>
+        </a>
+        <a href={createPageUrl('ModerationDashboard')}>
           <Card className="hover:shadow-lg transition-all cursor-pointer border-2 border-red-200">
             <CardContent className="p-4 text-center">
               <Bell className="w-8 h-8 mx-auto mb-2 text-red-600" />
               <p className="font-semibold text-sm text-gray-900">Moderation</p>
             </CardContent>
           </Card>
-        </Link>
-        <Link to={createPageUrl('ManageServiceVerticals')}>
+        </a>
+        <a href={createPageUrl('ManageServiceVerticals')}>
           <Card className="hover:shadow-lg transition-all cursor-pointer border-2 border-purple-200">
             <CardContent className="p-4 text-center">
               <Users className="w-8 h-8 mx-auto mb-2 text-purple-600" />
               <p className="font-semibold text-sm text-gray-900">Services</p>
             </CardContent>
           </Card>
-        </Link>
+        </a>
       </div>
 
       {/* Stats Grid */}

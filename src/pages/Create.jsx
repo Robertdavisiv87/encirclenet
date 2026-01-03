@@ -327,12 +327,12 @@ export default function Create() {
 
       {/* Quick Links */}
       <div className="mb-6">
-        <Link to={createPageUrl('MasterSpec')}>
+        <a href={createPageUrl('MasterSpec')}>
           <Button variant="outline" size="sm" className="w-full">
             <Sparkles className="w-4 h-4 mr-2" />
             View Content Templates & Master Spec
           </Button>
-        </Link>
+        </a>
       </div>
 
       {/* Content Type Selector */}
