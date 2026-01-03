@@ -22,6 +22,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminProtection from '../components/auth/AdminProtection';
 import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
+import AdvancedAnalyticsDashboard from '../components/admin/AdvancedAnalyticsDashboard';
+import AIContentModerator from '../components/admin/AIContentModerator';
 import EarningsDashboard from '../components/creator/EarningsDashboard';
 
 export default function Admin() {
@@ -207,9 +209,53 @@ export default function Admin() {
         </CardContent>
       </Card>
 
+      {/* Automated Payout System */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Automated Payout System
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              Automatically process payouts for creators who meet the threshold criteria.
+            </p>
+            <Button
+              onClick={async () => {
+                try {
+                  const result = await base44.functions.invoke('processAutomatedPayouts', {
+                    threshold: 50,
+                    auto_approve: true
+                  });
+                  alert(`✅ Processed ${result.data.approved} payouts automatically`);
+                  refetch();
+                } catch (error) {
+                  alert('❌ Automated payout failed: ' + error.message);
+                }
+              }}
+              className="gradient-bg-primary text-white"
+            >
+              Run Automated Payouts
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Payout Approval Queue */}
       <div className="mb-8">
         <PayoutApprovalQueue />
+      </div>
+
+      {/* Advanced Analytics Dashboard */}
+      <div className="mb-8">
+        <AdvancedAnalyticsDashboard />
+      </div>
+
+      {/* AI Content Moderator */}
+      <div className="mb-8">
+        <AIContentModerator />
       </div>
 
       {/* Tabs for Recent Activity and Live Tracking */}
