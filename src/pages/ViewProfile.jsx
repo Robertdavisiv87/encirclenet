@@ -60,11 +60,10 @@ export default function ViewProfile() {
 
       if (profileEmail) {
         try {
-          const users = await base44.asServiceRole.entities.User.list();
-          const foundUser = users.find(u => u.email === profileEmail);
+          const users = await base44.entities.User.filter({ email: profileEmail });
           if (mounted) {
-            if (foundUser) {
-              setProfileUser(foundUser);
+            if (users && users.length > 0) {
+              setProfileUser(users[0]);
             } else {
               console.error('No user found with email:', profileEmail);
             }
