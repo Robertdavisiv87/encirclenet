@@ -16,7 +16,8 @@ import {
   Rocket,
   Copy,
   ExternalLink,
-  Plus
+  Plus,
+  CreditCard
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -28,10 +29,13 @@ import AffiliateTracker from '../components/monetization/AffiliateTracker';
 import ReferralCard from '../components/monetization/ReferralCard';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
+import BankAccountSetup from '../components/monetization/BankAccountSetup';
 import { createPageUrl } from '../utils';
 
 export default function CreatorEconomy() {
   const [user, setUser] = useState(null);
+  const [showBankSetup, setShowBankSetup] = useState(false);
+  const [isProcessingPayout, setIsProcessingPayout] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -46,6 +50,49 @@ export default function CreatorEconomy() {
     };
     loadUser();
   }, []);
+
+  const handlePayout = async () => {
+    if (!user.bank_account_linked) {
+      setShowBankSetup(true);
+      return;
+    }
+
+    if (totalEarnings < 5) {
+      toast({
+        title: "Minimum Payout Not Met",
+        description: `You need at least $5 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessingPayout(true);
+    try {
+      const response = await base44.functions.invoke('processPayout', {
+        amount: totalEarnings
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "🎉 Payout Successful!",
+          description: response.data.message
+        });
+        
+        // Refresh the page data
+        window.location.reload();
+      } else {
+        throw new Error(response.data.error || 'Payout failed');
+      }
+    } catch (error) {
+      toast({
+        title: "Payout Failed",
+        description: error.message || "Please try again later",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessingPayout(false);
+    }
+  };
 
   // Fetch referrals
   const { data: referrals = [] } = useQuery({
@@ -320,35 +367,28 @@ export default function CreatorEconomy() {
           />
           <MultiStreamDashboard 
             earnings={earnings} 
-            onCashOut={async () => {
-              if (totalEarnings >= 5) {
-                toast({
-                  title: "🎉 Payout Requested!",
-                  description: `Processing $${totalEarnings.toFixed(2)} to your account. Funds typically arrive in 1-3 business days.`
-                });
-                
-                // Create payout record
-                try {
-                  await base44.entities.Transaction.create({
-                    from_email: 'system@encirclenet.net',
-                    to_email: user.email,
-                    type: 'payout',
-                    amount: totalEarnings,
-                    status: 'pending',
-                    description: 'Earnings cashout'
-                  });
-                } catch (e) {
-                  console.error('Payout record failed:', e);
-                }
-              } else {
-                toast({
-                  title: "Minimum Payout Not Met",
-                  description: `You need at least $5 to cash out. Current balance: $${totalEarnings.toFixed(2)}`,
-                  variant: "destructive"
-                });
-              }
-            }}
+            onCashOut={handlePayout}
           />
+          
+          {!user?.bank_account_linked && totalEarnings >= 5 && (
+            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-300 rounded-xl p-6 mb-6">
+              <div className="flex items-start gap-3">
+                <CreditCard className="w-6 h-6 text-orange-600 mt-1" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-blue-900 mb-2">Link Your Bank Account</h3>
+                  <p className="text-sm text-gray-700 mb-4">
+                    You have ${totalEarnings.toFixed(2)} ready to cash out! Link your bank account to receive payments.
+                  </p>
+                  <Button 
+                    onClick={() => setShowBankSetup(true)}
+                    className="gradient-bg-primary text-white shadow-glow"
+                  >
+                    Link Bank Account Now
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="affiliate">
@@ -971,6 +1011,19 @@ export default function CreatorEconomy() {
           </motion.div>
         </TabsContent>
       </Tabs>
+
+      <BankAccountSetup
+        isOpen={showBankSetup}
+        onClose={() => setShowBankSetup(false)}
+        user={user}
+        onSuccess={() => {
+          toast({
+            title: "Bank Account Linked!",
+            description: "You can now cash out your earnings"
+          });
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }
