@@ -150,9 +150,24 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
               {/* Share */}
               <motion.button
                 whileTap={{ scale: 0.8 }}
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({ title: post.caption, url: window.location.href });
+                onClick={async () => {
+                  const postUrl = `${window.location.origin}?post=${post.id}`;
+                  try {
+                    if (navigator.share) {
+                      await navigator.share({ 
+                        title: `Check out this post by ${post.author_name}`,
+                        text: post.caption || 'Amazing content on Encircle Net!',
+                        url: postUrl 
+                      });
+                    } else {
+                      navigator.clipboard.writeText(postUrl);
+                      alert('Link copied to clipboard!');
+                    }
+                  } catch (err) {
+                    if (err.name !== 'AbortError') {
+                      navigator.clipboard.writeText(postUrl);
+                      alert('Link copied to clipboard!');
+                    }
                   }
                 }}
                 className="flex flex-col items-center gap-1"
