@@ -30,6 +30,7 @@ import ModerationDashboard from './pages/ModerationDashboard';
 import MyCircle from './pages/MyCircle';
 import Onboarding from './pages/Onboarding';
 import PassiveIncome from './pages/PassiveIncome';
+import PayoutSettings from './pages/PayoutSettings';
 import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import ScheduleQA from './pages/ScheduleQA';
@@ -40,7 +41,6 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import PayoutSettings from './pages/PayoutSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +77,7 @@ export const PAGES = {
     "MyCircle": MyCircle,
     "Onboarding": Onboarding,
     "PassiveIncome": PassiveIncome,
+    "PayoutSettings": PayoutSettings,
     "Profile": Profile,
     "Referrals": Referrals,
     "ScheduleQA": ScheduleQA,
@@ -87,7 +88,6 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "PayoutSettings": PayoutSettings,
 }
 
 export const pagesConfig = {
