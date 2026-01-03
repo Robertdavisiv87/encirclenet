@@ -12,7 +12,7 @@ import SmartSuggestions from '../components/ai/SmartSuggestions';
 import ReferralSuccessNotification from '../components/referrals/ReferralSuccessNotification';
 import PersonalizedRecommendations from '../components/recommendations/PersonalizedRecommendations';
 import FilteredFeed from '../components/feed/FilteredFeed';
-import { Loader2, RefreshCw, Grid3X3, LayoutGrid, Bell, Search } from 'lucide-react';
+import { Loader2, RefreshCw, Search } from 'lucide-react';
 import NotificationDropdown from '../components/notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { createPageUrl } from '../utils';
@@ -34,7 +34,7 @@ const mockAds = [
 
 export default function Home() {
   const [user, setUser] = useState(null);
-  const [feedMode, setFeedMode] = useState('tiktok'); // classic or tiktok
+  const [feedMode, setFeedMode] = useState('tiktok');
   const [showGrowPrompt, setShowGrowPrompt] = useState(false);
   const queryClient = useQueryClient();
 
@@ -150,11 +150,10 @@ export default function Home() {
         </div>
       </div>
     );
-  }
+    }
 
-  if (feedMode === 'tiktok') {
     return (
-      <div className="relative">
+    <div className="relative">
         <SEO 
           title="Encircle Net Feed - Viral Content & High Engagement Social Media"
           description="Discover trending posts, viral content, and connect with top creators on Encircle Net. The most engaging social media platform with real-time interactions."
@@ -176,14 +175,6 @@ export default function Home() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                onClick={() => setFeedMode('classic')}
-                className="text-zinc-400 hover:text-white"
-              >
-                <Grid3X3 className="w-5 h-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
                 onClick={handleRefresh}
                 className="text-zinc-400 hover:text-white"
               >
@@ -200,11 +191,7 @@ export default function Home() {
           onTip={() => queryClient.invalidateQueries(['posts'])}
         />
       </div>
-    );
-  }
-
-  return (
-    <div className="max-w-lg mx-auto bg-[#F4F6FA] min-h-screen">
+      );
       <SEO 
         title="Encircle Net - #1 High Engagement Social Media Platform | Earn While You Share"
         description="Join 1M+ creators on Encircle Net, the highest engagement social media platform. Share content, earn money through tips & subscriptions, and build your circle. Start monetizing today!"
@@ -315,8 +302,4 @@ export default function Home() {
         />
       </div>
 
-        {/* Chatbot */}
-        <HomeChatbot user={user} />
-        </div>
-        );
         }
