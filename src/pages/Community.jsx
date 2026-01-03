@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Lock, Video, Trophy, Plus, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import CommunityStats from '../components/community/CommunityStats';
+import InterestBasedGroups from '../components/community/InterestBasedGroups';
+import TrendingDiscussions from '../components/community/TrendingDiscussions';
 
 export default function Community() {
   const [user, setUser] = useState(null);
@@ -55,6 +58,18 @@ export default function Community() {
         <p className="text-gray-600">Join groups, exclusive circles, live sessions, and challenges</p>
       </div>
 
+      <div className="mb-8">
+        <CommunityStats />
+      </div>
+
+      <div className="mb-8">
+        <InterestBasedGroups />
+      </div>
+
+      <div className="mb-8">
+        <TrendingDiscussions />
+      </div>
+
       <Tabs defaultValue="groups" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="groups">Groups</TabsTrigger>
@@ -76,7 +91,10 @@ export default function Community() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {groups.map((group) => (
               <motion.div key={group.id} whileHover={{ scale: 1.02 }}>
-                <Card className="cursor-pointer hover:shadow-glow">
+                <Card 
+                  className="cursor-pointer hover:shadow-glow"
+                  onClick={() => window.location.href = `${createPageUrl('ViewGroup')}?id=${group.id}`}
+                >
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Users className="w-5 h-5 text-cyan-600" />
@@ -84,11 +102,11 @@ export default function Community() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-gray-600 mb-3">{group.description}</p>
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{group.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">{group.member_count} members</span>
-                      <Button size="sm" variant="outline">
-                        <ArrowRight className="w-4 h-4" />
+                      <Button size="sm" className="gradient-bg-primary text-white">
+                        View Group
                       </Button>
                     </div>
                   </CardContent>
