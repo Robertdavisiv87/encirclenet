@@ -29,7 +29,7 @@ import ReferralCard from '../components/monetization/ReferralCard';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
-import { Link } from 'react-router-dom';
+import GlobalAIAssistant from '../components/ai/GlobalAIAssistant';
 
 export default function CreatorEconomy() {
   const [user, setUser] = useState(null);
@@ -203,6 +203,8 @@ export default function CreatorEconomy() {
         description="Track earnings from tips, subscriptions, affiliates, referrals, and brand deals. Full creator economy platform with real-time analytics."
         keywords="creator economy, monetization dashboard, affiliate earnings, subscription income, creator earnings, multi-stream revenue"
       />
+      
+      <GlobalAIAssistant user={user} currentPage="Economy" />
 
       {/* Header */}
       <motion.div

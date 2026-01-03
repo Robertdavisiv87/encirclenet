@@ -20,7 +20,8 @@ import { motion } from 'framer-motion';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import { createPageUrl } from '../utils';
-import { Link } from 'react-router-dom';
+import GlobalAIAssistant from '../components/ai/GlobalAIAssistant';
+import PerformanceMonitor from '../components/system/PerformanceMonitor';
 
 export default function LocalServices() {
   const [user, setUser] = useState(null);
@@ -62,9 +63,11 @@ export default function LocalServices() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50 p-6">
       <SEO 
-        title="Local Services Marketplace | EncircleNet"
-        description="Find trusted local service providers near you. From mechanics to tutors, all in one place."
+        title="Local Services Marketplace - Instant Booking | EncircleNet"
+        description="Book trusted local services instantly. Real-time availability, automated confirmations, secure payments. From mechanics to tutors, all in one place."
       />
+      
+      <GlobalAIAssistant user={user} currentPage="Services" />
 
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -74,8 +77,13 @@ export default function LocalServices() {
           className="mb-8"
         >
           <h1 className="text-4xl font-bold gradient-text mb-2">Local Services</h1>
-          <p className="text-gray-600">Find trusted professionals near you</p>
+          <p className="text-gray-600">Instant booking • Real-time availability • Automated confirmations</p>
         </motion.div>
+
+        {/* System Monitor */}
+        <div className="mb-6">
+          <PerformanceMonitor />
+        </div>
 
         {/* Search & Location */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">

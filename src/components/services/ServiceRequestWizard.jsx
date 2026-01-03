@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight, ArrowLeft, DollarSign, CheckCircle, Loader2, Shield } from 'lucide-react';
+import CalendarBooking from './CalendarBooking';
 
 export default function ServiceRequestWizard({ vertical, isOpen, onClose, user }) {
   const [step, setStep] = useState(1);
@@ -19,16 +20,18 @@ export default function ServiceRequestWizard({ vertical, isOpen, onClose, user }
   const [pricing, setPricing] = useState(null);
   const [loadingPricing, setLoadingPricing] = useState(false);
   const [loadingAddOns, setLoadingAddOns] = useState(false);
+  const [serviceRequest, setServiceRequest] = useState(null);
 
-  const totalSteps = 4;
+  const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
   const createRequestMutation = useMutation({
     mutationFn: async (data) => {
       return await base44.entities.ServiceRequest.create(data);
     },
-    onSuccess: () => {
-      setStep(5);
+    onSuccess: (request) => {
+      setServiceRequest(request);
+      setStep(4);
     }
   });
 
@@ -138,7 +141,7 @@ Return JSON array with: name (string), description (string), price (number), pri
 
   const handleBack = () => setStep(prev => prev - 1);
 
-  const handleSubmit = () => {
+  const handleReviewSubmit = () => {
     const selectedAddOns = addOns.filter(addon => formData[`addon_${addon.name}`]);
     const totalPrice = (pricing?.estimated_price || 0) + selectedAddOns.reduce((sum, a) => sum + a.price, 0);
 
@@ -151,6 +154,8 @@ Return JSON array with: name (string), description (string), price (number), pri
       status: 'pending_provider'
     });
   };
+
+  const totalPrice = (pricing?.estimated_price || 0) + addOns.filter(a => formData[`addon_${a.name}`]).reduce((sum, a) => sum + a.price, 0);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -354,41 +359,20 @@ Return JSON array with: name (string), description (string), price (number), pri
             </motion.div>
           )}
 
-          {/* Step 4: Payment */}
-          {step === 4 && (
+          {/* Step 4: Calendar Booking */}
+          {step === 4 && serviceRequest && (
             <motion.div
               key="step4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-4"
             >
-              <h3 className="text-lg font-semibold text-gray-900">Secure Payment</h3>
-              
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border-2 border-purple-300">
-                <p className="text-sm text-gray-700 mb-3">Payment processing is secure and encrypted.</p>
-                
-                <div className="space-y-3">
-                  <div>
-                    <Label>Card Number</Label>
-                    <Input placeholder="1234 5678 9012 3456" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label>Expiry</Label>
-                      <Input placeholder="MM/YY" />
-                    </div>
-                    <div>
-                      <Label>CVV</Label>
-                      <Input placeholder="123" type="password" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-xs text-gray-500 text-center">
-                🔒 Secured by Stripe • Your payment is protected
-              </div>
+              <CalendarBooking
+                serviceRequest={serviceRequest}
+                provider={{ email: 'auto-assigned', name: 'Best Available Provider' }}
+                totalPrice={totalPrice}
+                onBookingComplete={() => setStep(5)}
+              />
             </motion.div>
           )}
 
@@ -418,15 +402,15 @@ Return JSON array with: name (string), description (string), price (number), pri
                 Back
               </Button>
             )}
-            {step < 4 && (
+            {step < 3 && (
               <Button onClick={handleNext} className="flex-1 gradient-bg-primary text-white" disabled={loadingPricing || loadingAddOns}>
                 Next
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             )}
-            {step === 4 && (
-              <Button onClick={handleSubmit} className="flex-1 bg-green-600 hover:bg-green-700 text-white" disabled={createRequestMutation.isLoading}>
-                {createRequestMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm & Pay'}
+            {step === 3 && (
+              <Button onClick={handleReviewSubmit} className="flex-1 bg-green-600 hover:bg-green-700 text-white" disabled={createRequestMutation.isLoading}>
+                {createRequestMutation.isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Continue to Booking'}
               </Button>
             )}
           </div>
