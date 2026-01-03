@@ -10,7 +10,7 @@ export default function MoneyAssistant({ user, mission }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `Hey ${user?.full_name || 'there'}! 👋 I'm your AI Money Assistant. Want me to help you land your first paid job today?`
+      content: `Hey ${user?.full_name || 'there'}! 👋 I'm here to help you start earning. No pressure, no complicated stuff — just real opportunities. What sounds interesting to you?`
     }
   ]);
   const [input, setInput] = useState('');

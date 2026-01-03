@@ -93,7 +93,7 @@ export default function MoneyMissionFlow({ isOpen, onClose, user }) {
             >
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
                 <h3 className="font-bold text-green-900 mb-2">How do you want to make money today?</h3>
-                <p className="text-sm text-gray-700">Choose your path and we'll guide you step-by-step</p>
+                <p className="text-sm text-gray-700">No experience needed. Pick what feels right and we'll help you get started.</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
