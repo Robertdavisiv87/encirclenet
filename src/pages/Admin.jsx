@@ -273,8 +273,8 @@ export default function Admin() {
                     threshold: 50,
                     auto_approve: true
                   });
-                  alert(`✅ Processed ${result.data.approved} payouts automatically`);
-                  refetch();
+                  alert(`✅ ${result.data.message}\n\nRevenue: ${result.data.processed}\nReferrals: ${result.data.referrals_processed}\nTotal Approved: ${result.data.approved}`);
+                  window.location.reload();
                 } catch (error) {
                   alert('❌ Automated payout failed: ' + error.message);
                 }

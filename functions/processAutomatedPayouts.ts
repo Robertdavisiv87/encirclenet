@@ -18,13 +18,50 @@ Deno.serve(async (req) => {
       payout_amount: { $gte: threshold }
     });
 
+    // Get all completed referrals that haven't been paid out
+    const completedReferrals = await base44.asServiceRole.entities.Referral.filter({
+      status: 'completed'
+    });
+
     const results = {
       processed: 0,
       approved: 0,
       rejected: 0,
+      referrals_processed: 0,
       errors: []
     };
 
+    // Process referral payouts
+    for (const referral of completedReferrals) {
+      try {
+        if (referral.commission_earned > 0) {
+          // Mark referral as paid
+          await base44.asServiceRole.entities.Referral.update(referral.id, {
+            status: 'paid'
+          });
+
+          // Create transaction record
+          await base44.asServiceRole.entities.Transaction.create({
+            from_email: 'system@encirclenet.net',
+            to_email: referral.referrer_email,
+            amount: referral.commission_earned,
+            type: 'payout',
+            status: 'completed',
+            description: `Referral commission payout for ${referral.referred_email}`
+          });
+
+          results.referrals_processed++;
+          results.approved++;
+        }
+      } catch (error) {
+        results.errors.push({
+          referral_id: referral.id,
+          error: error.message
+        });
+      }
+    }
+
+    // Process revenue payouts
     for (const payout of pendingPayouts) {
       try {
         // Auto-approve logic: check if creator meets criteria
@@ -65,7 +102,7 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       ...results,
-      message: `Processed ${results.processed} payouts, approved ${results.approved}`
+      message: `Processed ${results.processed} revenue payouts and ${results.referrals_processed} referral payouts, total approved: ${results.approved}`
     });
   } catch (error) {
     console.error('Automated payout error:', error);
