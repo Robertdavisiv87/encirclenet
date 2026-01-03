@@ -45,11 +45,27 @@ export default function CreatorEconomy() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Auto-sync earnings on page load
+        try {
+          await base44.functions.invoke('syncUserEarnings', {});
+        } catch (e) {
+          console.log('Earnings sync failed:', e);
+        }
       } catch (e) {
         window.location.href = '/';
       }
     };
     loadUser();
+    
+    // Auto-refresh earnings every 30 seconds
+    const interval = setInterval(() => {
+      base44.functions.invoke('syncUserEarnings', {}).catch(e => {
+        console.log('Auto-sync failed:', e);
+      });
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const handlePayout = async () => {
@@ -96,11 +112,17 @@ export default function CreatorEconomy() {
   };
 
   // Fetch referrals with real-time updates
-  const { data: referrals = [] } = useQuery({
+  const { data: referrals = [], refetch: refetchReferrals } = useQuery({
     queryKey: ['referrals', user?.email],
-    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    queryFn: async () => {
+      const allReferrals = await base44.entities.Referral.filter({ referrer_email: user?.email });
+      console.log('Referrals loaded:', allReferrals);
+      return allReferrals;
+    },
     enabled: !!user?.email,
-    refetchInterval: 30000 // Refresh every 30 seconds
+    refetchInterval: 10000, // Refresh every 10 seconds for real-time updates
+    refetchOnMount: true,
+    refetchOnWindowFocus: true
   });
 
   // Fetch creator shop
@@ -131,15 +153,20 @@ export default function CreatorEconomy() {
   });
 
   // Fetch transactions for tips with real-time updates
-  const { data: tipTransactions = [] } = useQuery({
+  const { data: tipTransactions = [], refetch: refetchTips } = useQuery({
     queryKey: ['tip-transactions', user?.email],
-    queryFn: () => base44.entities.Transaction.filter({ 
-      to_email: user?.email,
-      type: 'tip',
-      status: 'completed'
-    }),
+    queryFn: async () => {
+      const allTransactions = await base44.entities.Transaction.filter({ 
+        to_email: user?.email,
+        type: 'tip'
+      });
+      console.log('Tips loaded:', allTransactions);
+      return allTransactions.filter(t => t.status === 'completed' || !t.status);
+    },
     enabled: !!user?.email,
-    refetchInterval: 30000 // Refresh every 30 seconds
+    refetchInterval: 10000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true
   });
 
   // Fetch subscriptions (platform tier subscriptions)
@@ -245,6 +272,29 @@ export default function CreatorEconomy() {
   };
 
   const totalEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
+  
+  // Log for debugging
+  console.log('Earnings Breakdown:', {
+    tips: tipsTotal,
+    subscriptions: subscriptionsTotal,
+    affiliate: affiliateTotal,
+    referrals: referralsTotal,
+    shop: creatorShop?.total_revenue || 0,
+    brands: brandAccount?.total_spent || 0,
+    total: totalEarnings
+  });
+  
+  const handleRefreshEarnings = () => {
+    refetchReferrals();
+    refetchTips();
+    toast({
+      title: "Refreshing Earnings...",
+      description: "Updating all revenue streams"
+    });
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50">
@@ -269,20 +319,31 @@ export default function CreatorEconomy() {
             <Button
               variant="outline"
               size="icon"
-              onClick={() => {
-                window.location.reload();
-              }}
+              onClick={handleRefreshEarnings}
               className="border-2 border-purple-300 hover:bg-purple-50"
+              title="Refresh all earnings data"
             >
               <RefreshCw className="w-4 h-4" />
             </Button>
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow"
+              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-6 shadow-glow cursor-pointer"
+              onClick={() => {
+                if (totalEarnings >= 5) {
+                  handlePayout();
+                } else {
+                  toast({
+                    title: "Keep Earning!",
+                    description: `You need $${(5 - totalEarnings).toFixed(2)} more to cash out.`
+                  });
+                }
+              }}
             >
               <p className="text-sm opacity-90 mb-1">Total Earnings</p>
               <p className="text-3xl font-bold">${totalEarnings.toFixed(2)}</p>
-              <p className="text-xs opacity-75 mt-2">All-Time Total</p>
+              <p className="text-xs opacity-75 mt-2">
+                {totalEarnings >= 5 ? 'Click to Cash Out' : `Need $${(5 - totalEarnings).toFixed(2)} more`}
+              </p>
             </motion.div>
           </div>
         </div>
