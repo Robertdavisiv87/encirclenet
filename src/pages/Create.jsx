@@ -305,7 +305,7 @@ export default function Create() {
         url="https://encirclenet.net/create"
       />
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold gradient-text animate-shimmer">Create VibePosts</h1>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
@@ -323,6 +323,16 @@ export default function Create() {
             )}
           </Button>
         </motion.div>
+      </div>
+
+      {/* Quick Links */}
+      <div className="mb-6">
+        <Link to={createPageUrl('MasterSpec')}>
+          <Button variant="outline" size="sm" className="w-full">
+            <Sparkles className="w-4 h-4 mr-2" />
+            View Content Templates & Master Spec
+          </Button>
+        </Link>
       </div>
 
       {/* Content Type Selector */}
