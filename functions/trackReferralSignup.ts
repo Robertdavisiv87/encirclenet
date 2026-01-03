@@ -55,13 +55,13 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create referral record with $0.50 commission
+    // Create referral record with $5.00 commission
     // Note: ALL users (including free tier) can earn referral commissions
     const referral = await base44.asServiceRole.entities.Referral.create({
       referrer_email: referrer_email,
       referrer_code: referral_code,
       referred_email: user.email,
-      commission_earned: 0.50,
+      commission_earned: 5.00,
       status: 'completed',
       conversion_type: 'signup'
     });
@@ -84,14 +84,14 @@ Deno.serve(async (req) => {
       const referrerUser = referrerUsers[0];
       const currentEarnings = referrerUser.total_earnings || 0;
       await base44.asServiceRole.entities.User.update(referrerUser.id, {
-        total_earnings: currentEarnings + 0.50
+        total_earnings: currentEarnings + 5.00
       });
     }
 
     return Response.json({ 
       success: true, 
       referral,
-      commission_earned: 0.50
+      commission_earned: 5.00
     });
 
   } catch (error) {

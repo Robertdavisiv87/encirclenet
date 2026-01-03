@@ -16,7 +16,6 @@ import Discover from './pages/Discover';
 import Earnings from './pages/Earnings';
 import Events from './pages/Events';
 import Explore from './pages/Explore';
-import Forums from './pages/Forums';
 import Gamification from './pages/Gamification';
 import Groups from './pages/Groups';
 import Home from './pages/Home';
@@ -35,11 +34,9 @@ import Profile from './pages/Profile';
 import Referrals from './pages/Referrals';
 import ScheduleQA from './pages/ScheduleQA';
 import Search from './pages/Search';
-import ServiceRequest from './pages/ServiceRequest';
 import Settings from './pages/Settings';
 import Subscription from './pages/Subscription';
 import SystemStatus from './pages/SystemStatus';
-import TrustCenter from './pages/TrustCenter';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
@@ -65,7 +62,6 @@ export const PAGES = {
     "Earnings": Earnings,
     "Events": Events,
     "Explore": Explore,
-    "Forums": Forums,
     "Gamification": Gamification,
     "Groups": Groups,
     "Home": Home,
@@ -84,11 +80,9 @@ export const PAGES = {
     "Referrals": Referrals,
     "ScheduleQA": ScheduleQA,
     "Search": Search,
-    "ServiceRequest": ServiceRequest,
     "Settings": Settings,
     "Subscription": Subscription,
     "SystemStatus": SystemStatus,
-    "TrustCenter": TrustCenter,
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
