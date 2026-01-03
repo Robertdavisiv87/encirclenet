@@ -141,6 +141,47 @@ export default function ViewProfile() {
     enabled: !!profileEmail
   });
 
+  const { data: userStats } = useQuery({
+    queryKey: ['user-stats', profileEmail],
+    queryFn: async () => {
+      const stats = await base44.entities.UserStats.filter({ user_email: profileEmail });
+      return stats[0];
+    },
+    enabled: !!profileEmail
+  });
+
+  const { data: badges } = useQuery({
+    queryKey: ['user-badges', profileEmail],
+    queryFn: async () => {
+      const allBadges = await base44.entities.Badge.list();
+      const userBadgeIds = userStats?.badges_earned || [];
+      return allBadges.filter(badge => userBadgeIds.includes(badge.id));
+    },
+    enabled: !!profileEmail && !!userStats,
+    initialData: []
+  });
+
+  const { data: polls } = useQuery({
+    queryKey: ['user-polls', profileEmail],
+    queryFn: () => base44.entities.Poll.filter({ creator_email: profileEmail, is_active: true }),
+    enabled: !!profileEmail,
+    initialData: []
+  });
+
+  const { data: liveQA } = useQuery({
+    queryKey: ['user-liveqa', profileEmail],
+    queryFn: async () => {
+      const sessions = await base44.entities.LiveQA.filter({ 
+        host_email: profileEmail, 
+        status: 'live' 
+      });
+      return sessions[0];
+    },
+    enabled: !!profileEmail
+  });
+
+  const [showPollModal, setShowPollModal] = useState(false);
+
   const handleFollow = async () => {
     if (!currentUser) {
       base44.auth.redirectToLogin();
