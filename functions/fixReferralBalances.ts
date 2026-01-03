@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     `);
 
     // 6️⃣ Update user record with corrected balance
-    await base44.asServiceRole.auth.updateMe({
+    await base44.asServiceRole.entities.User.update(user.id, {
       stripe_balance: availableBalance,
       earnings_migrated: user.stripe_account_id ? true : false
     });
