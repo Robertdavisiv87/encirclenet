@@ -1,145 +1,76 @@
-import React from 'react';
-import { X, Flame, Trophy, Calendar, TrendingUp } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { motion } from 'framer-motion';
+import { Flame, Trophy, Star, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import confetti from 'canvas-confetti';
 
-export default function StreakModal({ isOpen, onClose, userStats, posts }) {
-  if (!isOpen) return null;
-
-  const currentStreak = userStats?.current_streak || 0;
-  const longestStreak = userStats?.longest_streak || 0;
-  const totalPosts = userStats?.posts_count || 0;
-  
-  // Get recent posting days
-  const postsByDate = posts.reduce((acc, post) => {
-    const date = new Date(post.created_date).toDateString();
-    acc[date] = (acc[date] || 0) + 1;
-    return acc;
-  }, {});
-
-  const recentDays = Object.entries(postsByDate)
-    .map(([date, count]) => ({ date, count }))
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 7);
+export default function StreakModal({ isOpen, onClose, streakCount = 7, bonusPoints = 0 }) {
+  useEffect(() => {
+    if (isOpen) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [isOpen]);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-        onClick={onClose}
-      >
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md bg-gradient-to-br from-orange-100 to-red-100 border-4 border-orange-500">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-gradient-to-br from-white to-purple-50 rounded-2xl p-6 w-full max-w-md border-2 border-purple-200 shadow-glow"
-          onClick={e => e.stopPropagation()}
+          className="text-center py-8"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold gradient-text flex items-center gap-2">
-              <Flame className="w-7 h-7 text-orange-500 animate-pulse" />
-              Your Streak
-            </h2>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
+          <motion.div
+            animate={{ 
+              rotate: [0, 10, -10, 10, 0],
+              scale: [1, 1.2, 1, 1.2, 1]
+            }}
+            transition={{ duration: 0.6, repeat: 3 }}
+          >
+            <Flame className="w-24 h-24 mx-auto mb-4 text-orange-500" />
+          </motion.div>
+          
+          <h2 className="text-4xl font-bold gradient-text mb-3">
+            {streakCount} Day Streak! 🔥
+          </h2>
+          
+          <p className="text-gray-700 mb-6">
+            {streakCount >= 100 && "Legendary dedication! You're unstoppable!"}
+            {streakCount >= 30 && streakCount < 100 && "You're absolutely crushing it!"}
+            {streakCount >= 7 && streakCount < 30 && "You're on fire! Keep this momentum going!"}
+          </p>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-4 text-white shadow-glow">
-              <Flame className="w-8 h-8 mb-2 animate-bounce" />
-              <p className="text-3xl font-bold">{currentStreak}</p>
-              <p className="text-sm opacity-90">Day Streak</p>
+            <div className="bg-white/80 rounded-xl p-4 border-2 border-orange-400">
+              <Trophy className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
+              <p className="text-sm text-gray-600">Achievement</p>
+              <p className="text-xl font-bold text-blue-900">{streakCount} Days</p>
             </div>
-            
-            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl p-4 text-white shadow-glow">
-              <Trophy className="w-8 h-8 mb-2" />
-              <p className="text-3xl font-bold">{longestStreak}</p>
-              <p className="text-sm opacity-90">Best Streak</p>
-            </div>
-          </div>
-
-          {/* Total Posts */}
-          <div className="bg-white rounded-xl p-4 mb-6 border-2 border-purple-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-blue-900">{totalPosts}</p>
-                  <p className="text-sm text-gray-600">Total Posts</p>
-                </div>
-              </div>
+            <div className="bg-white/80 rounded-xl p-4 border-2 border-orange-400">
+              <Zap className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+              <p className="text-sm text-gray-600">Bonus Points</p>
+              <p className="text-xl font-bold text-purple-900">+{bonusPoints} XP</p>
             </div>
           </div>
 
-          {/* Recent Activity */}
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar className="w-5 h-5 text-purple-600" />
-              <h3 className="font-bold text-blue-900">Recent Activity</h3>
+          {streakCount >= 100 && (
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 rounded-xl p-4 mb-4">
+              <p className="text-sm font-bold text-yellow-900">🏆 Elite Achiever Badge Unlocked!</p>
             </div>
-            
-            {recentDays.length > 0 ? (
-              <div className="space-y-2">
-                {recentDays.map((day, index) => (
-                  <div 
-                    key={day.date}
-                    className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200"
-                  >
-                    <div>
-                      <p className="font-medium text-blue-900 text-sm">
-                        {new Date(day.date).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </p>
-                      {index === 0 && (
-                        <p className="text-xs text-purple-600">Today</p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-700">
-                        {day.count} post{day.count !== 1 ? 's' : ''}
-                      </span>
-                      <Flame className="w-4 h-4 text-orange-500" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600 text-sm text-center py-4">
-                No recent posts. Start posting to build your streak!
-              </p>
-            )}
-          </div>
+          )}
 
-          {/* Motivation */}
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white text-center">
-            <p className="font-semibold mb-1">
-              {currentStreak === 0 
-                ? "🚀 Start your streak today!" 
-                : currentStreak < 7 
-                  ? "🔥 Keep it going!" 
-                  : currentStreak < 30 
-                    ? "⭐ You're on fire!" 
-                    : "👑 Streak Master!"}
-            </p>
-            <p className="text-sm opacity-90">
-              {currentStreak === 0 
-                ? "Post today to begin your journey"
-                : "Post daily to maintain your streak"}
-            </p>
-          </div>
+          <Button 
+            onClick={onClose}
+            className="w-full gradient-bg-primary text-white shadow-glow"
+          >
+            Keep Going! 🚀
+          </Button>
         </motion.div>
-      </motion.div>
-    </AnimatePresence>
+      </DialogContent>
+    </Dialog>
   );
 }
