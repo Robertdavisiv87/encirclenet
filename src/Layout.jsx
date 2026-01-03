@@ -22,6 +22,7 @@ import {
   Crown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AutoMonitor from './components/system/AutoMonitor';
 
 const ADMIN_EMAIL = 'robertdavisiv87@gmail.com';
 
@@ -168,7 +169,10 @@ export default function Layout({ children, currentPageName }) {
         <main className="md:ml-64 min-h-screen pb-20 md:pb-0 transition-all duration-300">
           {children}
         </main>
-      </div>
-    </HelmetProvider>
-  );
+
+        {/* Global System Monitor */}
+        <AutoMonitor />
+        </div>
+        </HelmetProvider>
+        );
 }
