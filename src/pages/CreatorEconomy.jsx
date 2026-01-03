@@ -46,6 +46,7 @@ import BankAccountSetup from '../components/monetization/BankAccountSetup';
 import { createPageUrl } from '../utils';
 
 export default function CreatorEconomy() {
+  // Creator Economy Dashboard - Multi-Stream Monetization
   const [user, setUser] = useState(null);
   const [showBankSetup, setShowBankSetup] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
