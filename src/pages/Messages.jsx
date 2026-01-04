@@ -17,8 +17,10 @@ export default function Messages() {
   const [messageText, setMessageText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
+  const [showNewChatModal, setShowNewChatModal] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [groupName, setGroupName] = useState('');
+  const [userSearchQuery, setUserSearchQuery] = useState('');
   const messagesEndRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -65,7 +67,7 @@ export default function Messages() {
         return [];
       }
     },
-    enabled: showNewGroupModal
+    enabled: showNewGroupModal || showNewChatModal
   });
 
   const { data: messages = [] } = useQuery({
@@ -169,6 +171,38 @@ export default function Messages() {
     }
   });
 
+  const startNewChatMutation = useMutation({
+    mutationFn: async (otherUser) => {
+      const participantEmails = [user.email, otherUser.email];
+      
+      // Check if thread already exists
+      const existingThread = threads.find(t => 
+        t.participant_emails.length === 2 &&
+        t.participant_emails.includes(user.email) &&
+        t.participant_emails.includes(otherUser.email)
+      );
+      
+      if (existingThread) {
+        return existingThread;
+      }
+      
+      // Create new thread
+      const thread = await base44.entities.MessageThread.create({
+        participant_emails: participantEmails,
+        last_message: 'New conversation',
+        last_message_date: new Date().toISOString()
+      });
+
+      return thread;
+    },
+    onSuccess: (thread) => {
+      queryClient.invalidateQueries(['message-threads']);
+      setShowNewChatModal(false);
+      setUserSearchQuery('');
+      setSelectedThread(thread);
+    }
+  });
+
   const handleSend = () => {
     if (messageText.trim()) {
       sendMessageMutation.mutate();
@@ -212,18 +246,37 @@ export default function Messages() {
     );
   }
 
+  const filteredUsers = allUsers
+    .filter(u => u.email !== user?.email)
+    .filter(u => {
+      const query = userSearchQuery.toLowerCase();
+      return (u.full_name?.toLowerCase().includes(query) || 
+              u.email?.toLowerCase().includes(query));
+    });
+
   return (
     <div className="max-w-6xl mx-auto h-screen flex flex-col bg-white">
       <div className="border-b border-gray-200 p-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold gradient-text">Messages</h1>
-        <Button 
-          onClick={() => setShowNewGroupModal(true)}
-          className="gradient-bg-primary text-white"
-          size="sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          New Group
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => setShowNewChatModal(true)}
+            variant="outline"
+            size="sm"
+            className="border-2 border-purple-400"
+          >
+            <MessageCircle className="w-4 h-4 mr-2" />
+            New Chat
+          </Button>
+          <Button 
+            onClick={() => setShowNewGroupModal(true)}
+            className="gradient-bg-primary text-white"
+            size="sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Group
+          </Button>
+        </div>
       </div>
 
       <div className="flex-1 flex overflow-hidden">
@@ -414,6 +467,65 @@ export default function Messages() {
           )}
         </div>
       </div>
+
+      {/* New 1-on-1 Chat Modal */}
+      <Dialog open={showNewChatModal} onOpenChange={setShowNewChatModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Start New Chat</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Search users by name or email..."
+                value={userSearchQuery}
+                onChange={(e) => setUserSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="max-h-96 overflow-y-auto space-y-2 border border-gray-200 rounded-lg p-2">
+              {filteredUsers.length === 0 ? (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                  <p className="text-gray-600 text-sm">
+                    {userSearchQuery ? 'No users found' : 'Start typing to search users'}
+                  </p>
+                </div>
+              ) : (
+                filteredUsers.map(u => (
+                  <motion.div
+                    key={u.email}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onClick={() => startNewChatMutation.mutate(u)}
+                    className="p-3 rounded-lg cursor-pointer transition-all flex items-center gap-3 bg-gray-50 hover:bg-purple-50 hover:border-purple-300 border-2 border-transparent"
+                  >
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={u.avatar} />
+                      <AvatarFallback className="gradient-bg-primary text-white">
+                        {u.full_name?.[0] || u.email?.[0] || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-blue-900 truncate">
+                        {u.full_name || 'User'}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">{u.email}</p>
+                    </div>
+                    {startNewChatMutation.isPending ? (
+                      <div className="w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <MessageCircle className="w-5 h-5 text-purple-600" />
+                    )}
+                  </motion.div>
+                ))
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New Group Chat Modal */}
       <Dialog open={showNewGroupModal} onOpenChange={setShowNewGroupModal}>
