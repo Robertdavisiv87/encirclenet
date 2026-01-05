@@ -40,6 +40,7 @@ import { useToast } from '@/components/ui/use-toast';
 import MultiStreamDashboard from '../components/monetization/MultiStreamDashboard';
 import AffiliateTracker from '../components/monetization/AffiliateTracker';
 import ReferralCard from '../components/monetization/ReferralCard';
+import TierProgressCard from '../components/referrals/TierProgressCard';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import BankAccountSetup from '../components/monetization/BankAccountSetup';
@@ -749,6 +750,9 @@ export default function CreatorEconomy() {
             animate={{ opacity: 1 }}
             className="space-y-6"
           >
+            {/* Tier Progress */}
+            <TierProgressCard userEmail={user?.email} />
+
             {/* Referral Stats Card */}
             <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">
               <div className="flex items-center justify-between mb-6">

@@ -24,6 +24,7 @@ import AdminProtection from '../components/auth/AdminProtection';
 import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
 import AdvancedAnalyticsDashboard from '../components/admin/AdvancedAnalyticsDashboard';
 import AIContentModerator from '../components/admin/AIContentModerator';
+import ReferralTierManager from '../components/admin/ReferralTierManager';
 import EarningsDashboard from '../components/creator/EarningsDashboard';
 import PerformanceMonitor from '../components/system/PerformanceMonitor';
 import { createPageUrl } from '../utils';
