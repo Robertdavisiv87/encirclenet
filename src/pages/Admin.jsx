@@ -313,6 +313,9 @@ export default function Admin() {
             <Activity className="w-4 h-4 mr-2 inline" />
             Live Tracking
           </TabsTrigger>
+          <TabsTrigger value="tiers" className="flex-1 data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+            Referral Tiers
+          </TabsTrigger>
         </TabsList>
 
         {/* Recent Activity Tab */}
@@ -553,6 +556,11 @@ export default function Admin() {
               </Card>
             </div>
           </div>
+        </TabsContent>
+
+        {/* Referral Tiers Tab */}
+        <TabsContent value="tiers">
+          <ReferralTierManager />
         </TabsContent>
       </Tabs>
       </div>
