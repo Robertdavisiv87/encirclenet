@@ -387,11 +387,9 @@ export default function CreatorEconomy() {
     referrals: referralsTotal,
     shop: creatorShop?.total_revenue || 0,
     brands: brandAccount?.total_spent || 0,
-    stripe_balance: stripeBalance,
     total: totalEarnings,
     payouts: totalPayouts,
-    available: availableBalance,
-    earnings_migrated: user?.earnings_migrated
+    available: availableBalance
   });
   
   const handleRefreshEarnings = async () => {
@@ -1381,9 +1379,7 @@ export default function CreatorEconomy() {
                   <p className="text-sm opacity-90">Total Earnings</p>
                 </div>
                 <p className="text-4xl font-bold">${totalEarnings.toFixed(2)}</p>
-                <p className="text-xs opacity-75 mt-2">
-                  {user?.earnings_migrated ? 'Synced with Stripe' : 'All-time revenue'}
-                </p>
+                <p className="text-xs opacity-75 mt-2">All-time revenue</p>
               </motion.div>
 
               <motion.div
