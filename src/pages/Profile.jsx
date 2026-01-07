@@ -105,9 +105,45 @@ export default function Profile() {
     initialData: []
   });
 
-  const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
-  const transactionEarnings = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-  const totalEarnings = user?.stripe_balance || (referralEarnings + transactionEarnings);
+  const { data: subscriptions = [] } = useQuery({
+    queryKey: ['profile-user-subscriptions', user?.email],
+    queryFn: () => base44.entities.Subscription.filter({ user_email: user?.email, status: 'active' }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const { data: affiliateLinks = [] } = useQuery({
+    queryKey: ['profile-affiliate-links', user?.email],
+    queryFn: () => base44.entities.AffiliateLink.filter({ user_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: []
+  });
+
+  const { data: creatorShop } = useQuery({
+    queryKey: ['profile-creator-shop', user?.email],
+    queryFn: async () => {
+      const shops = await base44.entities.CreatorShop.filter({ creator_email: user?.email });
+      return shops[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: brandAccount } = useQuery({
+    queryKey: ['profile-brand-account', user?.email],
+    queryFn: async () => {
+      const accounts = await base44.entities.BrandAccount.filter({ owner_email: user?.email });
+      return accounts[0];
+    },
+    enabled: !!user?.email
+  });
+
+  // Calculate earnings using same method as CreatorEconomy page
+  const tipsTotal = transactions.filter(t => t.type === 'tip').reduce((sum, t) => sum + (t.amount || 0), 0);
+  const subscriptionsTotal = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90;
+  const referralsTotal = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
+  const affiliateTotal = affiliateLinks.reduce((sum, a) => sum + (a.earnings || 0), 0);
+
+  const totalEarnings = tipsTotal + subscriptionsTotal + referralsTotal + affiliateTotal + (creatorShop?.total_revenue || 0) + (brandAccount?.total_spent || 0);
 
   const { data: subscription } = useQuery({
     queryKey: ['profile-subscription', user?.email],
@@ -272,7 +308,7 @@ export default function Profile() {
                 <p className="text-sm text-zinc-500">Following</p>
               </div>
               <div className="text-center">
-                <p className="font-bold text-green-400">${totalEarnings}</p>
+                <p className="font-bold text-green-400">${totalEarnings.toFixed(2)}</p>
                 <p className="text-sm text-zinc-500">Earned</p>
               </div>
             </div>
