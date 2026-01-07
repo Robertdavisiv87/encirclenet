@@ -97,31 +97,26 @@ const VideoPlayer = forwardRef(({ src, className = '', aspectRatio = 'square', i
         if (video.readyState < 2) {
           await new Promise((resolve) => {
             video.addEventListener('loadeddata', resolve, { once: true });
-            setTimeout(resolve, 5000);
+            setTimeout(resolve, 3000);
           });
         }
         
-        // Unmute on interaction
+        // Unmute on first play
         if (isMuted) {
           video.muted = false;
           setIsMuted(false);
         }
         
         await video.play();
-        setIsPlaying(true);
       } else {
         video.pause();
-        setIsPlaying(false);
       }
     } catch (err) {
       console.error('Playback error:', err);
-      
-      // Fallback: try muted
       try {
         video.muted = true;
-        await video.play();
-        setIsPlaying(true);
         setIsMuted(true);
+        await video.play();
       } catch (retryErr) {
         setHasError(true);
       }
@@ -143,17 +138,22 @@ const VideoPlayer = forwardRef(({ src, className = '', aspectRatio = 'square', i
       <video
         ref={videoRef}
         src={src}
-        className="w-full h-full object-contain cursor-pointer"
+        className="w-full h-full object-contain"
         style={{ 
-          pointerEvents: 'auto', 
           zIndex: 1
         }}
         playsInline
         preload="metadata"
         muted={isMuted}
+        disablePictureInPicture={false}
+        loop={false}
+      />
+      
+      {/* Click overlay to control playback */}
+      <div 
+        className="absolute inset-0 z-10 cursor-pointer"
         onClick={handleVideoClick}
         onTouchStart={handleVideoClick}
-        disablePictureInPicture={false}
       />
       
       {/* PLAY BUTTON OVERLAY - NON-INTERACTIVE */}
