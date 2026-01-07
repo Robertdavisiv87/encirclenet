@@ -62,71 +62,140 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create referral record with commission ($50 for admin, $5 for others)
-    const isAdmin = referrer_email === 'robertdavisiv87@gmail.com';
-    const commissionAmount = isAdmin ? 50.00 : 5.00;
-    const newUserBonus = 5.00; // New user also gets $5 signup bonus
-    
-    const referral = await base44.asServiceRole.entities.Referral.create({
-      referrer_email: referrer_email,
-      referrer_code: referral_code,
-      referred_email: user.email,
-      commission_earned: commissionAmount,
-      status: 'completed',
-      conversion_type: 'signup'
-    });
-    
-    // Record admin commission for referrals (platform also earns)
-    await base44.asServiceRole.entities.AdminCommission.create({
-      transaction_type: 'referral',
-      reference_id: referral.id,
-      amount: commissionAmount,
-      creator_email: referrer_email,
-      status: 'completed'
-    });
-
-    // Update referrer's total earnings
-    const referrerUsers = await base44.asServiceRole.entities.User.filter({
-      email: referrer_email
-    });
-
-    if (referrerUsers.length > 0) {
-      const referrerUser = referrerUsers[0];
-      const currentEarnings = referrerUser.total_earnings || 0;
-      await base44.asServiceRole.entities.User.update(referrerUser.id, {
-        total_earnings: currentEarnings + commissionAmount
-      });
-    }
-
-    // Give new user signup bonus
+    // Store referrer in new user's profile for tracking chain
     const newUserData = await base44.asServiceRole.entities.User.filter({
       email: user.email
     });
 
+    if (newUserData.length > 0) {
+      await base44.asServiceRole.entities.User.update(newUserData[0].id, {
+        referred_by: referrer_email
+      });
+    }
+
+    // Multi-level commission structure
+    const isAdmin = referrer_email === 'robertdavisiv87@gmail.com';
+    const level1Commission = isAdmin ? 50.00 : 5.00; // Direct referrer
+    const level2Commission = 2.50; // Their upline
+    const level3Commission = 1.00; // Their upline's upline
+    const newUserBonus = 5.00; // New user signup bonus
+    
+    let totalPaid = 0;
+    const commissionsLog = [];
+
+    // Level 1: Direct referrer
+    const referral = await base44.asServiceRole.entities.Referral.create({
+      referrer_email: referrer_email,
+      referrer_code: referral_code,
+      referred_email: user.email,
+      commission_earned: level1Commission,
+      status: 'completed',
+      conversion_type: 'signup'
+    });
+    
+    await base44.asServiceRole.entities.AdminCommission.create({
+      transaction_type: 'referral',
+      reference_id: referral.id,
+      amount: level1Commission,
+      creator_email: referrer_email,
+      status: 'completed'
+    });
+
+    const level1Users = await base44.asServiceRole.entities.User.filter({
+      email: referrer_email
+    });
+
+    if (level1Users.length > 0) {
+      const level1User = level1Users[0];
+      const currentEarnings = level1User.total_earnings || 0;
+      await base44.asServiceRole.entities.User.update(level1User.id, {
+        total_earnings: currentEarnings + level1Commission
+      });
+      totalPaid += level1Commission;
+      commissionsLog.push({ email: referrer_email, level: 1, amount: level1Commission });
+    }
+
+    // Level 2: Find who referred the direct referrer
+    if (level1Users.length > 0 && level1Users[0].referred_by) {
+      const level2Email = level1Users[0].referred_by;
+      
+      await base44.asServiceRole.entities.Referral.create({
+        referrer_email: level2Email,
+        referrer_code: 'LEVEL2',
+        referred_email: user.email,
+        commission_earned: level2Commission,
+        status: 'completed',
+        conversion_type: 'signup'
+      });
+
+      const level2Users = await base44.asServiceRole.entities.User.filter({
+        email: level2Email
+      });
+
+      if (level2Users.length > 0) {
+        const level2User = level2Users[0];
+        const currentEarnings = level2User.total_earnings || 0;
+        await base44.asServiceRole.entities.User.update(level2User.id, {
+          total_earnings: currentEarnings + level2Commission
+        });
+        totalPaid += level2Commission;
+        commissionsLog.push({ email: level2Email, level: 2, amount: level2Commission });
+
+        // Level 3: Find who referred level 2
+        if (level2User.referred_by) {
+          const level3Email = level2User.referred_by;
+          
+          await base44.asServiceRole.entities.Referral.create({
+            referrer_email: level3Email,
+            referrer_code: 'LEVEL3',
+            referred_email: user.email,
+            commission_earned: level3Commission,
+            status: 'completed',
+            conversion_type: 'signup'
+          });
+
+          const level3Users = await base44.asServiceRole.entities.User.filter({
+            email: level3Email
+          });
+
+          if (level3Users.length > 0) {
+            const level3User = level3Users[0];
+            const currentEarnings = level3User.total_earnings || 0;
+            await base44.asServiceRole.entities.User.update(level3User.id, {
+              total_earnings: currentEarnings + level3Commission
+            });
+            totalPaid += level3Commission;
+            commissionsLog.push({ email: level3Email, level: 3, amount: level3Commission });
+          }
+        }
+      }
+    }
+
+    // Give new user signup bonus
     if (newUserData.length > 0) {
       const newUser = newUserData[0];
       const currentEarnings = newUser.total_earnings || 0;
       await base44.asServiceRole.entities.User.update(newUser.id, {
         total_earnings: currentEarnings + newUserBonus
       });
-    }
 
-    // Create referral record for new user's bonus
-    await base44.asServiceRole.entities.Referral.create({
-      referrer_email: user.email,
-      referrer_code: 'SIGNUP_BONUS',
-      referred_email: referrer_email,
-      commission_earned: newUserBonus,
-      status: 'completed',
-      conversion_type: 'signup'
-    });
+      await base44.asServiceRole.entities.Referral.create({
+        referrer_email: user.email,
+        referrer_code: 'SIGNUP_BONUS',
+        referred_email: user.email,
+        commission_earned: newUserBonus,
+        status: 'completed',
+        conversion_type: 'signup'
+      });
+    }
 
     return Response.json({ 
       success: true, 
       referral,
-      referrer_commission: commissionAmount,
       new_user_bonus: newUserBonus,
-      message: `Referrer earned $${commissionAmount}, new user earned $${newUserBonus}`
+      total_commissions_paid: totalPaid,
+      commissions_breakdown: commissionsLog,
+      message: `Multi-level commissions paid: $${totalPaid.toFixed(2)} across ${commissionsLog.length} levels. New user earned $${newUserBonus}`
     });
 
   } catch (error) {
