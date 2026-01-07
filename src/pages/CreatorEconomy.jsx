@@ -41,6 +41,7 @@ import MultiStreamDashboard from '../components/monetization/MultiStreamDashboar
 import AffiliateTracker from '../components/monetization/AffiliateTracker';
 import ReferralCard from '../components/monetization/ReferralCard';
 import TierProgressCard from '../components/referrals/TierProgressCard';
+import BonusTracker from '../components/referrals/BonusTracker';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import BankAccountSetup from '../components/monetization/BankAccountSetup';
@@ -747,6 +748,9 @@ export default function CreatorEconomy() {
           >
             {/* Tier Progress */}
             <TierProgressCard userEmail={user?.email} />
+
+            {/* Bonus Tracker */}
+            <BonusTracker userEmail={user?.email} referralCount={referrals.length} />
 
             {/* Referral Stats Card */}
             <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 realistic-shadow">

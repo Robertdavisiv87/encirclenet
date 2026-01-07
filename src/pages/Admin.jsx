@@ -25,6 +25,7 @@ import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
 import AdvancedAnalyticsDashboard from '../components/admin/AdvancedAnalyticsDashboard';
 import AIContentModerator from '../components/admin/AIContentModerator';
 import ReferralTierManager from '../components/admin/ReferralTierManager';
+import ReferralBonusManager from '../components/admin/ReferralBonusManager';
 import EarningsDashboard from '../components/creator/EarningsDashboard';
 import PerformanceMonitor from '../components/system/PerformanceMonitor';
 import { createPageUrl } from '../utils';
@@ -316,6 +317,9 @@ export default function Admin() {
           <TabsTrigger value="tiers" className="flex-1 data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
             Referral Tiers
           </TabsTrigger>
+          <TabsTrigger value="bonuses" className="flex-1 data-[state=active]:gradient-bg-primary data-[state=active]:text-white">
+            Bonus Rules
+          </TabsTrigger>
         </TabsList>
 
         {/* Recent Activity Tab */}
@@ -561,6 +565,11 @@ export default function Admin() {
         {/* Referral Tiers Tab */}
         <TabsContent value="tiers">
           <ReferralTierManager />
+        </TabsContent>
+
+        {/* Bonus Rules Tab */}
+        <TabsContent value="bonuses">
+          <ReferralBonusManager />
         </TabsContent>
       </Tabs>
       </div>
