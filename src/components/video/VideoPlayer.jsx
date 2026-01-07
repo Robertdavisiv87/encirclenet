@@ -1,12 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { Play, Pause } from 'lucide-react';
 
-export default function VideoPlayer({ src, className = '', aspectRatio = 'square', videoRef: externalVideoRef, isVisible = false }) {
+const VideoPlayer = forwardRef(({ src, className = '', aspectRatio = 'square', isVisible = false, onPlaybackChange }, ref) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const internalVideoRef = useRef(null);
-  const videoRef = externalVideoRef || internalVideoRef;
+  const videoRef = useRef(null);
+
+  // Expose pause method to parent
+  useImperativeHandle(ref, () => ({
+    pause: () => {
+      if (videoRef.current && !videoRef.current.paused) {
+        videoRef.current.pause();
+      }
+    },
+    play: async () => {
+      if (videoRef.current && videoRef.current.paused) {
+        try {
+          await videoRef.current.play();
+        } catch (err) {
+          console.error('Play error:', err);
+        }
+      }
+    }
+  }));
 
   const aspectClasses = {
     square: 'aspect-square',
@@ -24,9 +41,21 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
     video.preload = 'metadata';
     video.autoplay = false;
     
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-    const handleEnded = () => setIsPlaying(false);
+    const handlePlay = () => {
+      setIsPlaying(true);
+      if (onPlaybackChange) onPlaybackChange(true);
+    };
+    
+    const handlePause = () => {
+      setIsPlaying(false);
+      if (onPlaybackChange) onPlaybackChange(false);
+    };
+    
+    const handleEnded = () => {
+      setIsPlaying(false);
+      if (onPlaybackChange) onPlaybackChange(false);
+    };
+    
     const handleError = (e) => {
       console.error('Video error:', e);
       setHasError(true);
@@ -43,7 +72,7 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('error', handleError);
     };
-  }, [src]);
+  }, [src, onPlaybackChange]);
 
   // Pause when not visible
   useEffect(() => {
@@ -112,14 +141,7 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
   return (
     <div className={`${className} ${aspectClasses[aspectRatio]} relative bg-black overflow-hidden`}>
       <video
-        ref={(ref) => {
-          if (externalVideoRef) {
-            externalVideoRef(ref);
-          }
-          if (typeof videoRef === 'object') {
-            videoRef.current = ref;
-          }
-        }}
+        ref={videoRef}
         src={src}
         className="w-full h-full object-contain cursor-pointer"
         style={{ 
@@ -128,7 +150,7 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
         }}
         playsInline
         preload="metadata"
-        muted
+        muted={isMuted}
         onClick={handleVideoClick}
         onTouchStart={handleVideoClick}
         disablePictureInPicture={false}
@@ -177,4 +199,8 @@ export default function VideoPlayer({ src, className = '', aspectRatio = 'square
       )}
     </div>
   );
-}
+});
+
+VideoPlayer.displayName = 'VideoPlayer';
+
+export default VideoPlayer;

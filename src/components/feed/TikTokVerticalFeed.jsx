@@ -14,53 +14,34 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
   const [likedPosts, setLikedPosts] = useState({});
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const observerRef = useRef(null);
+  const [currentPlayingId, setCurrentPlayingId] = useState(null);
 
-  // Pause all videos except the current one
+  // Pause all videos globally
   const pauseAllVideos = useCallback(() => {
-    Object.values(videoRefs.current).forEach(video => {
-      if (video && !video.paused) {
-        video.pause();
+    Object.entries(videoRefs.current).forEach(([postId, videoRef]) => {
+      if (videoRef && videoRef.pause) {
+        videoRef.pause();
       }
     });
+    setCurrentPlayingId(null);
   }, []);
 
-  // Intersection Observer for smart video playback
-  useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect();
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
-          const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.6;
-
-          if (isVisible) {
-            // Pause all other videos first
-            pauseAllVideos();
-            
-            // Don't autoplay - let user tap to play
-            // Video will remain paused until user interaction
-          } else {
-            // Pause when scrolled out of view
-            if (video && !video.paused) {
-              video.pause();
-            }
-          }
-        });
-      },
-      { threshold: [0, 0.6, 1.0] }
-    );
-
-    // Observe all video elements
-    Object.values(videoRefs.current).forEach(video => {
-      if (video) observerRef.current.observe(video);
-    });
-
-    return () => {
-      if (observerRef.current) observerRef.current.disconnect();
-    };
-  }, [posts.length, pauseAllVideos]);
+  // Handle video playback change
+  const handlePlaybackChange = useCallback((postId, isPlaying) => {
+    if (isPlaying) {
+      // Pause all other videos when one starts playing
+      Object.entries(videoRefs.current).forEach(([id, videoRef]) => {
+        if (id !== postId && videoRef && videoRef.pause) {
+          videoRef.pause();
+        }
+      });
+      setCurrentPlayingId(postId);
+    } else {
+      if (currentPlayingId === postId) {
+        setCurrentPlayingId(null);
+      }
+    }
+  }, [currentPlayingId]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -138,12 +119,13 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
               {post.content_type === 'video' && post.media_url ? (
                 <div className="w-full h-full">
                   <VideoPlayer 
-                    src={post.media_url} 
-                    className="w-full h-full object-cover"
-                    videoRef={(ref) => {
+                    ref={(ref) => {
                       if (ref) videoRefs.current[post.id] = ref;
                     }}
+                    src={post.media_url} 
+                    className="w-full h-full object-cover"
                     isVisible={index === currentIndex}
+                    onPlaybackChange={(isPlaying) => handlePlaybackChange(post.id, isPlaying)}
                   />
                 </div>
               ) : post.content_type === 'photo' && post.media_url ? (
