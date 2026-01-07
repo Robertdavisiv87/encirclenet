@@ -60,9 +60,9 @@ export default function AdminRevenue() {
   const subscriptionRevenue = subscriptions
     .reduce((sum, s) => sum + (s.price || 0), 0); // 100% platform
 
-  const referralRevenue = allRevenue
-    .filter(r => r.source === 'referrals')
-    .reduce((sum, r) => sum + ((r.amount || 0) * 0.55), 0); // 55% platform share
+  // Referral revenue: Admin gets $20 per referral, others get $5
+  // No platform share on referrals - creators keep 100%
+  const referralRevenue = 0; // Platform doesn't take a cut from referrals
 
   const totalPlatformRevenue = 
     tipsRevenue + 
