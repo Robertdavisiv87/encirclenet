@@ -33,9 +33,9 @@ Deno.serve(async (req) => {
         let newEarnings = 0;
         const createdReferrals = [];
         
-        // Create referral records for all new users ($20 for admin)
+        // Create referral records for all new users ($50 for admin)
         const isAdmin = referrerEmail === 'robertdavisiv87@gmail.com';
-        const commissionAmount = isAdmin ? 20.0 : 5.0;
+        const commissionAmount = isAdmin ? 50.0 : 5.0;
         
         for (const newUser of newUsers) {
             const referral = await base44.asServiceRole.entities.Referral.create({

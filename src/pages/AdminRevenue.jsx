@@ -67,7 +67,7 @@ export default function AdminRevenue() {
   const subscriptionRevenue = subscriptions
     .reduce((sum, s) => sum + (s.price || 0), 0); // 100% platform
 
-  // Referral revenue: Admin gets $20 per referral (total commission earned)
+  // Referral revenue: Admin gets $50 per referral (total commission earned)
   const referralRevenue = adminReferrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
 
   const totalPlatformRevenue = 

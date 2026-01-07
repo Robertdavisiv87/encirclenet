@@ -50,9 +50,9 @@ Deno.serve(async (req) => {
     const createdReferrals = [];
     
     for (const referred of newReferrals) {
-      // Commission: $20 for admin, $5 for others
+      // Commission: $50 for admin, $5 for others
       const isAdmin = user.email === 'robertdavisiv87@gmail.com';
-      const commission = isAdmin ? 20.00 : 5.00;
+      const commission = isAdmin ? 50.00 : 5.00;
       
       try {
         const referralRecord = await base44.asServiceRole.entities.Referral.create({

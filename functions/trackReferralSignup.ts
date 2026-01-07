@@ -62,9 +62,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create referral record with commission ($20 for admin, $5 for others)
+    // Create referral record with commission ($50 for admin, $5 for others)
     const isAdmin = referrer_email === 'robertdavisiv87@gmail.com';
-    const commissionAmount = isAdmin ? 20.00 : 5.00;
+    const commissionAmount = isAdmin ? 50.00 : 5.00;
     
     const referral = await base44.asServiceRole.entities.Referral.create({
       referrer_email: referrer_email,
