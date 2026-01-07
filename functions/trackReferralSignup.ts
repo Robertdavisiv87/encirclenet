@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
     // Create referral record with commission ($50 for admin, $5 for others)
     const isAdmin = referrer_email === 'robertdavisiv87@gmail.com';
     const commissionAmount = isAdmin ? 50.00 : 5.00;
+    const newUserBonus = 5.00; // New user also gets $5 signup bonus
     
     const referral = await base44.asServiceRole.entities.Referral.create({
       referrer_email: referrer_email,
@@ -97,10 +98,35 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Give new user signup bonus
+    const newUserData = await base44.asServiceRole.entities.User.filter({
+      email: user.email
+    });
+
+    if (newUserData.length > 0) {
+      const newUser = newUserData[0];
+      const currentEarnings = newUser.total_earnings || 0;
+      await base44.asServiceRole.entities.User.update(newUser.id, {
+        total_earnings: currentEarnings + newUserBonus
+      });
+    }
+
+    // Create referral record for new user's bonus
+    await base44.asServiceRole.entities.Referral.create({
+      referrer_email: user.email,
+      referrer_code: 'SIGNUP_BONUS',
+      referred_email: referrer_email,
+      commission_earned: newUserBonus,
+      status: 'completed',
+      conversion_type: 'signup'
+    });
+
     return Response.json({ 
       success: true, 
       referral,
-      commission_earned: commissionAmount
+      referrer_commission: commissionAmount,
+      new_user_bonus: newUserBonus,
+      message: `Referrer earned $${commissionAmount}, new user earned $${newUserBonus}`
     });
 
   } catch (error) {
