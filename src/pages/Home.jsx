@@ -216,39 +216,55 @@ export default function Home() {
                   <DropdownMenuContent align="end" className="w-64">
                     <DropdownMenuLabel className="font-bold gradient-text">My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Profile')}>
-                      <User className="w-4 h-4 mr-2" />
-                      Profile
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('Profile')}>
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Settings')}>
-                      <Settings className="w-4 h-4 mr-2" />
-                      Settings
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('Settings')}>
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </a>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel className="text-xs text-gray-500">Elite Features</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Subscription')}>
-                      <Crown className="w-4 h-4 mr-2 text-purple-600" />
-                      Subscription & Tier
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('Subscription')}>
+                        <Crown className="w-4 h-4 mr-2 text-purple-600" />
+                        Subscription & Tier
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('CreatorEconomy')}>
-                      <DollarSign className="w-4 h-4 mr-2 text-green-600" />
-                      Monetization Dashboard
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('CreatorEconomy')}>
+                        <DollarSign className="w-4 h-4 mr-2 text-green-600" />
+                        Monetization Dashboard
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('CreatorAnalytics')}>
-                      <TrendingUp className="w-4 h-4 mr-2 text-blue-600" />
-                      Analytics & Insights
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('CreatorAnalytics')}>
+                        <TrendingUp className="w-4 h-4 mr-2 text-blue-600" />
+                        Analytics & Insights
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Profile')}>
-                      <Palette className="w-4 h-4 mr-2 text-pink-600" />
-                      Profile Customization
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('Profile')}>
+                        <Palette className="w-4 h-4 mr-2 text-pink-600" />
+                        Profile Customization
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('Settings')}>
-                      <Lock className="w-4 h-4 mr-2 text-orange-600" />
-                      Privacy Settings
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('Settings')}>
+                        <Lock className="w-4 h-4 mr-2 text-orange-600" />
+                        Privacy Settings
+                      </a>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => window.location.href = createPageUrl('ModerationDashboard')}>
-                      <Shield className="w-4 h-4 mr-2 text-red-600" />
-                      Content Moderation
+                    <DropdownMenuItem asChild>
+                      <a href={createPageUrl('ModerationDashboard')}>
+                        <Shield className="w-4 h-4 mr-2 text-red-600" />
+                        Content Moderation
+                      </a>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => base44.auth.logout()} className="text-red-600">

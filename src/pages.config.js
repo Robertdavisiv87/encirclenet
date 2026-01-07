@@ -1,3 +1,4 @@
+import Admin from './pages/Admin';
 import AdminRevenue from './pages/AdminRevenue';
 import Analytics from './pages/Analytics';
 import BusinessDashboard from './pages/BusinessDashboard';
@@ -8,6 +9,7 @@ import CreateChallenge from './pages/CreateChallenge';
 import CreateCircle from './pages/CreateCircle';
 import CreateGroup from './pages/CreateGroup';
 import CreatorAnalytics from './pages/CreatorAnalytics';
+import CreatorEconomy from './pages/CreatorEconomy';
 import CreatorMessaging from './pages/CreatorMessaging';
 import CreatorTools from './pages/CreatorTools';
 import Discover from './pages/Discover';
@@ -39,12 +41,11 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
-import Admin from './pages/Admin';
-import CreatorEconomy from './pages/CreatorEconomy';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Admin": Admin,
     "AdminRevenue": AdminRevenue,
     "Analytics": Analytics,
     "BusinessDashboard": BusinessDashboard,
@@ -55,6 +56,7 @@ export const PAGES = {
     "CreateCircle": CreateCircle,
     "CreateGroup": CreateGroup,
     "CreatorAnalytics": CreatorAnalytics,
+    "CreatorEconomy": CreatorEconomy,
     "CreatorMessaging": CreatorMessaging,
     "CreatorTools": CreatorTools,
     "Discover": Discover,
@@ -86,8 +88,6 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
-    "Admin": Admin,
-    "CreatorEconomy": CreatorEconomy,
 }
 
 export const pagesConfig = {
