@@ -1,16 +1,66 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Share2, DollarSign, MoreVertical, User } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import VideoPlayer from '../video/VideoPlayer';
 import CommentsModal from './CommentsModal';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 
 export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef(null);
+  const videoRefs = useRef({});
   const [likedPosts, setLikedPosts] = useState({});
   const [showCommentsModal, setShowCommentsModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  const observerRef = useRef(null);
+
+  // Pause all videos except the current one
+  const pauseAllVideos = useCallback(() => {
+    Object.values(videoRefs.current).forEach(video => {
+      if (video && !video.paused) {
+        video.pause();
+      }
+    });
+  }, []);
+
+  // Intersection Observer for smart video playback
+  useEffect(() => {
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.6;
+
+          if (isVisible) {
+            // Pause all other videos first
+            pauseAllVideos();
+            
+            // Don't autoplay - let user tap to play
+            // Video will remain paused until user interaction
+          } else {
+            // Pause when scrolled out of view
+            if (video && !video.paused) {
+              video.pause();
+            }
+          }
+        });
+      },
+      { threshold: [0, 0.6, 1.0] }
+    );
+
+    // Observe all video elements
+    Object.values(videoRefs.current).forEach(video => {
+      if (video) observerRef.current.observe(video);
+    });
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [posts.length, pauseAllVideos]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -23,12 +73,13 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
       
       if (newIndex !== currentIndex && newIndex >= 0 && newIndex < posts.length) {
         setCurrentIndex(newIndex);
+        pauseAllVideos();
       }
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [currentIndex, posts.length]);
+  }, [currentIndex, posts.length, pauseAllVideos]);
 
   const handleLike = async (postId, isLiked) => {
     if (!currentUser) {
@@ -89,7 +140,10 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
                   <VideoPlayer 
                     src={post.media_url} 
                     className="w-full h-full object-cover"
-                    autoPlay={index === currentIndex}
+                    videoRef={(ref) => {
+                      if (ref) videoRefs.current[post.id] = ref;
+                    }}
+                    isVisible={index === currentIndex}
                   />
                 </div>
               ) : post.content_type === 'photo' && post.media_url ? (
@@ -111,8 +165,8 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
             {/* Right Action Bar */}
             <div className="absolute right-4 bottom-24 flex flex-col gap-6 items-center z-10">
               {/* Profile */}
-              <button 
-                onClick={() => window.location.href = `/viewprofile?email=${post.created_by}`}
+              <Link 
+                to={createPageUrl('ViewProfile') + `?email=${post.created_by}`}
                 className="relative"
               >
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#4B6CB7] to-[#182848] flex items-center justify-center shadow-lg">
@@ -122,7 +176,7 @@ export default function TikTokVerticalFeed({ posts, currentUser, onLike, onTip }
                     <User className="w-6 h-6 text-white" />
                   )}
                 </div>
-              </button>
+              </Link>
 
               {/* Comment */}
               <motion.button
