@@ -44,6 +44,13 @@ export default function AdminRevenue() {
     initialData: [],
   });
 
+  const { data: adminReferrals } = useQuery({
+    queryKey: ['admin-referrals'],
+    queryFn: () => base44.entities.Referral.filter({ referrer_email: user?.email }),
+    enabled: !!user?.email,
+    initialData: [],
+  });
+
   // Calculate platform revenue shares (transparently applied)
   const tipsRevenue = transactions
     .filter(t => t.type === 'tip')
@@ -60,9 +67,8 @@ export default function AdminRevenue() {
   const subscriptionRevenue = subscriptions
     .reduce((sum, s) => sum + (s.price || 0), 0); // 100% platform
 
-  // Referral revenue: Admin gets $20 per referral, others get $5
-  // No platform share on referrals - creators keep 100%
-  const referralRevenue = 0; // Platform doesn't take a cut from referrals
+  // Referral revenue: Admin gets $20 per referral (total commission earned)
+  const referralRevenue = adminReferrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
 
   const totalPlatformRevenue = 
     tipsRevenue + 
