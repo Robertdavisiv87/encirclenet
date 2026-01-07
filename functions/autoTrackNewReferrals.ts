@@ -33,21 +33,24 @@ Deno.serve(async (req) => {
         let newEarnings = 0;
         const createdReferrals = [];
         
-        // Create referral records for all new users
+        // Create referral records for all new users ($20 for admin)
+        const isAdmin = referrerEmail === 'robertdavisiv87@gmail.com';
+        const commissionAmount = isAdmin ? 20.0 : 5.0;
+        
         for (const newUser of newUsers) {
             const referral = await base44.asServiceRole.entities.Referral.create({
                 referrer_email: referrerEmail,
                 referrer_code: referralCode,
                 referred_email: newUser.email,
                 referred_name: newUser.full_name || newUser.email.split('@')[0],
-                commission_earned: 5.0,
+                commission_earned: commissionAmount,
                 status: 'completed',
                 conversion_type: 'signup'
             });
             
             createdReferrals.push(referral);
             newReferralsCount++;
-            newEarnings += 5.0;
+            newEarnings += commissionAmount;
         }
         
         // Recalculate tier if new referrals were found

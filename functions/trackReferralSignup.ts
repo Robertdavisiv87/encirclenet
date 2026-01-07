@@ -62,13 +62,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create referral record with $5.00 commission
-    // Note: ALL users (including free tier) can earn referral commissions
+    // Create referral record with commission ($20 for admin, $5 for others)
+    const isAdmin = referrer_email === 'robertdavisiv87@gmail.com';
+    const commissionAmount = isAdmin ? 20.00 : 5.00;
+    
     const referral = await base44.asServiceRole.entities.Referral.create({
       referrer_email: referrer_email,
       referrer_code: referral_code,
       referred_email: user.email,
-      commission_earned: 5.00,
+      commission_earned: commissionAmount,
       status: 'completed',
       conversion_type: 'signup'
     });
@@ -77,7 +79,7 @@ Deno.serve(async (req) => {
     await base44.asServiceRole.entities.AdminCommission.create({
       transaction_type: 'referral',
       reference_id: referral.id,
-      amount: 5.00,
+      amount: commissionAmount,
       creator_email: referrer_email,
       status: 'completed'
     });
@@ -91,14 +93,14 @@ Deno.serve(async (req) => {
       const referrerUser = referrerUsers[0];
       const currentEarnings = referrerUser.total_earnings || 0;
       await base44.asServiceRole.entities.User.update(referrerUser.id, {
-        total_earnings: currentEarnings + 5.00
+        total_earnings: currentEarnings + commissionAmount
       });
     }
 
     return Response.json({ 
       success: true, 
       referral,
-      commission_earned: 5.00
+      commission_earned: commissionAmount
     });
 
   } catch (error) {
