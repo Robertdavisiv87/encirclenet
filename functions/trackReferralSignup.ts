@@ -1,8 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
-  try {
-    const base44 = createClientFromRequest(req);
+    try {
+        const base44 = createClientFromRequest(req);
+
+        // Auto-sync all referrals first to catch any new signups
+        try {
+            await base44.functions.invoke('syncReferrals', {});
+        } catch (e) {
+            console.log('Auto-sync during tracking:', e);
+        }
     
     // Get the current user who just signed up
     const user = await base44.auth.me();

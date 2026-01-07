@@ -371,15 +371,12 @@ export default function CreatorEconomy() {
     brands: brandAccount?.total_spent || 0
   };
 
-  // Always use Stripe balance if migrated, otherwise calculate from platform earnings
-  const stripeBalance = user?.stripe_balance || 0;
+  // Always use total platform earnings
   const platformEarnings = Object.values(earnings).reduce((sum, val) => sum + (val || 0), 0);
-
-  // Use Stripe balance if earnings are migrated, otherwise use platform earnings
-  const totalEarnings = user?.earnings_migrated ? stripeBalance : platformEarnings;
+  const totalEarnings = platformEarnings;
   const totalPayouts = payouts.reduce((sum, p) => sum + (p.amount || 0), 0);
-  
-  // Prevent negative balance - if there's a discrepancy, use totalEarnings directly
+
+  // Available balance is total earnings minus payouts
   const availableBalance = Math.max(totalEarnings - totalPayouts, 0);
   
   // Log for debugging
