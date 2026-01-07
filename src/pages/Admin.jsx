@@ -569,7 +569,36 @@ export default function Admin() {
 
         {/* Bonus Rules Tab */}
         <TabsContent value="bonuses">
-          <ReferralBonusManager />
+          <div className="space-y-6">
+            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-blue-900 mb-3">Quick Setup</h3>
+                <p className="text-sm text-gray-700 mb-4">
+                  Create a default tiered referral program with milestone bonuses and percentage boosts
+                </p>
+                <Button
+                  onClick={async () => {
+                    try {
+                      const result = await base44.functions.invoke('setupDefaultReferralTiers', {});
+                      if (result.data.success) {
+                        alert(`✅ ${result.data.message}\n${result.data.tiers_created} tiers created!`);
+                        window.location.reload();
+                      } else {
+                        alert(result.data.message);
+                      }
+                    } catch (e) {
+                      alert('❌ ' + e.message);
+                    }
+                  }}
+                  className="gradient-bg-primary text-white"
+                >
+                  <Gift className="w-4 h-4 mr-2" />
+                  Setup Default Tier Program
+                </Button>
+              </CardContent>
+            </Card>
+            <ReferralBonusManager />
+          </div>
         </TabsContent>
       </Tabs>
       </div>

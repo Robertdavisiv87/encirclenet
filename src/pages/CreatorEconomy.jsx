@@ -42,6 +42,7 @@ import AffiliateTracker from '../components/monetization/AffiliateTracker';
 import ReferralCard from '../components/monetization/ReferralCard';
 import TierProgressCard from '../components/referrals/TierProgressCard';
 import BonusTracker from '../components/referrals/BonusTracker';
+import TierProgressVisualization from '../components/referrals/TierProgressVisualization';
 import AISuggestions from '../components/ai/AISuggestions';
 import SEO from '../components/SEO';
 import BankAccountSetup from '../components/monetization/BankAccountSetup';
@@ -746,6 +747,9 @@ export default function CreatorEconomy() {
             animate={{ opacity: 1 }}
             className="space-y-6"
           >
+            {/* Tier Progress Visualization */}
+            <TierProgressVisualization referralCount={referrals.length} totalEarnings={referralsTotal} />
+
             {/* Tier Progress */}
             <TierProgressCard userEmail={user?.email} />
 

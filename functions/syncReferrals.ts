@@ -90,6 +90,15 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Auto-apply bonuses if new referrals were found
+    if (newReferrals.length > 0) {
+      try {
+        await base44.functions.invoke('applyReferralBonuses', { user_email: user.email });
+      } catch (e) {
+        console.log('Bonus application skipped:', e);
+      }
+    }
+
     return Response.json({
       success: true,
       new_referrals_found: newReferrals.length,
