@@ -199,6 +199,23 @@ Deno.serve(async (req) => {
 
           if (level3Users.length > 0) {
             const level3User = level3Users[0];
+            
+            // Transfer to Stripe if account connected
+            if (level3User.stripe_account_id) {
+              try {
+                await stripe.transfers.create({
+                  amount: Math.round(level3Commission * 100),
+                  currency: 'usd',
+                  destination: level3User.stripe_account_id,
+                  description: `Level 3 referral commission for ${user.email} signup`,
+                  metadata: { level: '3' }
+                });
+                console.log(`✅ Transferred $${level3Commission} level 3 commission to ${level3Email}`);
+              } catch (transferError) {
+                console.error(`❌ Stripe transfer failed for ${level3Email}:`, transferError.message);
+              }
+            }
+            
             const currentEarnings = level3User.total_earnings || 0;
             await base44.asServiceRole.entities.User.update(level3User.id, {
               total_earnings: currentEarnings + level3Commission
