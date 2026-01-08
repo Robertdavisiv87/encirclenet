@@ -230,6 +230,23 @@ Deno.serve(async (req) => {
     // Give new user signup bonus
     if (newUserData.length > 0) {
       const newUser = newUserData[0];
+      
+      // Transfer signup bonus to Stripe if account connected
+      if (newUser.stripe_account_id) {
+        try {
+          await stripe.transfers.create({
+            amount: Math.round(newUserBonus * 100),
+            currency: 'usd',
+            destination: newUser.stripe_account_id,
+            description: `Welcome signup bonus`,
+            metadata: { type: 'signup_bonus' }
+          });
+          console.log(`✅ Transferred $${newUserBonus} signup bonus to ${user.email}`);
+        } catch (transferError) {
+          console.error(`❌ Stripe transfer failed for ${user.email}:`, transferError.message);
+        }
+      }
+      
       const currentEarnings = newUser.total_earnings || 0;
       await base44.asServiceRole.entities.User.update(newUser.id, {
         total_earnings: currentEarnings + newUserBonus
