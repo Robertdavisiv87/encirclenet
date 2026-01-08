@@ -115,17 +115,18 @@ Deno.serve(async (req) => {
         // Use available Stripe balance as payout amount
         const payoutAmount = availableBalanceDollars;
 
-        // Create Stripe payout
+        // Create Stripe payout with available balance
         try {
-          const amountInCents = Math.floor(totalEarnings * 100);
+          const amountInCents = Math.floor(payoutAmount * 100);
           
           const payout = await stripe.payouts.create({
             amount: amountInCents,
             currency: 'usd',
-            description: `Encircle Net Automated Payout - ${userEmail}`,
+            description: `Encircle Net Auto Payout - ${userEmail}`,
             metadata: {
               user_email: userEmail,
-              user_id: targetUser.id
+              user_id: targetUser.id,
+              threshold_used: dynamicThreshold
             }
           }, {
             stripeAccount: stripeAccountId
@@ -135,13 +136,13 @@ Deno.serve(async (req) => {
             throw new Error(payout.failure_message || 'Payout failed');
           }
 
-          console.log(`✅ Stripe payout ${payout.id} created for ${userEmail}: $${totalEarnings}`);
+          console.log(`✅ Stripe payout ${payout.id} created for ${userEmail}: $${payoutAmount} (threshold: $${dynamicThreshold})`);
 
-          // Update user earnings to 0
+          // Update user payout tracking
           await base44.asServiceRole.entities.User.update(targetUser.id, {
             total_earnings: 0,
             last_payout_date: new Date().toISOString(),
-            total_payouts: (targetUser.total_payouts || 0) + totalEarnings
+            total_payouts: (targetUser.total_payouts || 0) + payoutAmount
           });
 
           // Create transaction record
@@ -149,11 +150,12 @@ Deno.serve(async (req) => {
             from_email: 'system@encirclenet.net',
             to_email: userEmail,
             type: 'payout',
-            amount: totalEarnings,
+            amount: payoutAmount,
             status: 'completed',
             metadata: {
               stripe_payout_id: payout.id,
-              stripe_account_id: stripeAccountId
+              stripe_account_id: stripeAccountId,
+              threshold: dynamicThreshold
             }
           });
 
@@ -163,7 +165,7 @@ Deno.serve(async (req) => {
               user_email: userEmail,
               type: 'payout',
               title: 'Automated Payout Completed',
-              message: `$${totalEarnings.toFixed(2)} has been transferred to your bank account.`,
+              message: `$${payoutAmount.toFixed(2)} has been transferred to your bank account.`,
               is_read: false
             });
           } catch (notifError) {
@@ -175,7 +177,8 @@ Deno.serve(async (req) => {
             user_email: userEmail,
             success: true,
             payout_id: payout.id,
-            amount: totalEarnings,
+            amount: payoutAmount,
+            threshold: dynamicThreshold,
             status: payout.status
           });
 
