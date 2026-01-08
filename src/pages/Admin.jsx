@@ -275,11 +275,20 @@ export default function Admin() {
                     threshold: 50,
                     auto_approve: true
                   });
-                  const data = result.data || result;
-                  alert(`✅ Automated Payouts Completed\n\nRevenue: ${data.processed || 0}\nReferrals: ${data.referrals_processed || 0}\nTotal Approved: ${data.approved || 0}`);
+                  const data = result?.data || result;
+                  
+                  if (data?.success === false) {
+                    alert(`❌ Payout Failed\n\n${data?.error || 'Unknown error'}\n\nCheck console for details.`);
+                    console.error('Payout error:', data);
+                    return;
+                  }
+                  
+                  const errors = data?.errors?.length || 0;
+                  alert(`✅ Automated Payouts Completed\n\nRevenue Processed: ${data?.processed || 0}\nReferrals Paid: ${data?.referrals_processed || 0}\nTotal Approved: ${data?.approved || 0}\nRejected: ${data?.rejected || 0}\nErrors: ${errors}`);
                   window.location.reload();
                 } catch (error) {
-                  alert('❌ Automated payout failed: ' + (error.message || 'Unknown error'));
+                  alert(`❌ Payout System Error\n\n${error?.message || 'Unknown error'}\n\nCheck browser console for details.`);
+                  console.error('Payout error:', error);
                 }
               }}
               className="gradient-bg-primary text-white"

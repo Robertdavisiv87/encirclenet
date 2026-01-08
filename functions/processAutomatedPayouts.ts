@@ -5,22 +5,19 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    // Only admins can trigger automated payouts
     if (user?.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { threshold = 50, auto_approve = true } = await req.json();
+    let body = {};
+    try {
+      body = await req.json();
+    } catch (e) {
+      console.log('No JSON body provided, using defaults');
+    }
 
-    // Get all pending payouts above threshold
-    const pendingPayouts = await base44.asServiceRole.entities.Revenue.filter({
-      status: 'pending'
-    }).then(items => items.filter(item => (item.amount || 0) >= threshold));
-
-    // Get all completed referrals that haven't been paid out
-    const completedReferrals = await base44.asServiceRole.entities.Referral.filter({
-      status: 'completed'
-    });
+    const threshold = body?.threshold || 50;
+    const auto_approve = body?.auto_approve !== false;
 
     const results = {
       processed: 0,
@@ -30,22 +27,47 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Process referral payouts - DON'T create Transaction records, referrals are already counted
+    // Get all pending payouts
+    let pendingPayouts = [];
+    try {
+      const allPending = await base44.asServiceRole.entities.Revenue.filter({ status: 'pending' });
+      pendingPayouts = allPending?.filter(item => (item?.amount || 0) >= threshold) || [];
+      console.log(`Found ${pendingPayouts.length} pending payouts above threshold`);
+    } catch (error) {
+      console.error('Error fetching pending payouts:', error);
+      results.errors.push({ type: 'fetch_payouts', error: error?.message || 'Unknown error' });
+    }
+
+    // Get completed referrals
+    let completedReferrals = [];
+    try {
+      completedReferrals = await base44.asServiceRole.entities.Referral.filter({ status: 'completed' }) || [];
+      console.log(`Found ${completedReferrals.length} completed referrals`);
+    } catch (error) {
+      console.error('Error fetching referrals:', error);
+      results.errors.push({ type: 'fetch_referrals', error: error?.message || 'Unknown error' });
+    }
+
+    // Process referral payouts
     for (const referral of completedReferrals) {
       try {
-        if (referral.commission_earned > 0) {
-          // Mark referral as paid (but don't create duplicate transaction)
-          await base44.asServiceRole.entities.Referral.update(referral.id, {
-            status: 'paid'
-          });
+        if (!referral?.id) {
+          console.warn('Skipping referral with no ID');
+          continue;
+        }
 
+        const commissionAmount = referral?.commission_earned || 0;
+        if (commissionAmount > 0) {
+          await base44.asServiceRole.entities.Referral.update(referral.id, { status: 'paid' });
           results.referrals_processed++;
           results.approved++;
+          console.log(`Paid referral ${referral.id}: $${commissionAmount}`);
         }
       } catch (error) {
+        console.error(`Error processing referral ${referral?.id}:`, error);
         results.errors.push({
-          referral_id: referral.id,
-          error: error.message
+          referral_id: referral?.id || 'unknown',
+          error: error?.message || 'Unknown error'
         });
       }
     }
@@ -53,13 +75,27 @@ Deno.serve(async (req) => {
     // Process revenue payouts
     for (const payout of pendingPayouts) {
       try {
-        // Auto-approve logic: check if creator meets criteria
-        const creatorRevenue = await base44.asServiceRole.entities.Revenue.filter({
-          creator_email: payout.creator_email
-        });
+        if (!payout?.id) {
+          console.warn('Skipping payout with no ID');
+          continue;
+        }
 
-        const totalEarned = creatorRevenue.reduce((sum, r) => sum + (r.amount || 0), 0);
-        const shouldApprove = auto_approve && totalEarned >= 100; // Minimum $100 total earned
+        const userEmail = payout?.user_email || payout?.creator_email;
+        if (!userEmail) {
+          console.warn(`Skipping payout ${payout.id} - no user email`);
+          results.rejected++;
+          continue;
+        }
+
+        let creatorRevenue = [];
+        try {
+          creatorRevenue = await base44.asServiceRole.entities.Revenue.filter({ user_email: userEmail }) || [];
+        } catch (e) {
+          console.error(`Error fetching revenue for ${userEmail}:`, e);
+        }
+
+        const totalEarned = creatorRevenue.reduce((sum, r) => sum + (r?.amount || 0), 0);
+        const shouldApprove = auto_approve && totalEarned >= 100;
 
         if (shouldApprove) {
           await base44.asServiceRole.entities.Revenue.update(payout.id, {
@@ -67,38 +103,50 @@ Deno.serve(async (req) => {
             paid_date: new Date().toISOString()
           });
 
-          // Create notification (skip if entity doesn't exist)
           try {
             await base44.asServiceRole.entities.Notification.create({
-              user_email: payout.user_email || payout.creator_email,
+              user_email: userEmail,
               type: 'payout',
               title: 'Payout Processed',
-              message: `Your payout of $${payout.amount || 0} has been automatically approved and processed.`,
+              message: `Your payout of $${payout?.amount || 0} has been processed.`,
               is_read: false
             });
           } catch (notifError) {
-            console.log('Notification creation skipped:', notifError.message);
+            console.log('Notification skipped:', notifError?.message);
           }
 
           results.approved++;
+          console.log(`Approved payout ${payout.id} for ${userEmail}: $${payout?.amount || 0}`);
+        } else {
+          results.rejected++;
+          console.log(`Rejected payout ${payout.id} - total earned: $${totalEarned}`);
         }
 
         results.processed++;
       } catch (error) {
+        console.error(`Error processing payout ${payout?.id}:`, error);
         results.errors.push({
-          payout_id: payout.id,
-          error: error.message
+          payout_id: payout?.id || 'unknown',
+          error: error?.message || 'Unknown error'
         });
       }
     }
 
     return Response.json({
       success: true,
-      ...results,
-      message: `Processed ${results.processed} revenue payouts and ${results.referrals_processed} referral payouts, total approved: ${results.approved}`
+      processed: results.processed,
+      approved: results.approved,
+      rejected: results.rejected,
+      referrals_processed: results.referrals_processed,
+      errors: results.errors,
+      message: `Processed ${results.processed} revenue payouts and ${results.referrals_processed} referral payouts. Total approved: ${results.approved}`
     });
   } catch (error) {
-    console.error('Automated payout error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Critical automated payout error:', error);
+    return Response.json({ 
+      success: false,
+      error: error?.message || 'Unknown error occurred',
+      stack: error?.stack
+    }, { status: 500 });
   }
 });
