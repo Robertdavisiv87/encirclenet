@@ -14,9 +14,8 @@ Deno.serve(async (req) => {
 
     // Get all pending payouts above threshold
     const pendingPayouts = await base44.asServiceRole.entities.Revenue.filter({
-      status: 'pending',
-      payout_amount: { $gte: threshold }
-    });
+      status: 'pending'
+    }).then(items => items.filter(item => (item.amount || 0) >= threshold));
 
     // Get all completed referrals that haven't been paid out
     const completedReferrals = await base44.asServiceRole.entities.Referral.filter({
@@ -68,14 +67,18 @@ Deno.serve(async (req) => {
             paid_date: new Date().toISOString()
           });
 
-          // Create notification
-          await base44.asServiceRole.entities.Notification.create({
-            user_email: payout.creator_email,
-            type: 'subscription',
-            title: 'Payout Processed',
-            message: `Your payout of $${payout.payout_amount} has been automatically approved and processed.`,
-            is_read: false
-          });
+          // Create notification (skip if entity doesn't exist)
+          try {
+            await base44.asServiceRole.entities.Notification.create({
+              user_email: payout.user_email || payout.creator_email,
+              type: 'payout',
+              title: 'Payout Processed',
+              message: `Your payout of $${payout.amount || 0} has been automatically approved and processed.`,
+              is_read: false
+            });
+          } catch (notifError) {
+            console.log('Notification creation skipped:', notifError.message);
+          }
 
           results.approved++;
         }
