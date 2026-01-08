@@ -22,6 +22,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminProtection from '../components/auth/AdminProtection';
 import PayoutApprovalQueue from '../components/admin/PayoutApprovalQueue';
+import ManualPayoutQueue from '../components/admin/ManualPayoutQueue';
 import AdvancedAnalyticsDashboard from '../components/admin/AdvancedAnalyticsDashboard';
 import AIContentModerator from '../components/admin/AIContentModerator';
 import ReferralTierManager from '../components/admin/ReferralTierManager';
@@ -329,6 +330,11 @@ export default function Admin() {
       {/* Payout Approval Queue */}
       <div className="mb-8">
         <PayoutApprovalQueue />
+      </div>
+
+      {/* Manual Payout Queue */}
+      <div className="mb-8">
+        <ManualPayoutQueue />
       </div>
 
       {/* Advanced Analytics Dashboard */}
