@@ -160,20 +160,15 @@ Deno.serve(async (req) => {
             status: payout.status
           });
 
-        } catch (stripeError) {
-          console.error(`Stripe payout failed for ${userEmail}:`, {
-            code: stripeError.code,
-            message: stripeError.message,
-            type: stripeError.type
-          });
+        } catch (error) {
+          console.error(`Payout failed for user ${userEmail}:`, error.message);
           
           results.rejected++;
           results.payouts.push({
             user_email: userEmail,
             success: false,
-            error: stripeError.message,
-            error_code: stripeError.code || 'PAYOUT_FAILED',
-            error_type: stripeError.type
+            error: error.message,
+            error_code: error.code || 'PAYOUT_FAILED'
           });
         }
 
