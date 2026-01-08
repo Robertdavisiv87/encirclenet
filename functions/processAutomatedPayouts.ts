@@ -57,29 +57,18 @@ Deno.serve(async (req) => {
         const stripeAccountId = targetUser?.stripe_account_id;
         
         if (!stripeAccountId) {
-          console.log(`User ${userEmail} has no Stripe account - skipping`);
-          results.rejected++;
-          results.payouts.push({
-            user_email: userEmail,
-            success: false,
-            error: 'No Stripe account connected',
-            error_code: 'NO_STRIPE_ACCOUNT'
-          });
+          console.log(`No Stripe account connected for user ${userEmail}`);
           continue;
         }
 
-        // Check Stripe balance and calculate dynamic threshold
-        let stripeBalance;
+        // Retrieve Stripe balance for connected account
+        let balance;
         try {
-          stripeBalance = await stripe.balance.retrieve({
+          balance = await stripe.balance.retrieve({
             stripeAccount: stripeAccountId
           });
         } catch (balanceError) {
-          console.error(`Balance check failed for ${userEmail}:`, {
-            code: balanceError.code,
-            message: balanceError.message
-          });
-          
+          console.error(`Balance retrieval failed for ${userEmail}:`, balanceError.message);
           results.rejected++;
           results.payouts.push({
             user_email: userEmail,
@@ -90,18 +79,19 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        const availableBalance = stripeBalance.available[0]?.amount || 0;
-        const availableBalanceDollars = availableBalance / 100;
+        const availableAmount = balance.available[0]?.amount || 0;
 
-        // Skip if no available balance
-        if (availableBalance === 0) {
-          console.log(`User ${userEmail} has no available Stripe balance`);
+        // Only payout if available balance > 0
+        if (availableAmount <= 0) {
+          console.log(`No available funds for user ${userEmail}`);
           continue;
         }
 
-        // Calculate dynamic threshold based on Stripe balance
+        const availableBalanceDollars = availableAmount / 100;
+
+        // Calculate dynamic threshold to decide if we should payout now
         const accountAge = Math.floor((Date.now() - new Date(targetUser.created_date).getTime()) / (1000 * 60 * 60 * 24));
-        const dynamicThreshold = calculatePayoutThreshold(availableBalance, accountAge);
+        const dynamicThreshold = calculatePayoutThreshold(availableAmount, accountAge);
 
         // Check if available balance meets dynamic threshold
         if (availableBalanceDollars < dynamicThreshold) {
@@ -109,12 +99,8 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // Payout the exact available balance from Stripe
-        const payoutAmount = availableBalanceDollars;
-
-        // Create Stripe payout with available balance
+        // Create payout with exact available balance
         try {
-          const amountInCents = Math.floor(payoutAmount * 100);
           
           const payout = await stripe.payouts.create({
             amount: amountInCents,
