@@ -68,21 +68,7 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // Validate minimum payout
-        if (!auto_approve || totalEarnings < 100) {
-          console.log(`User ${userEmail} below auto-approve threshold`);
-          results.rejected++;
-          results.payouts.push({
-            user_email: userEmail,
-            success: false,
-            error: 'Below auto-approve threshold',
-            error_code: 'THRESHOLD_NOT_MET',
-            amount: totalEarnings
-          });
-          continue;
-        }
-
-        // Check Stripe balance before attempting payout
+        // Check Stripe balance and calculate dynamic threshold
         let stripeBalance;
         try {
           stripeBalance = await stripe.balance.retrieve({
@@ -107,19 +93,27 @@ Deno.serve(async (req) => {
         const availableBalance = stripeBalance.available[0]?.amount || 0;
         const availableBalanceDollars = availableBalance / 100;
 
-        if (availableBalanceDollars < totalEarnings) {
-          console.log(`Insufficient Stripe balance for ${userEmail}: $${availableBalanceDollars} available, $${totalEarnings} requested`);
+        // Calculate dynamic threshold based on Stripe balance
+        const accountAge = Math.floor((Date.now() - new Date(targetUser.created_date).getTime()) / (1000 * 60 * 60 * 24));
+        const dynamicThreshold = calculatePayoutThreshold(availableBalance, accountAge);
+
+        // Check if available balance meets dynamic threshold
+        if (availableBalanceDollars < dynamicThreshold) {
+          console.log(`User ${userEmail} balance $${availableBalanceDollars} below threshold $${dynamicThreshold}`);
           results.rejected++;
           results.payouts.push({
             user_email: userEmail,
             success: false,
-            error: 'Insufficient Stripe balance',
-            error_code: 'INSUFFICIENT_BALANCE',
+            error: 'Balance below dynamic threshold',
+            error_code: 'THRESHOLD_NOT_MET',
             available_balance: availableBalanceDollars,
-            requested_amount: totalEarnings
+            required_threshold: dynamicThreshold
           });
           continue;
         }
+
+        // Use available Stripe balance as payout amount
+        const payoutAmount = availableBalanceDollars;
 
         // Create Stripe payout
         try {
