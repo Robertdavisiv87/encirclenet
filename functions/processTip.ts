@@ -104,10 +104,30 @@ Deno.serve(async (req) => {
     const adminCommission = amount * 0.10;
     const creatorEarnings = amount * 0.90;
 
-    // Update recipient's total earnings
+    // Update recipient's total earnings AND transfer to Stripe
     const recipients = await base44.asServiceRole.entities.User.filter({ email: to_email });
     if (recipients.length > 0) {
       const recipient = recipients[0];
+      
+      // If recipient has Stripe account, transfer funds directly
+      if (recipient.stripe_account_id) {
+        try {
+          await stripe.transfers.create({
+            amount: Math.round(creatorEarnings * 100),
+            currency: 'usd',
+            destination: recipient.stripe_account_id,
+            description: `Tip earnings from ${user.email}`,
+            metadata: {
+              transaction_id: transaction.id,
+              recipient_email: to_email
+            }
+          });
+          console.log(`✅ Transferred $${creatorEarnings} to ${to_email}'s Stripe account`);
+        } catch (transferError) {
+          console.error(`❌ Stripe transfer failed for ${to_email}:`, transferError.message);
+        }
+      }
+      
       await base44.asServiceRole.entities.User.update(recipient.id, {
         total_earnings: (recipient.total_earnings || 0) + creatorEarnings
       });
