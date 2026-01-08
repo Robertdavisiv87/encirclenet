@@ -10,7 +10,8 @@ import {
   ExternalLink,
   RefreshCw,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,13 +24,20 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import SEO from '../components/SEO';
 
 export default function PayoutSettings() {
   const [user, setUser] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showManualPayoutModal, setShowManualPayoutModal] = useState(false);
   const [isProcessingPayout, setIsProcessingPayout] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
+  const [manualPayoutMethod, setManualPayoutMethod] = useState('cashapp');
+  const [manualPayoutDetails, setManualPayoutDetails] = useState('');
+  const [manualPayoutAmount, setManualPayoutAmount] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -84,6 +92,15 @@ export default function PayoutSettings() {
     }),
     enabled: !!user?.email,
     refetchInterval: 60000
+  });
+
+  const { data: payoutRequests = [] } = useQuery({
+    queryKey: ['payout-requests', user?.email],
+    queryFn: () => base44.entities.PayoutRequest.filter({ 
+      user_email: user?.email
+    }),
+    enabled: !!user?.email,
+    refetchInterval: 30000
   });
 
   const { data: subscriptions = [] } = useQuery({
@@ -156,6 +173,58 @@ export default function PayoutSettings() {
       setIsProcessingPayout(false);
     }
   };
+
+  const handleManualPayoutRequest = async () => {
+    if (!manualPayoutAmount || parseFloat(manualPayoutAmount) < 5) {
+      toast({
+        title: "Invalid Amount",
+        description: "Minimum payout is $5",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!manualPayoutDetails.trim()) {
+      toast({
+        title: "Missing Details",
+        description: `Please provide your ${manualPayoutMethod} details`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessingPayout(true);
+    try {
+      const response = await base44.functions.invoke('requestPayout', {
+        amount: parseFloat(manualPayoutAmount),
+        payout_method: manualPayoutMethod,
+        payout_details: manualPayoutDetails
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "✅ Request Submitted",
+          description: "Admin will process your payout within 24-72 hours"
+        });
+        setShowManualPayoutModal(false);
+        setManualPayoutAmount('');
+        setManualPayoutDetails('');
+        window.location.reload();
+      } else {
+        throw new Error(response.data.error);
+      }
+    } catch (error) {
+      toast({
+        title: "Request Failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessingPayout(false);
+    }
+  };
+
+  const pendingRequest = payoutRequests.find(r => r.status === 'pending');
 
   if (!user) {
     return (
@@ -313,27 +382,56 @@ export default function PayoutSettings() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {availableBalance >= 5 ? (
-              <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl">
-                <p className="text-sm text-gray-700 mb-3">
-                  You have <span className="font-bold text-green-900">${availableBalance.toFixed(2)}</span> available to withdraw
+            {pendingRequest && (
+              <div className="p-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-5 h-5 text-yellow-600" />
+                  <p className="font-semibold text-yellow-900">Pending Payout Request</p>
+                </div>
+                <p className="text-sm text-gray-700">
+                  Your ${pendingRequest.amount.toFixed(2)} payout via {pendingRequest.payout_method} is being processed. 
+                  Admin will review within 24-72 hours.
                 </p>
-                <Button
-                  onClick={() => setShowConfirmModal(true)}
-                  disabled={!user.stripe_account_id || isProcessingPayout}
-                  className="w-full gradient-bg-primary text-white shadow-glow"
-                >
-                  {isProcessingPayout ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Cash Out ${availableBalance.toFixed(2)}
-                    </>
-                  )}
-                </Button>
+              </div>
+            )}
+
+            {availableBalance >= 5 ? (
+              <div className="space-y-3">
+                <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl">
+                  <p className="text-sm text-gray-700 mb-3">
+                    You have <span className="font-bold text-green-900">${availableBalance.toFixed(2)}</span> available to withdraw
+                  </p>
+                  <div className="grid gap-3">
+                    {user.stripe_account_id && (
+                      <Button
+                        onClick={() => setShowConfirmModal(true)}
+                        disabled={isProcessingPayout || !!pendingRequest}
+                        className="w-full gradient-bg-primary text-white shadow-glow"
+                      >
+                        {isProcessingPayout ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <Building2 className="w-4 h-4 mr-2" />
+                            Cash Out via Bank (Instant)
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => setShowManualPayoutModal(true)}
+                      disabled={isProcessingPayout || !!pendingRequest}
+                      variant="outline"
+                      className="w-full border-2 border-blue-400"
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      Request Manual Payout (CashApp, Zelle, etc.)
+                    </Button>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="p-4 bg-blue-50 border-2 border-blue-300 rounded-xl">
@@ -346,8 +444,8 @@ export default function PayoutSettings() {
               </div>
             )}
             {!user.stripe_account_id && (
-              <div className="p-3 bg-orange-50 border border-orange-300 rounded-lg text-sm text-orange-900">
-                ⚠️ Connect your bank account to enable payouts
+              <div className="p-3 bg-blue-50 border border-blue-300 rounded-lg text-sm text-blue-900">
+                💡 Tip: Connect your bank for instant automated payouts, or request manual payouts via CashApp, Zelle, PayPal, or Venmo
               </div>
             )}
           </div>
@@ -418,11 +516,11 @@ export default function PayoutSettings() {
         </ul>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Stripe Payout Confirmation Modal */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Payout</DialogTitle>
+            <DialogTitle>Confirm Bank Payout</DialogTitle>
             <DialogDescription>
               You are about to withdraw <span className="font-bold text-green-900">${availableBalance.toFixed(2)}</span> to your bank account.
             </DialogDescription>
@@ -443,6 +541,92 @@ export default function PayoutSettings() {
               className="gradient-bg-primary text-white shadow-glow"
             >
               Confirm Payout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manual Payout Request Modal */}
+      <Dialog open={showManualPayoutModal} onOpenChange={setShowManualPayoutModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Request Manual Payout</DialogTitle>
+            <DialogDescription>
+              Choose your payout method and provide your account details. Admin will process within 24-72 hours.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="amount">Amount ($5 minimum)</Label>
+              <Input
+                id="amount"
+                type="number"
+                min="5"
+                max={availableBalance}
+                step="0.01"
+                placeholder="Enter amount"
+                value={manualPayoutAmount}
+                onChange={(e) => setManualPayoutAmount(e.target.value)}
+              />
+              <p className="text-xs text-gray-600 mt-1">Available: ${availableBalance.toFixed(2)}</p>
+            </div>
+            <div>
+              <Label htmlFor="method">Payout Method</Label>
+              <Select value={manualPayoutMethod} onValueChange={setManualPayoutMethod}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cashapp">CashApp</SelectItem>
+                  <SelectItem value="zelle">Zelle</SelectItem>
+                  <SelectItem value="paypal">PayPal</SelectItem>
+                  <SelectItem value="venmo">Venmo</SelectItem>
+                  <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="details">
+                {manualPayoutMethod === 'cashapp' && 'CashApp Tag (e.g., $username)'}
+                {manualPayoutMethod === 'zelle' && 'Zelle Email or Phone'}
+                {manualPayoutMethod === 'paypal' && 'PayPal Email'}
+                {manualPayoutMethod === 'venmo' && 'Venmo Username'}
+                {manualPayoutMethod === 'bank_transfer' && 'Bank Account Details'}
+              </Label>
+              <Input
+                id="details"
+                placeholder={
+                  manualPayoutMethod === 'cashapp' ? '$yourname' :
+                  manualPayoutMethod === 'zelle' ? 'email@example.com' :
+                  manualPayoutMethod === 'paypal' ? 'paypal@example.com' :
+                  manualPayoutMethod === 'venmo' ? '@username' :
+                  'Account details'
+                }
+                value={manualPayoutDetails}
+                onChange={(e) => setManualPayoutDetails(e.target.value)}
+              />
+            </div>
+            <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-3 text-sm text-yellow-900">
+              ⏱️ Manual payouts are processed by admin within 24-72 hours. For instant payouts, connect your bank account.
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowManualPayoutModal(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleManualPayoutRequest}
+              disabled={isProcessingPayout}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isProcessingPayout ? (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Request'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
