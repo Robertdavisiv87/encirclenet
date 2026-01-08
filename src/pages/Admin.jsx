@@ -275,10 +275,11 @@ export default function Admin() {
                     threshold: 50,
                     auto_approve: true
                   });
-                  alert(`✅ ${result.data.message}\n\nRevenue: ${result.data.processed}\nReferrals: ${result.data.referrals_processed}\nTotal Approved: ${result.data.approved}`);
+                  const data = result.data || result;
+                  alert(`✅ Automated Payouts Completed\n\nRevenue: ${data.processed || 0}\nReferrals: ${data.referrals_processed || 0}\nTotal Approved: ${data.approved || 0}`);
                   window.location.reload();
                 } catch (error) {
-                  alert('❌ Automated payout failed: ' + error.message);
+                  alert('❌ Automated payout failed: ' + (error.message || 'Unknown error'));
                 }
               }}
               className="gradient-bg-primary text-white"
