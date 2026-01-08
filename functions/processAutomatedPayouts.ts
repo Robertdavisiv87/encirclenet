@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
         results.processed++;
 
         // Check if user has Stripe account
-        const stripeAccountId = targetUser?.stripe_connect_account_id;
+        const stripeAccountId = targetUser?.stripe_account_id;
         
         if (!stripeAccountId) {
           console.log(`User ${userEmail} has no Stripe account - skipping`);
