@@ -115,16 +115,12 @@ Deno.serve(async (req) => {
             { stripeAccount: stripeAccountId }
           );
 
-          if (payout.status === 'failed') {
-            throw new Error(payout.failure_message || 'Payout failed');
-          }
+          console.log(`Payout successful for user ${userEmail}: ${payout.id} ($${availableBalanceDollars})`);
 
-          console.log(`✅ Stripe payout ${payout.id} created for ${userEmail}: $${payoutAmount} (threshold: $${dynamicThreshold})`);
-
-          // Update user payout tracking (don't reset total_earnings as it's updated by transfers)
+          // Update user payout tracking
           await base44.asServiceRole.entities.User.update(targetUser.id, {
             last_payout_date: new Date().toISOString(),
-            total_payouts: (targetUser.total_payouts || 0) + payoutAmount
+            total_payouts: (targetUser.total_payouts || 0) + availableBalanceDollars
           });
 
           // Create transaction record
@@ -132,7 +128,7 @@ Deno.serve(async (req) => {
             from_email: 'system@encirclenet.net',
             to_email: userEmail,
             type: 'payout',
-            amount: payoutAmount,
+            amount: availableBalanceDollars,
             status: 'completed',
             metadata: {
               stripe_payout_id: payout.id,
@@ -147,7 +143,7 @@ Deno.serve(async (req) => {
               user_email: userEmail,
               type: 'payout',
               title: 'Automated Payout Completed',
-              message: `$${payoutAmount.toFixed(2)} has been transferred to your bank account.`,
+              message: `$${availableBalanceDollars.toFixed(2)} has been transferred to your bank account.`,
               is_read: false
             });
           } catch (notifError) {
@@ -159,7 +155,7 @@ Deno.serve(async (req) => {
             user_email: userEmail,
             success: true,
             payout_id: payout.id,
-            amount: payoutAmount,
+            amount: availableBalanceDollars,
             threshold: dynamicThreshold,
             status: payout.status
           });
