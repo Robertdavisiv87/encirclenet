@@ -101,19 +101,19 @@ Deno.serve(async (req) => {
 
         // Create payout with exact available balance
         try {
-          
-          const payout = await stripe.payouts.create({
-            amount: amountInCents,
-            currency: 'usd',
-            description: `Encircle Net Auto Payout - ${userEmail}`,
-            metadata: {
-              user_email: userEmail,
-              user_id: targetUser.id,
-              threshold_used: dynamicThreshold
-            }
-          }, {
-            stripeAccount: stripeAccountId
-          });
+          const payout = await stripe.payouts.create(
+            {
+              amount: availableAmount,
+              currency: 'usd',
+              description: `Encircle Net Auto Payout - ${userEmail}`,
+              metadata: {
+                user_email: userEmail,
+                user_id: targetUser.id,
+                threshold_used: dynamicThreshold
+              }
+            },
+            { stripeAccount: stripeAccountId }
+          );
 
           if (payout.status === 'failed') {
             throw new Error(payout.failure_message || 'Payout failed');
