@@ -268,33 +268,60 @@ export default function Admin() {
             <p className="text-sm text-gray-600">
               Automatically process payouts for creators who meet the threshold criteria.
             </p>
-            <Button
-              onClick={async () => {
-                try {
-                  const result = await base44.functions.invoke('processAutomatedPayouts', {
-                    threshold: 50,
-                    auto_approve: true
-                  });
-                  const data = result?.data || result;
-                  
-                  if (data?.success === false) {
-                    alert(`❌ Payout Failed\n\n${data?.error || 'Unknown error'}\n\nCheck console for details.`);
-                    console.error('Payout error:', data);
-                    return;
+            <div className="flex gap-3">
+              <Button
+                onClick={async () => {
+                  if (!confirm('Sync all user balances to their Stripe Connect accounts?\n\nThis will transfer existing total_earnings to Stripe.')) return;
+
+                  try {
+                    const result = await base44.functions.invoke('syncBalanceToStripe', {});
+                    const data = result?.data || result;
+
+                    if (data?.success === false) {
+                      alert(`❌ Balance Sync Failed\n\n${data?.error || 'Unknown error'}`);
+                      return;
+                    }
+
+                    alert(`✅ Balance Sync Complete\n\nProcessed: ${data?.processed || 0}\nTransferred: ${data?.transferred || 0}\nSkipped: ${data?.skipped || 0}\nErrors: ${data?.errors || 0}`);
+                    window.location.reload();
+                  } catch (error) {
+                    alert(`❌ Sync Error\n\n${error?.message || 'Unknown error'}`);
+                    console.error('Sync error:', error);
                   }
-                  
-                  const errors = data?.errors?.length || 0;
-                  alert(`✅ Automated Payouts Completed\n\nRevenue Processed: ${data?.processed || 0}\nReferrals Paid: ${data?.referrals_processed || 0}\nTotal Approved: ${data?.approved || 0}\nRejected: ${data?.rejected || 0}\nErrors: ${errors}`);
-                  window.location.reload();
-                } catch (error) {
-                  alert(`❌ Payout System Error\n\n${error?.message || 'Unknown error'}\n\nCheck browser console for details.`);
-                  console.error('Payout error:', error);
-                }
-              }}
-              className="gradient-bg-primary text-white"
-            >
-              Run Automated Payouts
-            </Button>
+                }}
+                variant="outline"
+                className="border-blue-500 text-blue-700 hover:bg-blue-50"
+              >
+                Sync Balances to Stripe
+              </Button>
+              <Button
+                onClick={async () => {
+                  try {
+                    const result = await base44.functions.invoke('processAutomatedPayouts', {
+                      threshold: 50,
+                      auto_approve: true
+                    });
+                    const data = result?.data || result;
+
+                    if (data?.success === false) {
+                      alert(`❌ Payout Failed\n\n${data?.error || 'Unknown error'}\n\nCheck console for details.`);
+                      console.error('Payout error:', data);
+                      return;
+                    }
+
+                    const errors = data?.errors?.length || 0;
+                    alert(`✅ Automated Payouts Completed\n\nRevenue Processed: ${data?.processed || 0}\nReferrals Paid: ${data?.referrals_processed || 0}\nTotal Approved: ${data?.approved || 0}\nRejected: ${data?.rejected || 0}\nErrors: ${errors}`);
+                    window.location.reload();
+                  } catch (error) {
+                    alert(`❌ Payout System Error\n\n${error?.message || 'Unknown error'}\n\nCheck browser console for details.`);
+                    console.error('Payout error:', error);
+                  }
+                }}
+                className="gradient-bg-primary text-white"
+              >
+                Run Automated Payouts
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
