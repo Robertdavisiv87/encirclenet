@@ -11,7 +11,11 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+      return Response.json({ 
+        success: false,
+        error: 'Forbidden: Admin access required',
+        error_code: 'ADMIN_REQUIRED'
+      }, { status: 403 });
     }
 
     let body = {};
@@ -28,8 +32,7 @@ Deno.serve(async (req) => {
       processed: 0,
       approved: 0,
       rejected: 0,
-      stripe_transfers: 0,
-      errors: []
+      payouts: []
     };
 
     // Get all users with earnings above threshold
@@ -52,9 +55,11 @@ Deno.serve(async (req) => {
         if (!stripeAccountId) {
           console.log(`User ${userEmail} has no Stripe account - skipping`);
           results.rejected++;
-          results.errors.push({
+          results.payouts.push({
             user_email: userEmail,
-            error: 'No Stripe account connected'
+            success: false,
+            error: 'No Stripe account connected',
+            error_code: 'NO_STRIPE_ACCOUNT'
           });
           continue;
         }
@@ -63,38 +68,95 @@ Deno.serve(async (req) => {
         if (!auto_approve || totalEarnings < 100) {
           console.log(`User ${userEmail} below auto-approve threshold`);
           results.rejected++;
+          results.payouts.push({
+            user_email: userEmail,
+            success: false,
+            error: 'Below auto-approve threshold',
+            error_code: 'THRESHOLD_NOT_MET',
+            amount: totalEarnings
+          });
           continue;
         }
 
-        // Create Stripe transfer
+        // Check Stripe balance before attempting payout
+        let stripeBalance;
+        try {
+          stripeBalance = await stripe.balance.retrieve({
+            stripeAccount: stripeAccountId
+          });
+        } catch (balanceError) {
+          console.error(`Balance check failed for ${userEmail}:`, {
+            code: balanceError.code,
+            message: balanceError.message
+          });
+          
+          results.rejected++;
+          results.payouts.push({
+            user_email: userEmail,
+            success: false,
+            error: balanceError.message,
+            error_code: balanceError.code || 'BALANCE_CHECK_FAILED'
+          });
+          continue;
+        }
+
+        const availableBalance = stripeBalance.available[0]?.amount || 0;
+        const availableBalanceDollars = availableBalance / 100;
+
+        if (availableBalanceDollars < totalEarnings) {
+          console.log(`Insufficient Stripe balance for ${userEmail}: $${availableBalanceDollars} available, $${totalEarnings} requested`);
+          results.rejected++;
+          results.payouts.push({
+            user_email: userEmail,
+            success: false,
+            error: 'Insufficient Stripe balance',
+            error_code: 'INSUFFICIENT_BALANCE',
+            available_balance: availableBalanceDollars,
+            requested_amount: totalEarnings
+          });
+          continue;
+        }
+
+        // Create Stripe payout
         try {
           const amountInCents = Math.floor(totalEarnings * 100);
           
-          const transfer = await stripe.transfers.create({
+          const payout = await stripe.payouts.create({
             amount: amountInCents,
             currency: 'usd',
-            destination: stripeAccountId,
-            description: `Encircle Net Payout - ${userEmail}`
+            description: `Encircle Net Automated Payout - ${userEmail}`,
+            metadata: {
+              user_email: userEmail,
+              user_id: targetUser.id
+            }
+          }, {
+            stripeAccount: stripeAccountId
           });
 
-          if (!transfer?.id) {
-            throw new Error('Stripe transfer failed - no transfer ID returned');
+          if (payout.status === 'failed') {
+            throw new Error(payout.failure_message || 'Payout failed');
           }
 
-          console.log(`✅ Stripe transfer ${transfer.id} created for ${userEmail}: $${totalEarnings}`);
+          console.log(`✅ Stripe payout ${payout.id} created for ${userEmail}: $${totalEarnings}`);
 
           // Update user earnings to 0
           await base44.asServiceRole.entities.User.update(targetUser.id, {
-            total_earnings: 0
+            total_earnings: 0,
+            last_payout_date: new Date().toISOString(),
+            total_payouts: (targetUser.total_payouts || 0) + totalEarnings
           });
 
-          // Create revenue record
-          await base44.asServiceRole.entities.Revenue.create({
-            user_email: userEmail,
-            source: 'payout',
-            amount: -totalEarnings,
-            status: 'paid',
-            related_id: transfer.id
+          // Create transaction record
+          await base44.asServiceRole.entities.Transaction.create({
+            from_email: 'system@encirclenet.net',
+            to_email: userEmail,
+            type: 'payout',
+            amount: totalEarnings,
+            status: 'completed',
+            metadata: {
+              stripe_payout_id: payout.id,
+              stripe_account_id: stripeAccountId
+            }
           });
 
           // Notification
@@ -102,8 +164,8 @@ Deno.serve(async (req) => {
             await base44.asServiceRole.entities.Notification.create({
               user_email: userEmail,
               type: 'payout',
-              title: 'Payout Completed',
-              message: `$${totalEarnings} has been transferred to your Stripe account.`,
+              title: 'Automated Payout Completed',
+              message: `$${totalEarnings.toFixed(2)} has been transferred to your bank account.`,
               is_read: false
             });
           } catch (notifError) {
@@ -111,22 +173,42 @@ Deno.serve(async (req) => {
           }
 
           results.approved++;
-          results.stripe_transfers++;
+          results.payouts.push({
+            user_email: userEmail,
+            success: true,
+            payout_id: payout.id,
+            amount: totalEarnings,
+            status: payout.status
+          });
 
         } catch (stripeError) {
-          console.error(`Stripe transfer failed for ${userEmail}:`, stripeError);
-          results.errors.push({
-            user_email: userEmail,
-            error: `Stripe error: ${stripeError?.message || 'Unknown error'}`
+          console.error(`Stripe payout failed for ${userEmail}:`, {
+            code: stripeError.code,
+            message: stripeError.message,
+            type: stripeError.type
           });
+          
           results.rejected++;
+          results.payouts.push({
+            user_email: userEmail,
+            success: false,
+            error: stripeError.message,
+            error_code: stripeError.code || 'PAYOUT_FAILED',
+            error_type: stripeError.type
+          });
         }
 
       } catch (error) {
-        console.error(`Error processing user ${targetUser?.email}:`, error);
-        results.errors.push({
+        console.error(`Error processing user ${targetUser?.email}:`, {
+          message: error.message,
+          stack: error.stack
+        });
+        
+        results.payouts.push({
           user_email: targetUser?.email || 'unknown',
-          error: error?.message || 'Unknown error'
+          success: false,
+          error: error.message || 'Unknown error',
+          error_code: 'INTERNAL_ERROR'
         });
       }
     }
@@ -136,9 +218,8 @@ Deno.serve(async (req) => {
       processed: results.processed,
       approved: results.approved,
       rejected: results.rejected,
-      stripe_transfers: results.stripe_transfers,
-      errors: results.errors,
-      message: `Processed ${results.processed} users. Successfully transferred $${results.stripe_transfers} payouts via Stripe. Approved: ${results.approved}, Rejected: ${results.rejected}`
+      payouts: results.payouts,
+      message: `Processed ${results.processed} users. Approved: ${results.approved}, Rejected: ${results.rejected}`
     });
 
   } catch (error) {
