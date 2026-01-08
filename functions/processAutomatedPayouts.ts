@@ -59,9 +59,10 @@ Deno.serve(async (req) => {
         const commissionAmount = referral?.commission_earned || 0;
         if (commissionAmount > 0) {
           await base44.asServiceRole.entities.Referral.update(referral.id, { status: 'paid' });
+          console.log(`Paid referral ${referral.id}: $${commissionAmount}`);
           results.referrals_processed++;
           results.approved++;
-          console.log(`Paid referral ${referral.id}: $${commissionAmount}`);
+          results.processed++;
         }
       } catch (error) {
         console.error(`Error processing referral ${referral?.id}:`, error);
