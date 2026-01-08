@@ -135,9 +135,8 @@ Deno.serve(async (req) => {
 
           console.log(`✅ Stripe payout ${payout.id} created for ${userEmail}: $${payoutAmount} (threshold: $${dynamicThreshold})`);
 
-          // Update user payout tracking
+          // Update user payout tracking (don't reset total_earnings as it's updated by transfers)
           await base44.asServiceRole.entities.User.update(targetUser.id, {
-            total_earnings: 0,
             last_payout_date: new Date().toISOString(),
             total_payouts: (targetUser.total_payouts || 0) + payoutAmount
           });
