@@ -4,86 +4,102 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    
+
     if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+      return Response.json({ 
+        success: false,
+        error: 'Forbidden: Admin access required' 
+      }, { status: 403 });
     }
 
-    const { revenue_id, action, notes } = await req.json();
+    const { payout_request_id, action, admin_notes } = await req.json();
 
-    const revenues = await base44.asServiceRole.entities.Revenue.filter({ id: revenue_id });
-    
-    if (revenues.length === 0) {
-      return Response.json({ error: 'Revenue record not found' }, { status: 404 });
+    if (!['approve', 'reject'].includes(action)) {
+      return Response.json({ 
+        success: false,
+        error: 'Invalid action. Must be "approve" or "reject"' 
+      }, { status: 400 });
     }
 
-    const revenue = revenues[0];
+    // Get payout request
+    const requests = await base44.asServiceRole.entities.PayoutRequest.filter({
+      id: payout_request_id
+    });
 
-    if (action === 'approve') {
-      // Approve payout
-      await base44.asServiceRole.entities.Revenue.update(revenue_id, {
-        status: 'paid',
-        payout_date: new Date().toISOString(),
-        approved_by: user.email,
-        approval_notes: notes
+    if (requests.length === 0) {
+      return Response.json({ 
+        success: false,
+        error: 'Payout request not found' 
+      }, { status: 404 });
+    }
+
+    const request = requests[0];
+
+    if (request.status !== 'pending') {
+      return Response.json({ 
+        success: false,
+        error: `Request already ${request.status}` 
+      }, { status: 400 });
+    }
+
+    const newStatus = action === 'approve' ? 'approved' : 'rejected';
+
+    // Update payout request
+    await base44.asServiceRole.entities.PayoutRequest.update(payout_request_id, {
+      status: newStatus,
+      admin_notes: admin_notes,
+      processed_by: user.email,
+      processed_date: new Date().toISOString()
+    });
+
+    // If rejected, refund the amount to user's balance
+    if (action === 'reject') {
+      const userData = await base44.asServiceRole.entities.User.filter({
+        email: request.user_email
       });
 
-      // Check and mark referral as completed if this is a referral commission
-      if (revenue.source === 'referral') {
-        const referrals = await base44.asServiceRole.entities.Referral.filter({
-          referrer_email: revenue.user_email,
-          status: 'pending'
+      if (userData.length > 0) {
+        const currentUser = userData[0];
+        const currentBalance = currentUser.total_earnings || 0;
+        await base44.asServiceRole.entities.User.update(currentUser.id, {
+          total_earnings: currentBalance + request.amount
         });
-
-        for (const referral of referrals) {
-          await base44.asServiceRole.entities.Referral.update(referral.id, {
-            status: 'completed',
-            payout_date: new Date().toISOString()
-          });
-        }
       }
-
-      // Send notification to creator
-      await base44.asServiceRole.functions.invoke('createNotification', {
-        user_email: revenue.user_email,
-        type: 'revenue',
-        title: 'Payout Approved',
-        message: `Your payout of $${revenue.amount} has been approved and processed`,
-        from_user: user.email,
-        from_user_name: user.full_name
-      });
-
-      return Response.json({ 
-        success: true, 
-        message: 'Payout approved and processed' 
-      });
-    } else if (action === 'reject') {
-      // Reject payout
-      await base44.asServiceRole.entities.Revenue.update(revenue_id, {
-        status: 'rejected',
-        approved_by: user.email,
-        approval_notes: notes
-      });
-
-      // Notify creator
-      await base44.asServiceRole.functions.invoke('createNotification', {
-        user_email: revenue.user_email,
-        type: 'revenue',
-        title: 'Payout Rejected',
-        message: `Your payout of $${revenue.amount} was rejected. Reason: ${notes}`,
-        from_user: user.email,
-        from_user_name: user.full_name
-      });
-
-      return Response.json({ 
-        success: true, 
-        message: 'Payout rejected' 
-      });
     }
 
-    return Response.json({ error: 'Invalid action' }, { status: 400 });
+    // Notify user
+    try {
+      const message = action === 'approve' 
+        ? `Your $${request.amount.toFixed(2)} payout has been approved and will be sent to your ${request.payout_method} account shortly.`
+        : `Your $${request.amount.toFixed(2)} payout request was rejected. ${admin_notes || 'Please contact support for details.'}`;
+
+      await base44.asServiceRole.entities.Notification.create({
+        user_email: request.user_email,
+        type: 'payout',
+        title: action === 'approve' ? 'Payout Approved' : 'Payout Rejected',
+        message: message,
+        is_read: false
+      });
+    } catch (notifError) {
+      console.log('User notification failed:', notifError.message);
+    }
+
+    return Response.json({
+      success: true,
+      message: `Payout request ${newStatus}`,
+      request: {
+        ...request,
+        status: newStatus,
+        admin_notes,
+        processed_by: user.email
+      }
+    });
+
   } catch (error) {
-    console.error('Payout approval error:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Approve payout error:', error);
+    return Response.json({ 
+      success: false,
+      error: error.message 
+    }, { status: 500 });
   }
 });
