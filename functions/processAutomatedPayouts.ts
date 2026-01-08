@@ -25,9 +25,6 @@ Deno.serve(async (req) => {
       console.log('No JSON body provided, using defaults');
     }
 
-    const threshold = body?.threshold || 50;
-    const auto_approve = body?.auto_approve !== false;
-
     const results = {
       processed: 0,
       approved: 0,
@@ -35,17 +32,24 @@ Deno.serve(async (req) => {
       payouts: []
     };
 
-    // Get all users with earnings above threshold
+    // Dynamic threshold calculation helper
+    const calculatePayoutThreshold = (stripeBalance, accountAge) => {
+      const balanceDollars = stripeBalance / 100;
+      
+      // Tiered thresholds based on Stripe balance
+      if (balanceDollars >= 500) return 100;  // High balance: $100 min payout
+      if (balanceDollars >= 200) return 50;   // Medium balance: $50 min payout
+      if (balanceDollars >= 50) return 25;    // Low balance: $25 min payout
+      return 10;                              // Very low balance: $10 min payout
+    };
+
+    // Get all users with Stripe accounts
     const allUsers = await base44.asServiceRole.entities.User.list('-created_date', 1000);
     
     for (const targetUser of allUsers) {
       try {
         const userEmail = targetUser?.email;
         if (!userEmail) continue;
-
-        const totalEarnings = targetUser?.total_earnings || 0;
-        
-        if (totalEarnings < threshold) continue;
 
         results.processed++;
 
