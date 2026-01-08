@@ -1,4 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import Stripe from 'npm:stripe@17.5.0';
+
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'), {
+  apiVersion: '2024-12-18.acacia'
+});
 
 Deno.serve(async (req) => {
   try {
@@ -23,93 +28,82 @@ Deno.serve(async (req) => {
       processed: 0,
       approved: 0,
       rejected: 0,
-      referrals_processed: 0,
+      stripe_transfers: 0,
       errors: []
     };
 
-    // Get all pending payouts
-    let pendingPayouts = [];
-    try {
-      const allPending = await base44.asServiceRole.entities.Revenue.filter({ status: 'pending' });
-      pendingPayouts = allPending?.filter(item => (item?.amount || 0) >= threshold) || [];
-      console.log(`Found ${pendingPayouts.length} pending payouts above threshold`);
-    } catch (error) {
-      console.error('Error fetching pending payouts:', error);
-      results.errors.push({ type: 'fetch_payouts', error: error?.message || 'Unknown error' });
-    }
-
-    // Get completed referrals
-    let completedReferrals = [];
-    try {
-      completedReferrals = await base44.asServiceRole.entities.Referral.filter({ status: 'completed' }) || [];
-      console.log(`Found ${completedReferrals.length} completed referrals`);
-    } catch (error) {
-      console.error('Error fetching referrals:', error);
-      results.errors.push({ type: 'fetch_referrals', error: error?.message || 'Unknown error' });
-    }
-
-    // Process referral payouts
-    for (const referral of completedReferrals) {
+    // Get all users with earnings above threshold
+    const allUsers = await base44.asServiceRole.entities.User.list('-created_date', 1000);
+    
+    for (const targetUser of allUsers) {
       try {
-        if (!referral?.id) {
-          console.warn('Skipping referral with no ID');
+        const userEmail = targetUser?.email;
+        if (!userEmail) continue;
+
+        const totalEarnings = targetUser?.total_earnings || 0;
+        
+        if (totalEarnings < threshold) continue;
+
+        results.processed++;
+
+        // Check if user has Stripe account
+        const stripeAccountId = targetUser?.stripe_connect_account_id;
+        
+        if (!stripeAccountId) {
+          console.log(`User ${userEmail} has no Stripe account - skipping`);
+          results.rejected++;
+          results.errors.push({
+            user_email: userEmail,
+            error: 'No Stripe account connected'
+          });
           continue;
         }
 
-        const commissionAmount = referral?.commission_earned || 0;
-        if (commissionAmount > 0) {
-          await base44.asServiceRole.entities.Referral.update(referral.id, { status: 'paid' });
-          console.log(`Paid referral ${referral.id}: $${commissionAmount}`);
-          results.referrals_processed++;
-          results.approved++;
-          results.processed++;
-        }
-      } catch (error) {
-        console.error(`Error processing referral ${referral?.id}:`, error);
-        results.errors.push({
-          referral_id: referral?.id || 'unknown',
-          error: error?.message || 'Unknown error'
-        });
-      }
-    }
-
-    // Process revenue payouts
-    for (const payout of pendingPayouts) {
-      try {
-        if (!payout?.id) {
-          console.warn('Skipping payout with no ID');
-          continue;
-        }
-
-        const userEmail = payout?.user_email || payout?.creator_email;
-        if (!userEmail) {
-          console.warn(`Skipping payout ${payout.id} - no user email`);
+        // Validate minimum payout
+        if (!auto_approve || totalEarnings < 100) {
+          console.log(`User ${userEmail} below auto-approve threshold`);
           results.rejected++;
           continue;
         }
 
-        let creatorRevenue = [];
+        // Create Stripe transfer
         try {
-          creatorRevenue = await base44.asServiceRole.entities.Revenue.filter({ user_email: userEmail }) || [];
-        } catch (e) {
-          console.error(`Error fetching revenue for ${userEmail}:`, e);
-        }
-
-        const totalEarned = creatorRevenue.reduce((sum, r) => sum + (r?.amount || 0), 0);
-        const shouldApprove = auto_approve && totalEarned >= 100;
-
-        if (shouldApprove) {
-          await base44.asServiceRole.entities.Revenue.update(payout.id, {
-            status: 'paid',
-            paid_date: new Date().toISOString()
+          const amountInCents = Math.floor(totalEarnings * 100);
+          
+          const transfer = await stripe.transfers.create({
+            amount: amountInCents,
+            currency: 'usd',
+            destination: stripeAccountId,
+            description: `Encircle Net Payout - ${userEmail}`
           });
 
+          if (!transfer?.id) {
+            throw new Error('Stripe transfer failed - no transfer ID returned');
+          }
+
+          console.log(`✅ Stripe transfer ${transfer.id} created for ${userEmail}: $${totalEarnings}`);
+
+          // Update user earnings to 0
+          await base44.asServiceRole.entities.User.update(targetUser.id, {
+            total_earnings: 0
+          });
+
+          // Create revenue record
+          await base44.asServiceRole.entities.Revenue.create({
+            user_email: userEmail,
+            source: 'payout',
+            amount: -totalEarnings,
+            status: 'paid',
+            related_id: transfer.id
+          });
+
+          // Notification
           try {
             await base44.asServiceRole.entities.Notification.create({
               user_email: userEmail,
               type: 'payout',
-              title: 'Payout Processed',
-              message: `Your payout of $${payout?.amount || 0} has been processed.`,
+              title: 'Payout Completed',
+              message: `$${totalEarnings} has been transferred to your Stripe account.`,
               is_read: false
             });
           } catch (notifError) {
@@ -117,17 +111,21 @@ Deno.serve(async (req) => {
           }
 
           results.approved++;
-          console.log(`Approved payout ${payout.id} for ${userEmail}: $${payout?.amount || 0}`);
-        } else {
+          results.stripe_transfers++;
+
+        } catch (stripeError) {
+          console.error(`Stripe transfer failed for ${userEmail}:`, stripeError);
+          results.errors.push({
+            user_email: userEmail,
+            error: `Stripe error: ${stripeError?.message || 'Unknown error'}`
+          });
           results.rejected++;
-          console.log(`Rejected payout ${payout.id} - total earned: $${totalEarned}`);
         }
 
-        results.processed++;
       } catch (error) {
-        console.error(`Error processing payout ${payout?.id}:`, error);
+        console.error(`Error processing user ${targetUser?.email}:`, error);
         results.errors.push({
-          payout_id: payout?.id || 'unknown',
+          user_email: targetUser?.email || 'unknown',
           error: error?.message || 'Unknown error'
         });
       }
@@ -138,10 +136,11 @@ Deno.serve(async (req) => {
       processed: results.processed,
       approved: results.approved,
       rejected: results.rejected,
-      referrals_processed: results.referrals_processed,
+      stripe_transfers: results.stripe_transfers,
       errors: results.errors,
-      message: `Processed ${results.processed} revenue payouts and ${results.referrals_processed} referral payouts. Total approved: ${results.approved}`
+      message: `Processed ${results.processed} users. Successfully transferred $${results.stripe_transfers} payouts via Stripe. Approved: ${results.approved}, Rejected: ${results.rejected}`
     });
+
   } catch (error) {
     console.error('Critical automated payout error:', error);
     return Response.json({ 
