@@ -62,6 +62,18 @@ Deno.serve(async (req) => {
       }
     });
 
+    // Update user's total_payouts
+    const userData = await base44.asServiceRole.entities.User.filter({
+      email: request.user_email
+    });
+    if (userData.length > 0) {
+      const currentTotalPayouts = userData[0].total_payouts || 0;
+      await base44.asServiceRole.entities.User.update(userData[0].id, {
+        total_payouts: currentTotalPayouts + request.amount,
+        last_payout_date: new Date().toISOString()
+      });
+    }
+
     // Notify user
     try {
       await base44.asServiceRole.entities.Notification.create({

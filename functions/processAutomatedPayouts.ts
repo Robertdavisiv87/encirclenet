@@ -118,9 +118,10 @@ Deno.serve(async (req) => {
           console.log(`Payout successful for user ${userEmail}: ${payout.id} ($${availableBalanceDollars})`);
 
           // Update user payout tracking
+          const currentTotalPayouts = targetUser.total_payouts || 0;
           await base44.asServiceRole.entities.User.update(targetUser.id, {
             last_payout_date: new Date().toISOString(),
-            total_payouts: (targetUser.total_payouts || 0) + availableBalanceDollars
+            total_payouts: currentTotalPayouts + availableBalanceDollars
           });
 
           // Create transaction record
