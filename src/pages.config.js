@@ -41,6 +41,7 @@ import SystemStatus from './pages/SystemStatus';
 import ViewGroup from './pages/ViewGroup';
 import ViewProfile from './pages/ViewProfile';
 import Welcome from './pages/Welcome';
+import StripeReferrals from './pages/StripeReferrals';
 import __Layout from './Layout.jsx';
 
 
@@ -88,6 +89,7 @@ export const PAGES = {
     "ViewGroup": ViewGroup,
     "ViewProfile": ViewProfile,
     "Welcome": Welcome,
+    "StripeReferrals": StripeReferrals,
 }
 
 export const pagesConfig = {
