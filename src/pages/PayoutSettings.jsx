@@ -112,13 +112,9 @@ export default function PayoutSettings() {
     enabled: !!user?.email
   });
 
-  // Calculate earnings
-  const referralEarnings = referrals.reduce((sum, r) => sum + (r.commission_earned || 0), 0);
-  const tipEarnings = tips.filter(t => t.status === 'completed' || !t.status).reduce((sum, t) => sum + (t.amount || 0), 0);
-  const subscriptionEarnings = subscriptions.reduce((sum, s) => sum + (s.price || 0), 0) * 0.90;
-  
-  const totalEarnings = referralEarnings + tipEarnings + subscriptionEarnings;
-  const totalPayouts = payouts.reduce((sum, p) => sum + (p.amount || 0), 0);
+  // Calculate earnings - use User entity's total_earnings and total_payouts for accurate tracking
+  const totalEarnings = user?.total_earnings || 0;
+  const totalPayouts = user?.total_payouts || 0;
   const availableBalance = totalEarnings - totalPayouts;
 
   const handleConnectBank = async () => {
