@@ -179,8 +179,8 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
 
-      {/* Global System Monitor */}
-      <AutoMonitor />
+      {/* Global System Monitor - Disabled */}
+      {/* <AutoMonitor /> */}
     </div>
   </HelmetProvider>
 );
