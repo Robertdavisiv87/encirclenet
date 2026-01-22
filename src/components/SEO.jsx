@@ -6,7 +6,7 @@ export default function SEO({
   description = 'Join Encircle Net, the #1 high engagement social media platform where creators earn real money. Share content, build your circle, and monetize your influence with tips, subscriptions, and referrals. The future of social media is here.',
   keywords = 'social media platform, high engagement social media, best social media app, earn money social media, content creator platform, monetize social media, influencer platform, social networking, CircleValue, premium social media, creator economy, social media earnings, engagement platform, viral content platform',
   image = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=630&fit=crop',
-  url = 'https://encirclenet.net',
+  url = 'https://encirclenet.com',
   type = 'website'
 }) {
   const structuredData = {
