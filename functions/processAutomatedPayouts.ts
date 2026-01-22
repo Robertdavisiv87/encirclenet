@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
 
           // Create transaction record
           await base44.asServiceRole.entities.Transaction.create({
-            from_email: 'system@encirclenet.net',
+            from_email: 'system@encirclenet.com',
             to_email: userEmail,
             type: 'payout',
             amount: availableBalanceDollars,
